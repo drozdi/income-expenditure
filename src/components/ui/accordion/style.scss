@@ -1,0 +1,35 @@
+.x-accordion-tab {
+	display: grid;
+	grid-template-rows: minmax(min-content, auto) 0fr;
+	transition: all ease-in-out 0.2s;
+}
+.x-accordion-header {
+	cursor: pointer;
+	padding: 8px;
+
+	justify-content: space-between;
+	display: flex;
+	flex-wrap: nowrap;
+}
+.x-accordion-header-icon {
+	flex: 0 0 0;
+	display: inline-block;
+	width: 0;
+	height: 0;
+	border-right: 8px solid;
+	border-top: 8px solid transparent !important;
+	border-bottom: 8px solid transparent !important;
+	border-left: 0 none transparent;
+	transition: transform ease-in-out 0.2s;
+}
+.x-accordion-content {
+	transition: all ease-in-out 0.2s;
+	overflow: hidden;
+}
+
+.x-accordion-tab--expanded {
+	grid-template-rows: minmax(min-content, auto) 1fr;
+	.x-accordion-header-icon {
+		transform: rotate(-90deg);
+	}
+}

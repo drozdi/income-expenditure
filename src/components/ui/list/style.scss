@@ -1,0 +1,9 @@
+.x-list {
+	@apply flex flex-col;
+}
+.x-list--bordered {
+	@apply border border-separator;
+}
+.x-list--separator {
+	@apply divide-y divide-separator;
+}
