@@ -1,26 +1,16 @@
-import { Link, Route, Routes } from 'react-router-dom';
-import { AppProvider } from './components/app';
-import {
-	BtnExample,
-	BtnGroupExample,
-	CardsExample,
-	InputExample,
-	ListExample,
-	MessageExample,
-	ProgressExample,
-	SpinnerExample,
-} from './components/example';
-import { XIcon, XItem, XItemLabel, XItemSection, XList } from './components/ui';
-import { XLayout } from './components/ui/layout';
-import { ThemeProvider } from './hooks/useTheme';
-function App() {
+import { Link, Outlet } from 'react-router-dom';
+import { ThemeProvider } from '../../../hooks/useTheme';
+import { AppProvider } from '../../app';
+import { XIcon, XItem, XItemLabel, XItemSection, XList } from '../../ui';
+import { XLayout } from '../../ui/layout';
+export function Layout() {
 	return (
 		<AppProvider config={{ smKey: 'app-1' }}>
 			<XLayout container={true} overlay={true} toggle={true} view="lhr lpr lff">
 				{{
 					left: (props) => (
 						<XList separator={true}>
-							<XItem to="/btn" LinkComponent={Link}>
+							<XItem to="btn" LinkComponent={Link}>
 								<XItemSection side={true}>
 									<XIcon>mdi-button-pointer</XIcon>
 								</XItemSection>
@@ -28,7 +18,7 @@ function App() {
 									<XItemLabel lines={true}>XBtn</XItemLabel>
 								</XItemSection>
 							</XItem>
-							<XItem to="/btn-group" LinkComponent={Link}>
+							<XItem to="btn-group" LinkComponent={Link}>
 								<XItemSection side={true}>
 									<XIcon>mdi-card-outline</XIcon>
 								</XItemSection>
@@ -36,7 +26,7 @@ function App() {
 									<XItemLabel lines={true}>XBtnGroup</XItemLabel>
 								</XItemSection>
 							</XItem>
-							<XItem to="/input" LinkComponent={Link}>
+							<XItem to="input" LinkComponent={Link}>
 								<XItemSection side={true}>
 									<XIcon>mdi-form-textbox</XIcon>
 								</XItemSection>
@@ -44,7 +34,7 @@ function App() {
 									<XItemLabel lines={true}>XInput</XItemLabel>
 								</XItemSection>
 							</XItem>
-							<XItem to="/list" LinkComponent={Link}>
+							<XItem to="list" LinkComponent={Link}>
 								<XItemSection side={true}>
 									<XIcon>mdi-view-list</XIcon>
 								</XItemSection>
@@ -52,7 +42,7 @@ function App() {
 									<XItemLabel lines={true}>XList</XItemLabel>
 								</XItemSection>
 							</XItem>
-							<XItem to="/message" LinkComponent={Link}>
+							<XItem to="message" LinkComponent={Link}>
 								<XItemSection side={true}>
 									<XIcon>mdi-message-alert-outline</XIcon>
 								</XItemSection>
@@ -60,7 +50,7 @@ function App() {
 									<XItemLabel lines={true}>XMessage</XItemLabel>
 								</XItemSection>
 							</XItem>
-							<XItem to="/spinner" LinkComponent={Link}>
+							<XItem to="spinner" LinkComponent={Link}>
 								<XItemSection side={true}>
 									<XIcon>mdi-reload</XIcon>
 								</XItemSection>
@@ -68,7 +58,7 @@ function App() {
 									<XItemLabel lines={true}>XSpinner</XItemLabel>
 								</XItemSection>
 							</XItem>
-							<XItem to="/progress" LinkComponent={Link}>
+							<XItem to="progress" LinkComponent={Link}>
 								<XItemSection side={true}>
 									<XIcon>mdi-progress-helper</XIcon>
 								</XItemSection>
@@ -76,7 +66,7 @@ function App() {
 									<XItemLabel lines={true}>XProgress</XItemLabel>
 								</XItemSection>
 							</XItem>
-							<XItem to="/cards" LinkComponent={Link}>
+							<XItem to="cards" LinkComponent={Link}>
 								<XItemSection side={true}>
 									<XIcon>mdi-cards</XIcon>
 								</XItemSection>
@@ -84,28 +74,22 @@ function App() {
 									<XItemLabel lines={true}>XCards</XItemLabel>
 								</XItemSection>
 							</XItem>
+							<XItem to="accordion" LinkComponent={Link}>
+								<XItemSection side={true}>
+									<XIcon>mdi-table-column</XIcon>
+								</XItemSection>
+								<XItemSection>
+									<XItemLabel lines={true}>XAccordion</XItemLabel>
+								</XItemSection>
+							</XItem>
 						</XList>
 					),
 					header: <ThemeProvider.Toggler></ThemeProvider.Toggler>,
 					footer: 'footer',
 					//right: 'right',
-					default: (props) => (
-						<Routes>
-							<Route path="/" element={<div>Home</div>} />
-							<Route path="/btn" element={<BtnExample />} />
-							<Route path="/btn-group" element={<BtnGroupExample />} />
-							<Route path="/input" element={<InputExample />} />
-							<Route path="/list" element={<ListExample />} />
-							<Route path="/message" element={<MessageExample />} />
-							<Route path="/spinner" element={<SpinnerExample />} />
-							<Route path="/progress" element={<ProgressExample />} />
-							<Route path="/cards" element={<CardsExample />} />
-						</Routes>
-					),
+					default: (props) => <Outlet />,
 				}}
 			</XLayout>
 		</AppProvider>
 	);
 }
-
-export default App;
