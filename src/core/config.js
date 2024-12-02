@@ -1,4 +1,4 @@
-import { Config } from '../lib/';
+import { Config } from '../shared/lib';
 const config = new Config({
 	access: 'read',
 	newFolder: 'new folder',

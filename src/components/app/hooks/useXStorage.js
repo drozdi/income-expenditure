@@ -1,6 +1,6 @@
 import { createContext, useEffect } from 'react';
 import settingManager from '../../../core/setting-manager';
-import { cached } from '../../../utils/cached';
+import { cached } from '../../../shared/utils/cached';
 
 export const XStorage = cached(function XStorage(type, key) {
 	let smActive = false;

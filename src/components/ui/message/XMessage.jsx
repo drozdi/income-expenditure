@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { forwardRef, memo, useCallback, useMemo } from 'react';
 import { useTimeout } from '../../../hooks/useTimeout';
-import { isString } from '../../../utils/is';
+import { isString } from '../../../shared/utils/is';
 import { XBtn } from '../btn';
 import { XIcon } from '../icon';
 import { useXMessagesContext } from '../messages/XMessagesContext';

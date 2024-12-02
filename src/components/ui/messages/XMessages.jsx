@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { forwardRef, memo, useImperativeHandle, useRef, useState } from 'react';
-import { isArray } from '../../../utils/is';
+import { isArray } from '../../../shared/utils/is';
 import { XMessage } from '../message';
 import './style.scss';
 import { XMessagesContext } from './XMessagesContext';

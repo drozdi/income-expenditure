@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { isBoolean } from '../../../utils/is';
+import { isBoolean } from '../../../shared/utils/is';
 
 export function useProps(initial = {}, tag = '', body = '') {
 	const [props, setProps] = useState(initial);

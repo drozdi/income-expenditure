@@ -1,4 +1,4 @@
-import { capitalize } from '../../../utils/string';
+import { capitalize } from '../../../shared/utils/string';
 function select(props) {
 	return (
 		<label key={props.name} className="block">

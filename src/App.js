@@ -1,6 +1,10 @@
-import { useRoutes } from 'react-router-dom';
-import { routes } from './config/routers';
+import { AppProvider } from './app/app-provider';
+import { AppRouter } from './app/app-router';
+
 export function App() {
-	const routesElement = useRoutes(routes());
-	return routesElement;
+	return (
+		<AppProvider>
+			<AppRouter />
+		</AppProvider>
+	);
 }

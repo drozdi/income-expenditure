@@ -1,5 +1,5 @@
-import { Layout } from '../components/example/utils/Layout';
-import exampleRoters from '../components/example/utils/routers';
+import { Layout } from '../../components/example/utils/Layout';
+import exampleRoters from '../../components/example/utils/routers';
 export const routes = () => [
 	{
 		path: '/',
