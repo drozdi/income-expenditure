@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState } from 'react';
-import { extractEventHandlers } from '../shared/utils/extractEventHandlers';
-import { isFocusVisible } from '../shared/utils/is';
+import { extractEventHandlers } from '../utils/extractEventHandlers';
+import { isFocusVisible } from '../utils/is';
 import { useForkRef } from './useForkRef';
 export function useBtn({
 	selected,
