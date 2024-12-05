@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { forwardRef, memo, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { useBtn } from '../../hooks/useBtn';
 import { XIcon } from '../icon';
 import { useXBtnGroupContext, XBtnGroup } from './Group';
@@ -55,7 +56,7 @@ const XBtnRoot = forwardRef(function XBtn(params = {}, ref) {
 });
 
 XBtnRoot.defaultProps = {
-	LinkComponent: 'a',
+	LinkComponent: Link,
 	target: '_self',
 };
 XBtnRoot.propTypes = {
