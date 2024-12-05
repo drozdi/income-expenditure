@@ -1,0 +1,181 @@
+.x-btn {
+	@apply relative inline-flex items-center justify-center select-none cursor-pointer rounded px-6 py-2 text-base text-center font-normal uppercase box-border transition duration-200 ease-in-out border-current border-0 focus:outline-none focus-visible:outline-none disabled:!pointer-events-none disabled:!shadow-none disabled:!opacity-50 disabled:!cursor-not-allowed;
+	@apply shadow hover:shadow-xl focus:shadow-lg active:shadow-md shadow-black/50 hover:shadow-black/60 focus:shadow-black/70 active:shadow-black/20;
+	@apply active:scale-[0.97];
+}
+
+.x-btn-outline,
+.x-btn-backdor {
+	@apply absolute top-0 left-0 w-full h-full rounded-inherit contain-layout pointer-events-none;
+}
+.x-btn-outline {
+	@apply hidden bg-transparent border-0 border-inherit z-20;
+}
+.x-btn-backdor {
+	@apply z-10 bg-current opacity-0;
+}
+
+.x-btn:hover .x-btn-backdor {
+	@apply opacity-20;
+}
+.x-btn:focus .x-btn-backdor {
+	@apply opacity-25;
+}
+.x-btn:active .x-btn-backdor {
+	@apply opacity-30;
+}
+
+.x-btn--tonal .x-btn-backdor {
+	@apply opacity-20;
+}
+.x-btn--tonal:hover .x-btn-backdor {
+	@apply opacity-30;
+}
+.x-btn--tonal:focus .x-btn-backdor {
+	@apply opacity-30;
+}
+.x-btn--tonal:active .x-btn-backdor {
+	@apply opacity-40;
+}
+
+.x-btn--text .x-btn-backdor,
+.x-btn--outline:not(.x-btn--tonal, .x-btn--plain) .x-btn-backdor {
+	@apply opacity-0 !important;
+}
+
+.x-btn--outline,
+.x-btn--tonal,
+.x-btn--plain,
+.x-btn--text,
+.x-btn--link {
+	@apply bg-transparent !important;
+}
+.x-btn--flat {
+	@apply shadow-none !important;
+}
+
+.x-btn--outline .x-btn-outline {
+	@apply block border border-inherit;
+}
+
+.x-btn--text,
+.x-btn--plain {
+	.x-btn-content {
+		@apply opacity-80;
+	}
+	&:hover .x-btn-content,
+	&.x-btn--active .x-btn-content {
+		@apply opacity-100;
+	}
+}
+
+.x-btn--active.x-btn--tonal .x-btn-backdor {
+	@apply opacity-40 !important;
+}
+.x-btn--active .x-btn-backdor {
+	@apply opacity-30 !important;
+}
+.x-btn--active {
+	@apply shadow-md shadow-black/30 !important;
+}
+
+.x-btn--xs {
+	@apply rounded px-2 py-1 text-xs;
+}
+.x-btn--sm {
+	@apply rounded px-4 py-1 text-sm;
+}
+.x-btn--lg {
+	@apply rounded px-7 py-3 text-lg;
+}
+.x-btn--icon {
+	@apply px-2;
+}
+.x-btn--icon.x-btn--xs {
+	@apply px-1;
+}
+.x-btn--icon.x-btn--sm {
+	@apply px-1;
+}
+.x-btn--icon.x-btn--lg {
+	@apply px-3;
+}
+.x-btn--block {
+	@apply block w-full;
+}
+.x-btn--rounded {
+	@apply rounded-full;
+}
+.x-btn--square {
+	@apply rounded-none;
+}
+.x-btn--round {
+	@apply p-0 rounded-[50%] min-w-8 min-h-8;
+}
+
+.x-btn:where(
+		.x-btn--primary,
+		.x-btn--secondary,
+		.x-btn--accent,
+		.x-btn--positive,
+		.x-btn--negative,
+		.x-btn--info,
+		.x-btn--warning,
+		.x-btn--dimmed
+	) {
+	@apply text-white;
+}
+
+.x-btn--primary {
+	@apply bg-primary border-primary/85;
+}
+.x-btn--primary:where(.x-btn--tonal, .x-btn--outline, .x-btn--text, .x-btn--plain) {
+	@apply text-primary;
+}
+.x-btn--secondary {
+	@apply bg-secondary border-secondary/85;
+}
+.x-btn--secondary:where(.x-btn--tonal, .x-btn--outline, .x-btn--text, .x-btn--plain) {
+	@apply text-secondary;
+}
+.x-btn--accent {
+	@apply bg-accent border-accent/85;
+}
+.x-btn--accent:where(.x-btn--tonal, .x-btn--outline, .x-btn--text, .x-btn--plain) {
+	@apply text-accent;
+}
+.x-btn--positive {
+	@apply bg-positive border-positive/85;
+}
+.x-btn--positive:where(.x-btn--tonal, .x-btn--outline, .x-btn--text, .x-btn--plain) {
+	@apply text-positive;
+}
+.x-btn--negative {
+	@apply bg-negative border-negative/85;
+}
+.x-btn--negative:where(.x-btn--tonal, .x-btn--outline, .x-btn--text, .x-btn--plain) {
+	@apply text-negative;
+}
+.x-btn--info {
+	@apply bg-info border-info/85;
+}
+.x-btn--info:where(.x-btn--tonal, .x-btn--outline, .x-btn--text, .x-btn--plain) {
+	@apply text-info;
+}
+.x-btn--warning {
+	@apply bg-warning border-warning/85;
+}
+.x-btn--warning:where(.x-btn--tonal, .x-btn--outline, .x-btn--text, .x-btn--plain) {
+	@apply text-warning;
+}
+
+.x-btn--link {
+	@apply normal-case text-link hover:underline;
+}
+
+.x-btn--dimmed {
+	@apply bg-dimmed !important;
+}
+.x-btn--dimmed .x-btn-outline {
+	@apply border-separator bg-transparent;
+}
