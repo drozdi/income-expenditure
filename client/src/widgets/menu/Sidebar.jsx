@@ -5,13 +5,10 @@ export function Sidebar({ className }) {
 		<aside className={classNames('relative bg-sidebar shadow-xl', className)}>
 			<XList>
 				<XItem to="/">
-					<XItemSection>Home</XItemSection>
+					<XItemSection>Главная</XItemSection>
 				</XItem>
-				<XItem to="/">
-					<XItemSection>Home</XItemSection>
-				</XItem>
-				<XItem to="/">
-					<XItemSection>Home</XItemSection>
+				<XItem to="/categories">
+					<XItemSection>Категории</XItemSection>
 				</XItem>
 			</XList>
 		</aside>
