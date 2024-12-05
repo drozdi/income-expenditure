@@ -87,7 +87,7 @@
 		text-decoration: none;
 	}
 	a[href]:hover {
-		color: rgb(var(--link-hover-color));
+		/*color: rgb(var(--link-hover-color));*/
 		text-decoration: underlined;
 	}
 	* {

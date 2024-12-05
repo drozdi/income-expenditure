@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import { memo, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import './style.scss';
 const clickableTag = ['a', 'label'];
 const disRoleTag = ['label'];
@@ -16,7 +17,7 @@ export const XItem = memo(function XItem({
 	disabled = false,
 	role = null,
 	onClick = null,
-	LinkComponent = 'a',
+	LinkComponent = Link,
 	to,
 	href,
 	target = '_self',
@@ -83,7 +84,7 @@ export const XItem = memo(function XItem({
 	]);
 	return (
 		<TagProp {...attrs}>
-			<span className="x-item__backdor" />
+			<div className="x-item__backdor" />
 			{children}
 		</TagProp>
 	);

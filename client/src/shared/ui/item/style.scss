@@ -23,16 +23,15 @@
 .x-list--dense .x-item {
 	@apply min-h-8 px-2 py-1;
 }
-
-.x-item__backdor {
-	@apply absolute right-0 top-0 w-full h-full contain-layout -z-10 transition ease-in-out duration-300;
+.x-item > * {
+	@apply z-20;
 }
 .x-item__backdor {
-	@apply bg-black opacity-0;
+	@apply absolute top-0 left-0 w-full h-full !z-10 transition-opacity ease-in-out duration-300 bg-current opacity-0;
 }
 .x-item:not(.x-item--disabled):not(:has(input:disabled)):not(:disabled):hover
 	> .x-item__backdor {
-	@apply opacity-20;
+	@apply opacity-15;
 }
 
 .x-item:not(.x-item--vertical) .x-item__section--main + .x-item__section--main {
