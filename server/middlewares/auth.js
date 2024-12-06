@@ -1,20 +1,24 @@
-const jwt = require('jsonwebtoken');
-const { JWT_SECRET } = require('../constants');
+const tokenService = require('../services/token');
 
 function auth(req, res, next) {
-    const token = req.cookies.token;
+	if (req.method === 'OPTIONS') {
+		return next();
+	}
 
-    try {
-        const verifyResult = jwt.verify(token, JWT_SECRET)
+	try {
+		const token = req.headers.authorization.split(' ')[1];
+		if (!token) {
+			return res.status(401).json({ message: 'Unauthorized' });
+		}
 
-        req.user = {
-            email: verifyResult.email
-        }
+		const data = tokenService.validateAccess(token);
 
-        next();
-    } catch (e) {
-        res.redirect('/login');
-    }
+		req.user = data;
+
+		next();
+	} catch (e) {
+		res.status(401).json({ message: 'Unauthorized' });
+	}
 }
 
 module.exports = auth;

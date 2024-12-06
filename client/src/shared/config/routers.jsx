@@ -1,4 +1,5 @@
 import { MainLayout } from '../../layout';
+import { CategoriesPage } from '../../pages';
 export const routes = () => [
 	{
 		path: '/',
@@ -12,6 +13,11 @@ export const routes = () => [
 					</div>
 				),
 			},
+			{
+				path: 'categories',
+				element: <CategoriesPage />,
+			},
+
 			{
 				path: '404',
 				element: (
