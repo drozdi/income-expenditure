@@ -53,7 +53,7 @@ export default () => {
 		dispatch(registerUser(data))
 			.unwrap()
 			.then(() => {
-				navigate('/users');
+				navigate('/');
 			})
 			.catch((err) => console.log(err));
 	};

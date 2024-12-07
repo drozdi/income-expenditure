@@ -32,7 +32,7 @@ export default () => {
 		dispatch(loginUser(data))
 			.unwrap()
 			.then(() => {
-				navigate('/users');
+				navigate('/');
 			});
 	};
 	return (
