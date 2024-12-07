@@ -2,8 +2,8 @@
 	--body-bg: 255, 255, 255;
 	--body-color: 0, 0, 0;
 
-	--link-color: 255, 255, 255;
-	--link-hover-color: 255, 255, 255;
+	--link-color: 0, 0, 0;
+	--link-hover-color: 0, 0, 0;
 
 	--border-color: 0, 0, 0, 0.2;
 	--scrollbar-color: rgba(0, 0, 0, 0.3) rgba(255, 255, 255, 0.2);
@@ -94,9 +94,9 @@
 		scrollbar-color: var(--scrollbar-color);
 		scrollbar-width: thin;
 	}
-	*::-moz-selection,
+	/**::-moz-selection,
 	*::selection {
 		color: #eee;
 		background: rgba(255, 255, 255, 0.2);
-	}
+	}*/
 }

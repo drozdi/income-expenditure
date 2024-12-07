@@ -94,6 +94,20 @@ export const XInput = memo(
 							{prepend}
 						</div>
 					)}
+					{append && <div className="x-input-append">{append}</div>}
+					<div className="x-input-underlay"></div>
+					<div className="x-input-outline">
+						<div className="x-input-outline-start"></div>
+						<div className="x-input-outline-notch">
+							{label && (
+								<label htmlFor={props.id} className="x-input-label">
+									{label}
+								</label>
+							)}
+						</div>
+						<div className="x-input-outline-end"></div>
+					</div>
+					<div className="x-input-underlined"></div>
 					<div className="x-input-control">
 						<input {...attrs} />
 						{label && (
@@ -111,20 +125,6 @@ export const XInput = memo(
 							</label>
 						)}
 					</div>
-					{append && <div className="x-input-append">{append}</div>}
-					<div className="x-input-underlay"></div>
-					<div className="x-input-outline">
-						<div className="x-input-outline-start"></div>
-						<div className="x-input-outline-notch">
-							{label && (
-								<label htmlFor={props.id} className="x-input-label">
-									{label}
-								</label>
-							)}
-						</div>
-						<div className="x-input-outline-end"></div>
-					</div>
-					<div className="x-input-underlined"></div>
 				</div>
 				{after && <div className="x-input-after">{after}</div>}
 				{!hideMessage && (

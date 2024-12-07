@@ -17,7 +17,7 @@ export function Header({ className }) {
 
 				<div className="flex items-center">
 					<div>
-						<XBtn to="/">Выйти</XBtn>
+						<XBtn to="/auth">Ввойти</XBtn>
 					</div>
 				</div>
 			</div>
