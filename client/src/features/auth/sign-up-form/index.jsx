@@ -1,12 +1,12 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-import { registerUser } from '../../../entites/auth/authSlice';
-
+import { getIsLoading, registerUser } from '../../../entites/auth/authSlice';
+import { startLoader, stopLoader } from '../../../entites/loader/loaderSlice';
 import { XBtn, XInput } from '../../../shared/ui';
+import { useToast } from '../../toast';
 
 const regFormSchema = yup.object().shape({
 	username: yup
@@ -31,9 +31,10 @@ const regFormSchema = yup.object().shape({
 });
 
 export default () => {
-	const [isLoading, setIsLoading] = useState(false);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	const toast = useToast();
+	const isLoading = useSelector(getIsLoading);
 	const {
 		register,
 		handleSubmit,
@@ -50,12 +51,20 @@ export default () => {
 	});
 
 	const onSubmit = async (data) => {
+		dispatch(startLoader());
 		dispatch(registerUser(data))
 			.unwrap()
 			.then(() => {
+				dispatch(stopLoader());
 				navigate('/');
 			})
-			.catch((err) => console.log(err));
+			.catch(({ error }) => {
+				dispatch(stopLoader());
+				toast.show({
+					children: error.message,
+					color: 'negative',
+				});
+			});
 	};
 	return (
 		<form className="flex flex-col gap-2" onSubmit={handleSubmit(onSubmit)}>

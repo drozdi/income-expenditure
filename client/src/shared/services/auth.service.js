@@ -2,7 +2,7 @@ import axios from 'axios';
 import localStorageService from './localStorage.service';
 
 const httpAuth = axios.create({
-	baseURL: 'http://localhost/api/auth/',
+	baseURL: 'http://localhost:8080/api/auth/',
 });
 
 const authService = {

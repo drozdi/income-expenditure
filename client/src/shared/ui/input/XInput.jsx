@@ -66,9 +66,9 @@ export const XInput = memo(
 		const errorMes = errorMessage || errors[0] || '';
 
 		const attrs = {
+			type: 'text',
 			...other,
 			..._attrs,
-			type: 'text',
 			className: classNames('x-input-native', className),
 		};
 

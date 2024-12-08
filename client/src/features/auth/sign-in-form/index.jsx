@@ -1,11 +1,13 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-import { loginUser } from '../../../entites/auth/authSlice';
+import { getIsLoading, loginUser } from '../../../entites/auth/authSlice';
+import { startLoader, stopLoader } from '../../../entites/loader/loaderSlice';
 
 import { XBtn, XInput } from '../../../shared/ui';
+import { useToast } from '../../toast';
 
 const loginFormSchema = yup.object().shape({
 	email: yup.string().email('Введите корректный email').required('Заполните логин'),
@@ -15,6 +17,8 @@ const loginFormSchema = yup.object().shape({
 export default () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const toast = useToast();
+	const isLoading = useSelector(getIsLoading);
 	const {
 		register,
 		handleSubmit,
@@ -29,10 +33,20 @@ export default () => {
 	});
 
 	const onSubmit = (data) => {
+		dispatch(startLoader());
+
 		dispatch(loginUser(data))
 			.unwrap()
 			.then(() => {
+				dispatch(stopLoader());
 				navigate('/');
+			})
+			.catch(({ error }) => {
+				dispatch(stopLoader());
+				toast.show({
+					children: error.message,
+					color: 'negative',
+				});
 			});
 	};
 	return (
@@ -60,10 +74,10 @@ export default () => {
 			/>
 			<div className="text-center">
 				<XBtn color="primary" type="submit">
-					Ввойти
+					{isLoading ? 'Loading...' : 'Ввойти'}
 				</XBtn>
 				<XBtn text flat to="/auth/signUp">
-					Регистрация
+					{isLoading ? 'Loading...' : 'Регистрация'}
 				</XBtn>
 			</div>
 		</form>

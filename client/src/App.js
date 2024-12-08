@@ -1,10 +1,13 @@
 import { AppProvider } from './app/app-provider';
 import { AppRouter } from './app/app-router';
+import { ToastProvider } from './features/toast';
 
 export function App() {
 	return (
-		<AppProvider>
-			<AppRouter />
-		</AppProvider>
+		<ToastProvider>
+			<AppProvider>
+				<AppRouter />
+			</AppProvider>
+		</ToastProvider>
 	);
 }
