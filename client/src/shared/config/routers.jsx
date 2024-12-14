@@ -1,10 +1,10 @@
 import { Navigate } from 'react-router-dom';
 import { DefaultLayout, MainLayout } from '../../layout';
-import { CategoriesPage } from '../../pages';
+import { CategoriesPage, SourcesPage } from '../../pages';
 
 import { SignIn } from '../../pages/sign-in/sign-in';
 import { SignUp } from '../../pages/sign-up/sign-up';
-
+import { SourcePage } from '../../pages/source/source-page';
 export const routes = () => [
 	{
 		path: '/',
@@ -17,10 +17,6 @@ export const routes = () => [
 						<h2 className="text-2xl">Main</h2>
 					</div>
 				),
-			},
-			{
-				path: 'categories',
-				element: <CategoriesPage />,
 			},
 			{
 				path: 'auth',
@@ -48,6 +44,19 @@ export const routes = () => [
 					},
 				],
 			},
+			{
+				path: 'categories',
+				element: <CategoriesPage />,
+			},
+			{
+				path: 'sources',
+				element: <SourcesPage />,
+			},
+			{
+				path: 'source',
+				element: <SourcePage />,
+			},
+
 			{
 				path: '404',
 				element: (

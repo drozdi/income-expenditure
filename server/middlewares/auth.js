@@ -1,4 +1,4 @@
-const tokenService = require('../services/token');
+const tokenService = require('../services/token.service');
 
 function auth(req, res, next) {
 	if (req.method === 'OPTIONS') {
@@ -10,9 +10,7 @@ function auth(req, res, next) {
 		if (!token) {
 			return res.status(401).json({ message: 'Unauthorized' });
 		}
-
 		const data = tokenService.validateAccess(token);
-
 		req.user = data;
 
 		next();

@@ -2,15 +2,17 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const { check, validationResult } = require('express-validator');
 const User = require('../models/User');
-const tokenService = require('../services/token');
+const tokenService = require('../services/token.service.js');
 const router = express.Router({ mergeParams: true });
 
-// /api/auth/signUp
-// 1. get data from req (email, password ...)
-// 2. check if users already exists
-// 3. hash password
-// 4. create user
-// 5. generate tokens
+/**
+ * /api/auth/signUp
+ * 1. get data from req (email, password ...)
+ * 2. check if users already exists
+ * 3. hash password
+ * 4. create user
+ * 5. generate tokens
+ */
 router.post('/signUp', [
 	check('email', 'Некорректный email').isEmail(),
 	check('password', 'Минимальная длина пароля 8 символов').isLength({ min: 8 }),
@@ -58,12 +60,16 @@ router.post('/signUp', [
 		}
 	},
 ]);
+/**
+ * /api/auth/signIn
+ * 1. get data from req (email, password)
+ * 2. validate data
+ * 3. find user
+ * 4. compare hashed password
+ * 5. generate token
+ * 6. return data
+ */
 
-// 1. validate
-// 2. find user
-// 3. compare hashed password
-// 4. generate token
-// 5. return data
 router.post('/signIn', [
 	check('email', 'Email некорректный').normalizeEmail().isEmail(),
 	check('password', 'Пароль не может быть пустым').exists(),
@@ -119,6 +125,9 @@ function isTokenInvalid(data, dbToken) {
 	return !data || !dbToken || data._id !== dbToken?.user?.toString();
 }
 
+/**
+ * /api/auth/token
+ */
 router.post('/token', async (req, res) => {
 	try {
 		const { refresh_token: refreshToken } = req.body;
@@ -129,7 +138,7 @@ router.post('/token', async (req, res) => {
 			return res.status(401).json({ message: 'Unauthorized' });
 		}
 
-		const tokens = await tokenService.generate({
+		const tokens = tokenService.generate({
 			_id: data._id,
 		});
 		await tokenService.save(data._id, tokens.refreshToken);

@@ -2,6 +2,7 @@
 	"name": "xos",
 	"version": "0.1.0",
 	"private": true,
+	"proxy": "http://localhost:8080",
 	"dependencies": {
 		"@mdi/font": "^7.4.47",
 		"@reduxjs/toolkit": "^2.4.0",
@@ -29,6 +30,9 @@
 		"build": "react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject"
+	},
+	"imports": {
+		"#*": "./src/*"
 	},
 	"eslintConfig": {
 		"extends": [

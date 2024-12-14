@@ -17,6 +17,12 @@ const UserSchema = mongoose.Schema(
 			type: String,
 			required: true,
 		},
+		sources: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Source',
+			},
+		],
 	},
 	{ timestamps: true },
 );

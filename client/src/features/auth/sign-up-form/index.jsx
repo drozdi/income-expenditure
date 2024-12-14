@@ -69,7 +69,7 @@ export default () => {
 	return (
 		<form className="flex flex-col gap-2" onSubmit={handleSubmit(onSubmit)}>
 			<XInput
-				label="Име"
+				label="Имя"
 				placeholder="Ваше имя"
 				name="username"
 				field

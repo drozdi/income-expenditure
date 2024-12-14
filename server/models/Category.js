@@ -2,11 +2,12 @@ const mongoose = require('mongoose');
 
 const CategorySchema = mongoose.Schema(
 	{
-		name: {
+		source: { type: mongoose.Schema.Types.ObjectId, ref: 'Source' },
+		label: {
 			type: String,
 			required: true,
 		},
-		owner: {
+		operation: {
 			type: String,
 			required: true,
 		},
