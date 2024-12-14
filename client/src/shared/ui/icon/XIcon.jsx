@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import PropTypes from 'prop-types';
 import { createElement as h } from 'react';
 export function XIcon({ children, className, name, color, tag = 'i', ...props }) {
 	name ||= children;
@@ -18,3 +19,11 @@ export function XIcon({ children, className, name, color, tag = 'i', ...props })
 		'',
 	);
 }
+
+XIcon.propTypes = {
+	children: PropTypes.string,
+	className: PropTypes.string,
+	name: PropTypes.string,
+	color: PropTypes.string,
+	tag: PropTypes.string,
+};

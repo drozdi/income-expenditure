@@ -1,0 +1,243 @@
+.x-btn {
+	@apply relative inline-flex items-center justify-center select-none cursor-pointer rounded px-6 py-2 text-base text-center font-normal uppercase box-border transition duration-200 ease-in-out border-current border-0 focus:outline-none focus-visible:outline-none disabled:!pointer-events-none disabled:!shadow-none disabled:!opacity-50 disabled:!cursor-not-allowed;
+	@apply shadow hover:shadow-xl focus:shadow-lg active:shadow-md !shadow-black/50;
+	@apply active:scale-[0.97];
+}
+
+.x-btn-outline,
+.x-btn-underlay {
+	@apply absolute top-0 left-0 w-full h-full rounded-inherit pointer-events-none transition duration-200 ease-in-out;
+}
+.x-btn-outline {
+	@apply hidden bg-transparent border border-inherit opacity-80;
+}
+.x-btn-underlay {
+	@apply bg-current opacity-0;
+}
+
+.x-btn:hover .x-btn-underlay {
+	@apply opacity-15;
+}
+.x-btn:focus .x-btn-underlay {
+	@apply opacity-20;
+}
+.x-btn:active .x-btn-underlay {
+	@apply opacity-25;
+}
+
+.x-btn--tonal .x-btn-underlay {
+	@apply opacity-25;
+}
+.x-btn--tonal:hover .x-btn-underlay,
+.x-btn--plain:hover .x-btn-underlay {
+	@apply opacity-35;
+}
+.x-btn--tonal:focus .x-btn-underlay,
+.x-btn--plain:focus .x-btn-underlay {
+	@apply opacity-40;
+}
+.x-btn--tonal:active .x-btn-underlay,
+.x-btn--plain:active .x-btn-underlay {
+	@apply opacity-45;
+}
+
+.x-btn--outline,
+.x-btn--tonal,
+.x-btn--plain,
+.x-btn--text,
+.x-btn--link {
+	@apply bg-transparent !important;
+}
+.x-btn--flat {
+	@apply shadow-none !important;
+}
+
+.x-btn--outline {
+	@apply border-current;
+}
+.x-btn--outline .x-btn-outline {
+	@apply block border;
+}
+.x-btn--outline:hover .x-btn-outline {
+	@apply opacity-100;
+}
+
+.x-btn--text,
+.x-btn--plain {
+	.x-btn-content {
+		@apply opacity-80;
+	}
+}
+
+.x-btn--text,
+.x-btn--plain {
+	&:hover,
+	&.x-btn--active {
+		.x-btn-content {
+			@apply opacity-100;
+		}
+	}
+}
+
+.x-btn--active .x-btn-underlay {
+	@apply opacity-25 !important;
+}
+
+.x-btn--tonal,
+.x-btn--plain {
+	&.x-btn--active .x-btn-underlay {
+		@apply opacity-45 !important;
+	}
+}
+
+.x-btn--active {
+	@apply shadow-md shadow-black/50 !important;
+}
+
+.x-btn--text .x-btn-underlay,
+.x-btn--outline:not(.x-btn--tonal, .x-btn--plain) .x-btn-underlay {
+	@apply opacity-0 !important;
+}
+
+.x-btn--xs {
+	@apply rounded px-2 py-1 text-xs;
+}
+.x-btn--sm {
+	@apply rounded px-4 py-1 text-sm;
+}
+.x-btn--lg {
+	@apply rounded px-7 py-3 text-lg;
+}
+.x-btn--icon {
+	@apply px-2;
+}
+.x-btn--icon.x-btn--xs {
+	@apply px-1;
+}
+.x-btn--icon.x-btn--sm {
+	@apply px-1;
+}
+.x-btn--icon.x-btn--lg {
+	@apply px-3;
+}
+.x-btn--block {
+	@apply block w-full;
+}
+.x-btn--rounded {
+	@apply rounded-full;
+}
+.x-btn--square {
+	@apply rounded-none;
+}
+.x-btn--round {
+	@apply p-0 rounded-[50%] min-w-8 min-h-8;
+}
+
+.x-btn:where(
+		.x-btn--primary,
+		.x-btn--secondary,
+		.x-btn--accent,
+		.x-btn--positive,
+		.x-btn--negative,
+		.x-btn--info,
+		.x-btn--warning,
+		.x-btn--dimmed
+	) {
+	@apply text-white;
+}
+
+.x-btn--primary {
+	@apply bg-primary;
+}
+.x-btn--primary:where(
+		.x-btn--tonal,
+		.x-btn--outline,
+		.x-btn--text,
+		.x-btn--plain,
+		.x-btn--link
+	) {
+	@apply text-primary;
+}
+.x-btn--secondary {
+	@apply bg-secondary;
+}
+.x-btn--secondary:where(
+		.x-btn--tonal,
+		.x-btn--outline,
+		.x-btn--text,
+		.x-btn--plain,
+		.x-btn--link
+	) {
+	@apply text-secondary;
+}
+.x-btn--accent {
+	@apply bg-accent;
+}
+.x-btn--accent:where(
+		.x-btn--tonal,
+		.x-btn--outline,
+		.x-btn--text,
+		.x-btn--plain,
+		.x-btn--link
+	) {
+	@apply text-accent;
+}
+.x-btn--positive {
+	@apply bg-positive;
+}
+.x-btn--positive:where(
+		.x-btn--tonal,
+		.x-btn--outline,
+		.x-btn--text,
+		.x-btn--plain,
+		.x-btn--link
+	) {
+	@apply text-positive;
+}
+.x-btn--negative {
+	@apply bg-negative;
+}
+.x-btn--negative:where(
+		.x-btn--tonal,
+		.x-btn--outline,
+		.x-btn--text,
+		.x-btn--plain,
+		.x-btn--link
+	) {
+	@apply text-negative;
+}
+.x-btn--info {
+	@apply bg-info;
+}
+.x-btn--info:where(
+		.x-btn--tonal,
+		.x-btn--outline,
+		.x-btn--text,
+		.x-btn--plain,
+		.x-btn--link
+	) {
+	@apply text-info;
+}
+.x-btn--warning {
+	@apply bg-warning;
+}
+.x-btn--warning:where(
+		.x-btn--tonal,
+		.x-btn--outline,
+		.x-btn--text,
+		.x-btn--plain,
+		.x-btn--link
+	) {
+	@apply text-warning;
+}
+
+.x-btn--link {
+	@apply normal-case hover:underline;
+}
+
+.x-btn--dimmed {
+	@apply bg-dimmed !important;
+}
+.x-btn--dimmed .x-btn-outline {
+	@apply border-separator;
+}

@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { forwardRef, memo, useImperativeHandle, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { XMessages } from '../messages';
-import './style.scss';
+import './style.css';
 import { XToastContext } from './XToastContext';
 
 export const XToast = memo(

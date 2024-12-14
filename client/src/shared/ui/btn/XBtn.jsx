@@ -5,13 +5,13 @@ import { Link } from 'react-router-dom';
 import { useBtn } from '../../hooks/useBtn';
 import { XIcon } from '../icon';
 import { useXBtnGroupContext, XBtnGroup } from './Group';
-import './style.scss';
+import './style.css';
 
 const XBtnRoot = forwardRef(function XBtn(params = {}, ref) {
 	const props = useXBtnGroupContext(params);
 	const { children, className, active, icon, iconRight, color, size } = props;
 
-	const { isSelected, attrs, TagProp, isLink } = useBtn({ ...props, ref });
+	const { isSelected, isLink, attrs, TagProp } = useBtn({ ...props, ref });
 
 	const isIcon = useMemo(
 		() =>
@@ -27,7 +27,7 @@ const XBtnRoot = forwardRef(function XBtn(params = {}, ref) {
 			className={classNames(
 				'x-btn',
 				{
-					'x-btn--flat': props.flat || props.link,
+					'x-btn--flat': props.flat || props.link || isLink,
 					'x-btn--text': props.text,
 					'x-btn--tonal': props.tonal,
 					'x-btn--plain': props.plain,
@@ -46,11 +46,13 @@ const XBtnRoot = forwardRef(function XBtn(params = {}, ref) {
 				className,
 			)}
 		>
+			<div className="x-btn-underlay"></div>
 			<div className="x-btn-outline"></div>
-			<div className="x-btn-backdor"></div>
-			{icon && <XIcon className={!isIcon && '-ml-2 mr-2'}>{icon}</XIcon>}
+			{icon && <XIcon className={!isIcon ? '-ml-2 mr-2' : ''}>{icon}</XIcon>}
 			{children && <span className="x-btn-content">{children}</span>}
-			{iconRight && <XIcon className={!isIcon && 'ml-2 -mr-2'}>{iconRight}</XIcon>}
+			{iconRight && (
+				<XIcon className={!isIcon ? 'ml-2 -mr-2' : ''}>{iconRight}</XIcon>
+			)}
 		</TagProp>
 	);
 });

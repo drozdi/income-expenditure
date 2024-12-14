@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { memo, useMemo } from 'react';
-import './style.scss';
+import './style.css';
 export function XProgressBarRoot({
 	children,
 	className,

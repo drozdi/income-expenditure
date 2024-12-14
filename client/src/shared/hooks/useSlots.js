@@ -6,7 +6,7 @@ import {
 	useMemo,
 } from 'react';
 
-import { isString } from '../shared/utils/is';
+import { isString } from '../utils/is';
 
 export function useSlots(children) {
 	const slots = useMemo(() => {

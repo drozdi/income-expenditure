@@ -6,7 +6,7 @@ import { XBtn } from '../btn';
 import { XIcon } from '../icon';
 import { useXMessagesContext } from '../messages/XMessagesContext';
 import { useXToastContext } from '../toast/XToastContext';
-import './style.scss';
+import './style.css';
 
 export const XMessage = memo(
 	forwardRef(

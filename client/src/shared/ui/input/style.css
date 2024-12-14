@@ -68,7 +68,7 @@
 .x-input-underlay,
 .x-input-underlined,
 .x-input-outline {
-	@apply hidden absolute bottom-0 left-0 w-full rounded-inherit border-inherit contain-layout box-border;
+	@apply hidden absolute bottom-0 left-0 w-full rounded-inherit border-inherit contain-layout box-border -z-10;
 }
 
 .x-input-underlay {
@@ -227,7 +227,7 @@
 	@apply flex-auto w-full min-h-3 relative text-xs/none px-3 py-1 overflow-hidden;
 }
 .x-input-message {
-	@apply transition-position relative -top-full -translate-y-2;
+	@apply transition-position relative -top-full -translate-y-full;
 }
 .x-input-message--hint {
 }

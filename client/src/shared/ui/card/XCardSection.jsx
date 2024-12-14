@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { PropTypes } from 'prop-types';
-import './style.scss';
+import './style.css';
 
 export function XCardSection({ tag = 'div', children, className, horizontal = false }) {
 	const Tag = tag;

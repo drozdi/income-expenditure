@@ -1,6 +1,6 @@
 import classNames from 'classnames';
-import { useMemo } from 'react';
-import './style.scss';
+import PropTypes from 'prop-types';
+import './style.css';
 export function XItemSection({
 	children,
 	className,
@@ -9,11 +9,10 @@ export function XItemSection({
 	noWrap = false,
 	thumbnail = false,
 }) {
-	const main = useMemo(() => !side, [side]);
 	return (
 		<div
 			className={classNames('x-item__section', className, {
-				'x-item__section--main': main,
+				'x-item__section--main': !side,
 				'x-item__section--side': side,
 				'x-item__section--top': top,
 				'x-item__section--nowrap': noWrap,
@@ -24,3 +23,12 @@ export function XItemSection({
 		</div>
 	);
 }
+
+XItemSection.propTypes = {
+	children: PropTypes.node,
+	className: PropTypes.string,
+	top: PropTypes.bool,
+	side: PropTypes.bool,
+	noWrap: PropTypes.bool,
+	thumbnail: PropTypes.bool,
+};

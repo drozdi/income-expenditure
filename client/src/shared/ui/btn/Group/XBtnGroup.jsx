@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { useCallback, useEffect, useState } from 'react';
-import './XBtnGroup.scss';
+import './XBtnGroup.css';
 import { XBtnGroupContext } from './XBtnGroupContext';
 
 export function XBtnGroup(params = {}) {

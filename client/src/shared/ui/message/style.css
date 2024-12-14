@@ -48,12 +48,26 @@
 	@apply border-r-4;
 }
 
-$colors: primary, secondary, accent, positive, negative, info, warning, surface, dark;
-
-@each $color in $colors {
-	.x-message--#{$color} {
-		@apply border-#{$color} text-#{$color};
-	}
+.x-message--primary {
+	@apply border-primary text-primary;
+}
+.x-message--secondary {
+	@apply border-secondary text-secondary;
+}
+.x-message--accent {
+	@apply border-accent text-accent;
+}
+.x-message--positive {
+	@apply border-positive text-positive;
+}
+.x-message--negative {
+	@apply border-negative text-negative;
+}
+.x-message--info {
+	@apply border-info text-info;
+}
+.x-message--warning {
+	@apply border-warning text-warning;
 }
 
 .x-message:where(
@@ -63,9 +77,7 @@ $colors: primary, secondary, accent, positive, negative, info, warning, surface,
 		.x-message--positive,
 		.x-message--negative,
 		.x-message--info,
-		.x-message--warning,
-		.x-message--surface,
-		.x-message--dark
+		.x-message--warning
 	)
 	.x-message__backdor {
 	@apply block;

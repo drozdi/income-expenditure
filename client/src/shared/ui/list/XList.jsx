@@ -1,6 +1,7 @@
 import classNames from 'classnames';
-import { createElement as h, useMemo } from 'react';
-import './style.scss';
+import PropTypes from 'prop-types';
+import { createElement as h } from 'react';
+import './style.css';
 
 const roleAttrExceptions = ['ul', 'ol'];
 export function XList({
@@ -12,10 +13,7 @@ export function XList({
 	separator = false,
 	bordered = false,
 }) {
-	const aRole = useMemo(
-		() => (roleAttrExceptions.includes(tag) ? null : (role ?? 'list')),
-		[tag],
-	);
+	const attrRole = roleAttrExceptions.includes(tag) ? null : (role ?? 'list');
 	return h(
 		tag,
 		{
@@ -24,8 +22,18 @@ export function XList({
 				'x-list--separator': separator,
 				'x-list--bordered': bordered,
 			}),
-			role: aRole,
+			role: attrRole,
 		},
 		children,
 	);
 }
+
+XList.propTypes = {
+	children: PropTypes.node,
+	className: PropTypes.string,
+	tag: PropTypes.string,
+	role: PropTypes.string,
+	dense: PropTypes.bool,
+	separator: PropTypes.bool,
+	bordered: PropTypes.bool,
+};

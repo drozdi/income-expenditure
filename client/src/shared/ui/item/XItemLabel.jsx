@@ -1,5 +1,6 @@
 import classNames from 'classnames';
-import './style.scss';
+import PropTypes from 'prop-types';
+import './style.css';
 export function XItemLabel({
 	children,
 	className,
@@ -21,3 +22,12 @@ export function XItemLabel({
 		</div>
 	);
 }
+
+XItemLabel.propTypes = {
+	children: PropTypes.node,
+	className: PropTypes.string,
+	overline: PropTypes.bool,
+	caption: PropTypes.bool,
+	header: PropTypes.bool,
+	lines: PropTypes.bool,
+};

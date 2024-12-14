@@ -26,7 +26,7 @@ export const useInput = (props) => {
 	const formControlContext = null;
 
 	const [value, setValue] = useState(initialValue);
-	const [dirty, setDirty] = useState(false);
+	const [dirty, setDirty] = useState(!lazyRules);
 	const [focus, setFocus] = useState(false);
 	const [errors, setErrors] = useState(!lazyRules ? validation(value, rules) : []);
 
