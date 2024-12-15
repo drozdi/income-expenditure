@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const TransactionSchema = mongoose.Schema(
 	{
-		source: { type: mongoose.Schema.Types.ObjectId, ref: 'Source' },
+		account: { type: mongoose.Schema.Types.ObjectId, ref: 'Account' },
 		operation: {
 			type: String,
 			required: true,

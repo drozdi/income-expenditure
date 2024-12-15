@@ -3,8 +3,8 @@ import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
+import { getLoading } from '../../entites/accounts/accountsSlice';
 import { startLoader, stopLoader } from '../../entites/loader/loaderSlice';
-import { getLoading } from '../../entites/source/sourceSlice';
 import { XBtn, XInput } from '../../shared/ui';
 import { useToast } from '../toast';
 

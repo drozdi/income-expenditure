@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
+import accountsSlice from '../../entites/accounts/accountsSlice';
 import authReducer from '../../entites/auth/authSlice';
 import loaderReducer from '../../entites/loader/loaderSlice';
-import sourceSlice from '../../entites/source/sourceSlice';
 const rootReducer = {
 	auth: authReducer,
 	loader: loaderReducer,
-	source: sourceSlice,
+	accounts: accountsSlice,
 };
 
 export const createStore = () => {

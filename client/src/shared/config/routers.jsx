@@ -1,10 +1,10 @@
 import { Navigate } from 'react-router-dom';
 import { DefaultLayout, MainLayout } from '../../layout';
-import { CategoriesPage, SourcesPage } from '../../pages';
+import { AccountsPage, CategoriesPage } from '../../pages';
 
+import { AccountPage } from '../../pages/account/account-page';
 import { SignIn } from '../../pages/sign-in/sign-in';
 import { SignUp } from '../../pages/sign-up/sign-up';
-import { SourcePage } from '../../pages/source/source-page';
 export const routes = () => [
 	{
 		path: '/',
@@ -49,12 +49,12 @@ export const routes = () => [
 				element: <CategoriesPage />,
 			},
 			{
-				path: 'sources',
-				element: <SourcesPage />,
+				path: 'accounts',
+				element: <AccountsPage />,
 			},
 			{
-				path: 'source',
-				element: <SourcePage />,
+				path: 'account',
+				element: <AccountPage />,
 			},
 
 			{

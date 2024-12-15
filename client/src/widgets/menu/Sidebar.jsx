@@ -10,7 +10,7 @@ export function Sidebar({ className }) {
 				<XItem to="/categories">
 					<XItemSection>Категории</XItemSection>
 				</XItem>
-				<XItem to="/sources">
+				<XItem to="/accounts">
 					<XItemSection>Счета</XItemSection>
 				</XItem>
 			</XList>

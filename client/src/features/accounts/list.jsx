@@ -1,19 +1,19 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-	fetchSources,
+	fetchAccounts,
+	getAccounts,
 	getLoading,
-	getSources,
-} from '../../../entites/source/sourceSlice';
-import { XItem, XItemLabel, XItemSection, XList } from '../../../shared/ui';
-import { Loader } from '../../loader';
+} from '../../entites/accounts/accountsSlice';
+import { XItem, XItemLabel, XItemSection, XList } from '../../shared/ui';
+import { Loader } from '../loader';
 export default () => {
 	const dispatch = useDispatch();
-	const list = useSelector(getSources);
+	const list = useSelector(getAccounts);
 	const isLoading = useSelector(getLoading);
 	useEffect(() => {
-		dispatch(fetchSources());
-	}, []);
+		dispatch(fetchAccounts());
+	}, [dispatch]);
 
 	if (isLoading) {
 		return <Loader />;

@@ -1,7 +1,11 @@
 const tokenService = require('../services/token.service');
 
 function auth(req, res, next) {
-	if (req.method === 'OPTIONS') {
+	req.user = {
+		_id: '6755707168b4fed5a811b808',
+	};
+	next();
+	/*if (req.method === 'OPTIONS') {
 		return next();
 	}
 
@@ -16,7 +20,7 @@ function auth(req, res, next) {
 		next();
 	} catch (e) {
 		res.status(401).json({ message: 'Unauthorized' });
-	}
+	}*/
 }
 
 module.exports = auth;

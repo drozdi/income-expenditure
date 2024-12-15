@@ -1,15 +1,15 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 
-const SourceSchema = mongoose.Schema(
+const AccountSchema = mongoose.Schema(
 	{
 		label: { type: String, required: true },
-		total: { type: Number, required: true, default: 0 },
+		balance: { type: Number, required: true, default: 0 },
 		owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 	},
 	{ timestamps: true },
 );
 
-const Source = mongoose.model('Source', SourceSchema);
+const Account = mongoose.model('Account', AccountSchema);
 
-module.exports = Source;
+module.exports = Account;

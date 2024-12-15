@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const CategorySchema = mongoose.Schema(
 	{
-		source: { type: mongoose.Schema.Types.ObjectId, ref: 'Source' },
+		account: { type: mongoose.Schema.Types.ObjectId, ref: 'Account' },
 		label: {
 			type: String,
 			required: true,

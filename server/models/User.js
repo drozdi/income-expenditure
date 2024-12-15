@@ -17,10 +17,10 @@ const UserSchema = mongoose.Schema(
 			type: String,
 			required: true,
 		},
-		sources: [
+		accounts: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
-				ref: 'Source',
+				ref: 'Account',
 			},
 		],
 	},

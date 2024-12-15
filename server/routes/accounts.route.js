@@ -1,16 +1,16 @@
 const express = require('express');
 const { check, validationResult } = require('express-validator');
 const User = require('../models/User.js');
-const Source = require('../models/Source.js');
+const Account = require('../models/Account.js');
 const router = express.Router({ mergeParams: true });
-const auth = require('../middlewares/auth');
+const auth = require('../middlewares/auth.js');
 const {
-	addSource,
-	updateSource,
-	deleteSource,
-	getSources,
-	getSource,
-} = require('../controllers/source.controller');
+	addAccount,
+	updateAccount,
+	deleteAccount,
+	getAccounts,
+	getAccount,
+} = require('../controllers/account.controller');
 router.use(auth);
 
 router.get('/', async (req, res) => {
