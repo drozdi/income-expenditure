@@ -130,7 +130,7 @@ export const sourceSlice = createSlice({
 });
 
 const { actions, reducer } = sourceSlice;
-export const { reset } = actions;
+export const { reset: resetAccounts } = actions;
 
 export const getAccounts = (state) => {
 	return state.accounts.entities;

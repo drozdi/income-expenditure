@@ -1,19 +1,25 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { fetchAccounts } from '../entites/accounts/accountsSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAccounts, resetAccounts } from '../entites/accounts/accountsSlice';
+import { getCurrentUserId } from '../entites/auth/authSlice';
+
 import localStorageService from '../shared/services/localStorage.service';
 import { XSpinner } from '../shared/ui';
 
 export const AppLoader = ({ children }) => {
-	const [isLoading, setLoading] = useState(true);
+	const [isLoading, setLoading] = useState(false);
 	const dispatch = useDispatch();
-	const userId = localStorageService.getUserId();
+	const _userId = localStorageService.getUserId();
+	const userId = useSelector(getCurrentUserId);
 	useEffect(() => {
-		setLoading(true);
-		dispatch(fetchAccounts())
-			.unwrap()
-			.then(() => setLoading(false))
-			.catch(() => setLoading(false));
+		dispatch(resetAccounts());
+		if (userId) {
+			setLoading(true);
+			dispatch(fetchAccounts())
+				.unwrap()
+				.then(() => setLoading(false))
+				.catch(() => setLoading(false));
+		}
 	}, [userId]);
 	return (
 		<>

@@ -3,9 +3,9 @@ import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-import { getIsLoading, registerUser } from '../../../entites/auth/authSlice';
-import { XBtn, XInput } from '../../../shared/ui';
-import { useToast } from '../../toast';
+import { getIsLoading, registerUser } from '../../entites/auth/authSlice';
+import { XBtn, XInput } from '../../shared/ui';
+import { useToast } from '../toast';
 
 const regFormSchema = yup.object().shape({
 	username: yup

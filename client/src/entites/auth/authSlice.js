@@ -66,7 +66,7 @@ export const authSlice = createSlice({
 	},
 });
 
-const { actions, reducer } = authSlice;
+const { reducer } = authSlice;
 
 export const registerUser = createAsyncThunk(
 	'auth/register',
@@ -106,7 +106,7 @@ export const logoutUser = createAsyncThunk(
 
 export const getIsAuth = (state) => state.auth.isAuth;
 export const getIsLoading = (state) => state.auth.isLoading;
-export const getCurrentUserId = (state) => state.auth.auth.userId;
+export const getCurrentUserId = (state) => state.auth.auth?.userId;
 export const getAuthError = (state) => state.auth.error;
 
 export default reducer;

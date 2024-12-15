@@ -4,7 +4,7 @@ function auth(req, res, next) {
 	req.user = {
 		_id: '6755707168b4fed5a811b808',
 	};
-	next();
+	next(); //*/
 	/*if (req.method === 'OPTIONS') {
 		return next();
 	}
@@ -20,7 +20,7 @@ function auth(req, res, next) {
 		next();
 	} catch (e) {
 		res.status(401).json({ message: 'Unauthorized' });
-	}*/
+	} //*/
 }
 
 module.exports = auth;
