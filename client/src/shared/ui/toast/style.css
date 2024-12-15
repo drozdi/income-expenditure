@@ -33,5 +33,5 @@
 	@apply left-auto top-auto right-4 bottom-4;
 }
 .x-toast--right-center {
-	@apply left-auto top-auto right-auto bottom-auto;
+	@apply left-auto top-auto right-4 bottom-1/2 -translate-y-1/2;
 }

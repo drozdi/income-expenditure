@@ -1,7 +1,7 @@
 const express = require('express');
 const { check, validationResult } = require('express-validator');
 const User = require('../models/User.js');
-const Account = require('../models/Account.js');
+const Transaction = require('../models/Transaction.js');
 const router = express.Router({ mergeParams: true });
 const auth = require('../middlewares/auth.js');
 const {
@@ -14,47 +14,60 @@ const {
 router.use(auth);
 
 router.get('/', async (req, res) => {
-	const user = await User.find({
-		_id: '6755707168b4fed5a811b808',
-	});
-	console.log(user);
-	//console.log(req.user._id);
+	try {
+		const user = await User.findById(req.user._id).populate({
+			path: 'accounts',
+			populate: {
+				path: 'owner',
+			},
+		});
 
-	//const { } = await getSources();
+		user.accounts.forEach((account) => {
+			account.owner.password = null;
+			account.owner.accounts = null;
+		});
 
-	res.send({ data: [] });
-});
-
-router.get('/:id', async (req, res) => {
-	//const post = await getPost(req.params.id);
-
-	res.send({ data: {} });
+		res.send({ data: user.accounts });
+	} catch (error) {
+		res.status(500).send({
+			message: 'На сервере произошла ошибка. Попробуйте позже',
+		});
+	}
 });
 
 router.post('/', async (req, res) => {
-	/*const newPost = await addPost({
-		title: req.body.title,
-		content: req.body.content,
-		image: req.body.imageUrl,
-	});*/
+	const newAccount = await addAccount({
+		...req.body,
+		owner: req.user._id,
+	});
+	await User.findByIdAndUpdate(req.user._id, { $push: { accounts: newAccount } });
+	res.send({ data: newAccount });
+});
 
-	res.send({ data: {} });
+router.get('/:id', async (req, res) => {
+	const account = await getAccount(req.params.id);
+
+	res.send({ data: account });
 });
 
 router.patch('/:id', async (req, res) => {
-	/*const updatedPost = await editPost(req.params.id, {
-		title: req.body.title,
-		content: req.body.content,
-		image: req.body.imageUrl,
-	});*/
+	const updatedAccount = await updateAccount(req.params.id, req.body);
 
-	res.send({ data: {} });
+	res.send({ data: updatedAccount });
 });
 
 router.delete('/:id', async (req, res) => {
-	/*await deletePost(req.params.id);*/
-
-	res.send({ error: null });
+	const transactions = await Transaction.find({
+		account: req.params.id,
+	}).limit(1);
+	if (transactions.length > 0) {
+		res.status(400).send({
+			error: 'Нельзя удалить пока есть транзакции',
+		});
+	} else {
+		await deleteAccount(req.params.id);
+		res.send({ error: null });
+	}
 });
 
 module.exports = router;

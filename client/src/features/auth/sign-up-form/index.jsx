@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { getIsLoading, registerUser } from '../../../entites/auth/authSlice';
-import { startLoader, stopLoader } from '../../../entites/loader/loaderSlice';
 import { XBtn, XInput } from '../../../shared/ui';
 import { useToast } from '../../toast';
 
@@ -51,15 +50,12 @@ export default () => {
 	});
 
 	const onSubmit = async (data) => {
-		dispatch(startLoader());
 		dispatch(registerUser(data))
 			.unwrap()
 			.then(() => {
-				dispatch(stopLoader());
 				navigate('/');
 			})
 			.catch(({ error }) => {
-				dispatch(stopLoader());
 				toast.show({
 					children: error.message,
 					color: 'negative',

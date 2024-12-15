@@ -3,11 +3,6 @@ import accountsService from '../../shared/services/accounts.service';
 
 const initialState = {
 	entities: [],
-	current: {
-		label: '',
-		balance: 0,
-		owner: {},
-	},
 	isLoading: false,
 	error: null,
 };
@@ -16,21 +11,59 @@ export const fetchAccounts = createAsyncThunk(
 	'accounts/fetchAccounts',
 	async (_, { rejectWithValue }) => {
 		try {
-			const { data } = await accountsService.getSources();
+			const { data } = await accountsService.getAccounts();
 			return data;
 		} catch (error) {
 			return rejectWithValue(error.response.data);
 		}
 	},
 );
-export const addAccount = createAsyncThunk('accounts/addAccount', async (account) => {
-	try {
-		const { data } = await accountsService.addAccount(account);
-		return data;
-	} catch (error) {
-		return rejectWithValue(error.response.data);
-	}
-});
+export const addAccount = createAsyncThunk(
+	'accounts/addAccount',
+	async (account, { rejectWithValue }) => {
+		try {
+			const { data } = await accountsService.addAccount(account);
+			return data;
+		} catch (error) {
+			return rejectWithValue(error.response.data);
+		}
+	},
+);
+export const updateAccount = createAsyncThunk(
+	'accounts/updateAccount',
+	async (account, { rejectWithValue }) => {
+		try {
+			console.log(account._id, account);
+			const { data } = await accountsService.updateAccount(account._id, account);
+			return data;
+		} catch (error) {
+			return rejectWithValue(error.response.data);
+		}
+	},
+);
+
+export const deleteAccount = createAsyncThunk(
+	'accounts/deleteAccount',
+	async (id, { rejectWithValue }) => {
+		try {
+			await accountsService.deleteAccount(id);
+			return id;
+		} catch (error) {
+			return rejectWithValue(error.response.data);
+		}
+	},
+);
+
+export const saveAccount = createAsyncThunk(
+	'accounts/saveAccount',
+	async (account, { dispatch }) => {
+		if (account._id) {
+			return await dispatch(updateAccount(account));
+		} else {
+			return await dispatch(addAccount(account));
+		}
+	},
+);
 
 export const sourceSlice = createSlice({
 	name: 'accounts',
@@ -38,47 +71,78 @@ export const sourceSlice = createSlice({
 	reducers: {
 		reset: (state) => {
 			state.entities = [];
-			state.current = {};
 			state.isLoading = false;
 			state.error = null;
 		},
 	},
 	extraReducers: (builder) => {
-		builder.addCase(fetchAccounts.pending, (state, actions) => {
+		builder.addCase(fetchAccounts.pending, (state, action) => {
 			state.isLoading = true;
 		});
-		builder.addCase(fetchAccounts.fulfilled, (state, actions) => {
-			state.entities = actions.payload;
+		builder.addCase(fetchAccounts.fulfilled, (state, action) => {
+			state.entities = action.payload;
 			state.isLoading = false;
 		});
-		builder.addCase(fetchAccounts.rejected, (state, actions) => {
-			state.error = actions.payload;
+		builder.addCase(fetchAccounts.rejected, (state, action) => {
+			state.error = action.payload;
 			state.isLoading = false;
 		});
 
-		builder.addCase(addAccount.pending, (state, actions) => {
+		builder.addCase(addAccount.pending, (state, action) => {
 			state.isLoading = true;
 		});
 		builder.addCase(addAccount.fulfilled, (state, action) => {
-			state.current = action.payload;
 			state.entities.push(action.payload);
 			state.isLoading = false;
 		});
 		builder.addCase(addAccount.rejected, (state, action) => {
-			state.error = actions.payload;
+			state.error = action.payload;
+			state.isLoading = false;
+		});
+
+		builder.addCase(updateAccount.pending, (state, action) => {
+			state.isLoading = true;
+		});
+		builder.addCase(updateAccount.fulfilled, (state, action) => {
+			const index = state.entities.findIndex((t) => t._id === action.payload.id);
+			if (index !== -1) {
+				state.entities[index] = action.payload;
+			}
+			state.isLoading = false;
+		});
+		builder.addCase(updateAccount.rejected, (state, action) => {
+			state.error = action.payload;
+			state.isLoading = false;
+		});
+
+		builder.addCase(deleteAccount.pending, (state, action) => {
+			state.isLoading = true;
+		});
+		builder.addCase(deleteAccount.fulfilled, (state, action) => {
+			state.entities = state.entities.filter((t) => t._id !== action.payload);
+			state.isLoading = false;
+		});
+		builder.addCase(deleteAccount.rejected, (state, action) => {
+			state.error = action.payload;
 			state.isLoading = false;
 		});
 	},
 });
 
 const { actions, reducer } = sourceSlice;
-export const {} = actions;
+export const { reset } = actions;
 
 export const getAccounts = (state) => {
 	return state.accounts.entities;
 };
+export const getAccount = (id) => (state) => {
+	return state.accounts.entities.find((t) => t._id === id);
+};
 export const getLoading = (state) => {
 	return state.accounts.isLoading;
+};
+export const getError = (state) => {
+	return state.accounts.error;
 };
 
 export default reducer;

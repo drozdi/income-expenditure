@@ -11,7 +11,7 @@ export function ToastProvider({ children }) {
 				closable
 				square
 				life={6000}
-				position="center-top"
+				position="right-center"
 				ref={toast}
 			/>
 			<ToastContext.Provider value={toast}>{children}</ToastContext.Provider>

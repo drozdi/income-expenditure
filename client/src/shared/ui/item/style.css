@@ -25,7 +25,7 @@
 }
 
 .x-item__backdor {
-	@apply absolute right-0 top-0 w-full h-full contain-layout -z-10 transition ease-in-out duration-300;
+	@apply absolute right-0 top-0 w-full h-full contain-layout transition ease-in-out duration-300;
 }
 .x-item__backdor {
 	@apply bg-current opacity-0;

@@ -1,12 +1,13 @@
 const Account = require('../models/Account');
+const Transaction = require('../models/Transaction');
 
 async function addAccount(account) {
 	const newAccount = await Account.create(account);
 
-	await newAccount.populate({
-		path: 'accounts',
-		populate: 'owner',
-	});
+	await newAccount.populate('owner');
+
+	newAccount.owner.password = null;
+	newAccount.owner.accounts = null;
 
 	return newAccount;
 }
@@ -17,29 +18,27 @@ async function updateAccount(id, account) {
 		returnDocument: 'after',
 	});
 
-	await newAccount.populate({
-		path: 'accounts',
-		populate: 'owner',
-	});
+	await newAccount.populate('owner');
+
+	newAccount.owner.password = null;
+	newAccount.owner.accounts = null;
 
 	return newAccount;
 }
 
 // delete
-function deleteAccount(id) {
-	return Account.deleteOne({ _id: id });
+async function deleteAccount(id) {
+	return await Account.deleteOne({ _id: id });
 }
 
 // get list with search and pagination
 async function getAccounts(filter) {
 	const data = await Account.find(filter);
-	data.forEach(
-		async (account) =>
-			await account.populate({
-				path: 'accounts',
-				populate: 'owner',
-			}),
-	);
+	data.forEach(async (account) => {
+		await account.populate('owner');
+		account.owner.password = null;
+		account.owner.accounts = null;
+	});
 	return data;
 }
 
