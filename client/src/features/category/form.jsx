@@ -3,7 +3,11 @@ import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-import { getLoading, saveAccount } from '../../entites/accounts/accountsSlice';
+import {
+	getCategory,
+	getLoading,
+	saveAccount,
+} from '../../entites/accounts/accountsSlice';
 import { XBtn, XInput } from '../../shared/ui';
 import { useToast } from '../toast';
 
@@ -11,11 +15,17 @@ const categogySchema = yup.object().shape({
 	label: yup.string().required('Заполните название'),
 });
 
-export default ({ accountId, id, category }) => {
+export default ({ accountId, id }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const toast = useToast();
 	const isLoading = useSelector(getLoading);
+	const category = useSelector(getCategory(accountId, id)) ?? {
+		_id: id,
+		account: accountId,
+		label: '',
+		operation: '',
+	};
 
 	console.log(category);
 	const {
