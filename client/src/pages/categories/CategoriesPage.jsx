@@ -1,9 +1,12 @@
+import { useParams } from 'react-router-dom';
 import CategoriesList from '../../features/categories/list';
+import CategoryAddBtn from '../../features/category/add';
 export function CategoriesPage() {
-	//
+	const { accountId } = useParams();
 	return (
-		<div className="relative">
-			<CategoriesList accountId="675ed9c4444bb8cd1b565d2a" />
-		</div>
+		<>
+			<CategoriesList accountId={accountId} />
+			<CategoryAddBtn accountId={accountId} className="float-end" />
+		</>
 	);
 }

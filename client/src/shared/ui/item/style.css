@@ -24,14 +24,14 @@
 	@apply min-h-8 px-2 py-1;
 }
 
-.x-item__backdor {
+.x-item__underlay {
 	@apply absolute right-0 top-0 w-full h-full contain-layout transition ease-in-out duration-300;
 }
-.x-item__backdor {
+.x-item__underlay {
 	@apply bg-current opacity-0;
 }
-.x-item:not(.x-item--disabled):not(:has(input:disabled)):not(:disabled):hover
-	> .x-item__backdor {
+.x-item--hoverable:not(.x-item--disabled):not(:has(input:disabled)):not(:disabled):hover
+	> .x-item__underlay {
 	@apply opacity-15;
 }
 
@@ -61,7 +61,7 @@
 }
 
 .x-item > .x-item__section--thumbnail:first-child,
-.x-item > .x-item__backdor + .x-item__section--thumbnail {
+.x-item > .x-item__underlay + .x-item__section--thumbnail {
 	@apply -ml-4;
 }
 .x-item > .x-item__section--thumbnail:last-of-type {
@@ -76,7 +76,7 @@
 	@apply max-w-full;
 }
 .x-item__label--header {
-	@apply p-4 opacity-65;
+	@apply px-4 opacity-65;
 }
 .x-item__label--overline {
 	@apply text-xs font-medium tracking-widest uppercase opacity-70;

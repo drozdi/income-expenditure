@@ -47,7 +47,17 @@ export const AppRouter = () => {
 				},
 				{
 					path: 'categories',
-					element: <CategoriesPage />,
+					element: <DefaultLayout />,
+					children: [
+						{
+							path: '',
+							element: <CategoriesPage />,
+						},
+						{
+							path: ':accountId',
+							element: <CategoriesPage />,
+						},
+					],
 				},
 				{
 					path: 'accounts',
@@ -58,19 +68,19 @@ export const AppRouter = () => {
 					element: <DefaultLayout />,
 					children: [
 						{
-							path: '',
-							element: <AccountPage />,
-						},
-						{
 							path: ':id',
 							element: <AccountPage />,
 						},
 						{
-							path: ':accountId',
-							element: <CategoryPage />,
+							path: '',
+							element: <AccountPage />,
 						},
 						{
 							path: ':accountId/category/:id',
+							element: <CategoryPage />,
+						},
+						{
+							path: ':accountId/category/',
 							element: <CategoryPage />,
 						},
 					],

@@ -22,6 +22,7 @@ export const XItem = forwardRef(function XItem(
 		role,
 		onClick,
 		LinkComponent = Link,
+		hoverable,
 		to,
 		href,
 		target = '_self',
@@ -39,10 +40,8 @@ export const XItem = forwardRef(function XItem(
 			typeof onClick === 'function',
 		[TagProp, onClick],
 	);
-	const isClickable = useMemo(
-		() => !disabled && isActionable,
-		[disabled, isActionable],
-	);
+	const isClickable = !disabled && isActionable;
+	const isHoverable = isClickable || hoverable;
 	const attrs = useMemo(() => {
 		const attrs = {
 			className: classNames(
@@ -53,6 +52,7 @@ export const XItem = forwardRef(function XItem(
 					'x-item--active': active,
 					'x-item--disabled': disabled,
 					'x-item--clickable': isClickable,
+					'x-item--hoverable': isHoverable,
 					'x-item--vertical': vertical,
 				},
 				active && !disabled ? activeClass : '',
@@ -92,7 +92,7 @@ export const XItem = forwardRef(function XItem(
 	]);
 	return (
 		<TagProp {...attrs}>
-			<span className="x-item__backdor" />
+			<span className="x-item__underlay" />
 			{children}
 		</TagProp>
 	);
@@ -106,6 +106,7 @@ XItem.propTypes = {
 	active: PropTypes.bool,
 	disabled: PropTypes.bool,
 	vertical: PropTypes.bool,
+	hoverable: PropTypes.bool,
 	activeClass: PropTypes.string,
 	tabIndex: PropTypes.number,
 	role: PropTypes.string,

@@ -6,7 +6,7 @@ const tokenService = require('../services/token.service.js');
 const router = express.Router({ mergeParams: true });
 
 router.get('/', async (req, res) => {
-	res.send({ data: ['расход', 'доход', 'перевод'] });
+	res.send({ data: ['расход', 'доход'] });
 });
 
 module.exports = router;

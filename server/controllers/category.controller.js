@@ -6,8 +6,6 @@ async function addCategory(accountId, category) {
 
 	await Account.findByIdAndUpdate(accountId, { $push: { categories: newCategory } });
 
-	await newCategory.populate('account');
-
 	return newCategory;
 }
 
@@ -15,8 +13,6 @@ async function updateCategory(id, category) {
 	const updatedCategory = await Category.findByIdAndUpdate(id, category, {
 		returnDocument: 'after',
 	});
-
-	await updatedCategory.populate('account');
 
 	return updatedCategory;
 }

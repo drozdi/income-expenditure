@@ -1,8 +1,14 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-import { getLoading, saveAccount } from '../../entites/accounts/accountsSlice';
+import {
+	getAccount,
+	getLoading,
+	saveAccount,
+} from '../../entites/accounts/accountsSlice';
+
 import { XBtn, XInput } from '../../shared/ui';
 import { Loader } from '../loader';
 import { useToast } from '../toast';
@@ -12,10 +18,16 @@ const accountSchema = yup.object().shape({
 	balance: yup.number().required('Заполните сумму'),
 });
 
-export default ({ id, account, onSave }) => {
+export default ({ id, onSave }) => {
+	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const toast = useToast();
 	const isLoading = useSelector(getLoading);
+	const account = useSelector(getAccount(id)) ?? {
+		_id: id,
+		label: '',
+		balance: 0.0,
+	};
 	const {
 		register,
 		handleSubmit,
@@ -48,7 +60,8 @@ export default ({ id, account, onSave }) => {
 			});
 	};
 	return (
-		<form className="flex flex-col gap-2" onSubmit={handleSubmit(onSubmit)}>
+		<form className="relative flex flex-col gap-2" onSubmit={handleSubmit(onSubmit)}>
+			<Loader isActive={isLoading} />
 			<XInput
 				label="Название счета"
 				placeholder="Заначка"
@@ -72,12 +85,14 @@ export default ({ id, account, onSave }) => {
 				errorMessage={errors?.balance?.message}
 				{...register('balance', { required: true })}
 			/>
-			<div className="text-center">
-				<XBtn color="primary" type="submit">
+			<div className="flex gap-4 justify-center">
+				<XBtn color="primary" type="submit" disabled={isLoading}>
 					{isLoading ? 'Loading...' : id ? 'Сохранить' : 'Создать'}
 				</XBtn>
+				<XBtn color="secondary" disabled={isLoading} onClick={() => navigate(-1)}>
+					{isLoading ? 'Loading...' : 'Назад'}
+				</XBtn>
 			</div>
-			<Loader isActive={isLoading} />
 		</form>
 	);
 };

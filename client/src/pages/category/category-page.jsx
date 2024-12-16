@@ -14,7 +14,11 @@ export function CategoryPage() {
 
 	return (
 		<>
-			<CategoryForm accountId={accountId} id={id} />
+			<CategoryForm
+				accountId={accountId}
+				id={id}
+				onSaved={() => navigate(`/categories/${accountId}/`)}
+			/>
 			<Loader isActive={isLoading} />
 		</>
 	);

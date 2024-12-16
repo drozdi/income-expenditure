@@ -14,6 +14,14 @@ const {
 	getAccount,
 } = require('../controllers/account.controller');
 
+const {
+	addCategory,
+	updateCategory,
+	deleteCategory,
+	getCategories,
+	getCategory,
+} = require('../controllers/category.controller.js');
+
 router.use(auth);
 
 router.get('/', async (req, res) => {
@@ -71,12 +79,18 @@ router.delete('/:id', async (req, res) => {
 });
 
 router.post('/:accountId/categories/', async (req, res) => {
-	const newAccount = await addAccount({
-		...req.body,
-		owner: req.user._id,
-	});
-	await User.findByIdAndUpdate(req.user._id, { $push: { accounts: newAccount } });
-	res.send({ data: newAccount });
+	const newCategory = await addCategory(req.params.accountId, req.body);
+	res.send({ data: newCategory });
+});
+
+router.patch('/:accountId/categories/:id', async (req, res) => {
+	const newCategory = await updateCategory(req.params.id, req.body);
+	res.send({ data: newCategory });
+});
+
+router.delete('/:accountId/categories/:id', async (req, res) => {
+	await deleteCategory(req.params.id);
+	res.send({ error: null });
 });
 
 module.exports = router;
