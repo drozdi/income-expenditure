@@ -1,1 +1,1 @@
-export * from './CategoryPage';
+export * from './category-page';

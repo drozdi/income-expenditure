@@ -1,32 +1,31 @@
+const Account = require('../models/Account');
 const Category = require('../models/Category');
 
-async function addCategory(category) {
-	const newCategory = await Category.create(category);
+async function addCategory(accountId, category) {
+	const newCategory = await Category.create({ ...category, account: accountId });
 
-	await newCategory.populate({
-		path: 'categories',
-		populate: 'source',
-	});
+	await Account.findByIdAndUpdate(accountId, { $push: { categories: newCategory } });
+
+	await newCategory.populate('account');
 
 	return newCategory;
 }
 
-async function updatedCategory(id, category) {
-	const newCategory = await Category.findByIdAndUpdate(id, category, {
+async function updateCategory(id, category) {
+	const updatedCategory = await Category.findByIdAndUpdate(id, category, {
 		returnDocument: 'after',
 	});
 
-	await newCategory.populate({
-		path: 'categories',
-		populate: 'source',
-	});
+	await updatedCategory.populate('account');
 
-	return newCategory;
+	return updatedCategory;
 }
 
 // todo check operation
 async function deleteCategory(id) {
-	return await Category.deleteOne({ _id: id });
+	const category = await getCategory(id);
+	Account.findByIdAndUpdate(category.account._id, { $pull: { categories: id } });
+	return await category.deleteOne();
 }
 
 async function getCategories(filter = {}) {
@@ -34,16 +33,13 @@ async function getCategories(filter = {}) {
 }
 
 // get item
-function getCategory(id) {
-	return Category.findById(id).populate({
-		path: 'categories',
-		populate: 'source',
-	});
+async function getCategory(id) {
+	return await Category.findById(id).populate('account');
 }
 
 module.exports = {
 	addCategory,
-	updatedCategory,
+	updateCategory,
 	deleteCategory,
 	getCategories,
 	getCategory,

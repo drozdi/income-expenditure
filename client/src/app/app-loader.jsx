@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAccounts, resetAccounts } from '../entites/accounts/accountsSlice';
 import { getCurrentUserId } from '../entites/auth/authSlice';
+import { fetchOperations, resetOperations } from '../entites/operations/operationsSlice';
 
 import localStorageService from '../shared/services/localStorage.service';
 import { XSpinner } from '../shared/ui';
@@ -11,14 +12,15 @@ export const AppLoader = ({ children }) => {
 	const dispatch = useDispatch();
 	const _userId = localStorageService.getUserId();
 	const userId = useSelector(getCurrentUserId);
+	fetchOperations();
 	useEffect(() => {
 		dispatch(resetAccounts());
+		dispatch(resetOperations());
 		if (userId) {
 			setLoading(true);
-			dispatch(fetchAccounts())
-				.unwrap()
-				.then(() => setLoading(false))
-				.catch(() => setLoading(false));
+			Promise.all([dispatch(fetchOperations()), dispatch(fetchAccounts())]).finally(
+				() => setLoading(false),
+			);
 		}
 	}, [userId]);
 	return (

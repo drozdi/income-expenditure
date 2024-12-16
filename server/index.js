@@ -28,7 +28,7 @@ app.use('/api', routes);
 async function start() {
 	try {
 		/// ??????
-		mongoose.connection.once('open', () => {});
+		//mongoose.connection.once('open', () => {});
 		await mongoose.connect(process.env.MONGODB_CONNECTION_STRING);
 
 		console.log(chalk.green(`MongoDB connected.`));

@@ -1,21 +1,23 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { getLoading, saveAccount } from '../../entites/accounts/accountsSlice';
 import { XBtn, XInput } from '../../shared/ui';
-import { Loader } from '../loader';
 import { useToast } from '../toast';
 
-const accountSchema = yup.object().shape({
+const categogySchema = yup.object().shape({
 	label: yup.string().required('Заполните название'),
-	balance: yup.number().required('Заполните сумму'),
 });
 
-export default ({ id, account, onSave }) => {
+export default ({ accountId, id, category }) => {
+	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const toast = useToast();
 	const isLoading = useSelector(getLoading);
+
+	console.log(category);
 	const {
 		register,
 		handleSubmit,
@@ -23,11 +25,12 @@ export default ({ id, account, onSave }) => {
 	} = useForm({
 		mode: 'onChange',
 		defaultValues: {
-			_id: account._id,
-			label: account.label,
-			balance: account.balance,
+			_id: category._id,
+			label: category.label,
+			account: category.account,
+			operation: category.operation,
 		},
-		resolver: yupResolver(accountSchema),
+		resolver: yupResolver(categogySchema),
 	});
 
 	const onSubmit = async (data) => {
@@ -38,7 +41,7 @@ export default ({ id, account, onSave }) => {
 					children: 'Сохранено',
 					color: 'positive',
 				});
-				onSave?.(data);
+				navigate(`/categories/${accountId}/`);
 			})
 			.catch(({ error }) => {
 				toast.show({
@@ -77,7 +80,6 @@ export default ({ id, account, onSave }) => {
 					{isLoading ? 'Loading...' : id ? 'Сохранить' : 'Создать'}
 				</XBtn>
 			</div>
-			<Loader isActive={isLoading} />
 		</form>
 	);
 };

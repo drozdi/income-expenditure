@@ -1,6 +1,6 @@
 import { Navigate, useRoutes } from 'react-router-dom';
 import { DefaultLayout, MainLayout } from '../layout';
-import { AccountPage, AccountsPage, CategoriesPage } from '../pages';
+import { AccountPage, AccountsPage, CategoriesPage, CategoryPage } from '../pages';
 
 import { SignIn } from '../pages/sign-in/sign-in';
 import { SignUp } from '../pages/sign-up/sign-up';
@@ -64,6 +64,14 @@ export const AppRouter = () => {
 						{
 							path: ':id',
 							element: <AccountPage />,
+						},
+						{
+							path: ':accountId',
+							element: <CategoryPage />,
+						},
+						{
+							path: ':accountId/category/:id',
+							element: <CategoryPage />,
 						},
 					],
 				},

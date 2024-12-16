@@ -18,7 +18,8 @@ const getTheme = () => {
 		localStorage.setItem(StorageKey, 'light');
 		theme = 'light';
 	}
-	return theme;
+	return 'light';
+	//return theme;
 };
 
 export function ThemeProvider({ children }) {

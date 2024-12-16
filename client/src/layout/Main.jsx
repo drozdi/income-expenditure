@@ -8,7 +8,7 @@ export function MainLayout() {
 				<div className="flex pt-32 pb-5 overflow-hidden bg-gray-50">
 					<Sidebar className="w-64 hidden sm:block" />
 					<div className="relative w-full p-4 bg-gray-50">
-						<main className="">
+						<main className="relative">
 							<Outlet />
 						</main>
 					</div>

@@ -65,7 +65,7 @@ export const saveAccount = createAsyncThunk(
 	},
 );
 
-export const sourceSlice = createSlice({
+export const accountsSlice = createSlice({
 	name: 'accounts',
 	initialState,
 	reducers: {
@@ -104,7 +104,7 @@ export const sourceSlice = createSlice({
 			state.isLoading = true;
 		});
 		builder.addCase(updateAccount.fulfilled, (state, action) => {
-			const index = state.entities.findIndex((t) => t._id === action.payload.id);
+			const index = state.entities.findIndex((t) => t._id === action.payload._id);
 			if (index !== -1) {
 				state.entities[index] = action.payload;
 			}
@@ -129,7 +129,7 @@ export const sourceSlice = createSlice({
 	},
 });
 
-const { actions, reducer } = sourceSlice;
+const { actions, reducer } = accountsSlice;
 export const { reset: resetAccounts } = actions;
 
 export const getAccounts = (state) => {
@@ -143,6 +143,15 @@ export const getLoading = (state) => {
 };
 export const getError = (state) => {
 	return state.accounts.error;
+};
+
+export const getCategories = (accountId) => (state) => {
+	return state.accounts.entities.find((t) => t._id === accountId)?.categories || [];
+};
+export const getCategory = (accountId, id) => (state) => {
+	const categories =
+		state.accounts.entities.find((t) => t._id === accountId)?.categories || [];
+	return categories.find((t) => t._id === id);
 };
 
 export default reducer;

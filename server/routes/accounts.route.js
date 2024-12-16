@@ -1,6 +1,8 @@
 const express = require('express');
 const { check, validationResult } = require('express-validator');
 const User = require('../models/User.js');
+const Account = require('../models/Account.js');
+const Category = require('../models/Category.js');
 const Transaction = require('../models/Transaction.js');
 const router = express.Router({ mergeParams: true });
 const auth = require('../middlewares/auth.js');
@@ -11,21 +13,19 @@ const {
 	getAccounts,
 	getAccount,
 } = require('../controllers/account.controller');
+
 router.use(auth);
 
 router.get('/', async (req, res) => {
 	try {
-		const user = await User.findById(req.user._id).populate({
-			path: 'accounts',
-			populate: {
-				path: 'owner',
-			},
-		});
+		const user = await User.findById(req.user._id).populate('accounts');
 
-		user.accounts.forEach((account) => {
+		for (let account of user.accounts) {
+			await account.populate('owner');
 			account.owner.password = null;
 			account.owner.accounts = null;
-		});
+			await account.populate('categories');
+		}
 
 		res.send({ data: user.accounts });
 	} catch (error) {
@@ -68,6 +68,15 @@ router.delete('/:id', async (req, res) => {
 		await deleteAccount(req.params.id);
 		res.send({ error: null });
 	}
+});
+
+router.post('/:accountId/categories/', async (req, res) => {
+	const newAccount = await addAccount({
+		...req.body,
+		owner: req.user._id,
+	});
+	await User.findByIdAndUpdate(req.user._id, { $push: { accounts: newAccount } });
+	res.send({ data: newAccount });
 });
 
 module.exports = router;
