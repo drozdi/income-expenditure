@@ -14,7 +14,7 @@ export function CategoryPage() {
 
 	return (
 		<>
-			<CategoryForm accountId={accountId} id={id} category={category} />
+			<CategoryForm accountId={accountId} id={id} />
 			<Loader isActive={isLoading} />
 		</>
 	);
