@@ -22,26 +22,5 @@ const accountsService = {
 		const { data } = await httpService.delete(accountsEndpoint + id);
 		return data;
 	},
-
-	addCategory: async (account, payload) => {
-		const { data } = await httpService.post(
-			accountsEndpoint + account + '/categories/',
-			payload,
-		);
-		return data;
-	},
-	updateCategory: async (account, id, payload) => {
-		const { data } = await httpService.patch(
-			accountsEndpoint + account + '/categories/' + id,
-			payload,
-		);
-		return data;
-	},
-	deleteCategory: async (account, id) => {
-		const { data } = await httpService.delete(
-			accountsEndpoint + account + '/categories/' + id,
-		);
-		return data;
-	},
 };
 export default accountsService;

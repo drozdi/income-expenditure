@@ -11,8 +11,8 @@ export function XBtnGroup(params = {}) {
 		selected,
 		multiple,
 		separator,
-		onClick = () => {},
-		onChange = () => {},
+		onClick,
+		onChange,
 		value,
 		...props
 	} = params;
@@ -21,7 +21,7 @@ export function XBtnGroup(params = {}) {
 
 	const handleClick = useCallback(
 		(e, value) => {
-			onClick(e, value);
+			onClick?.(e, value);
 			if (!selected) {
 				return;
 			}
@@ -45,7 +45,7 @@ export function XBtnGroup(params = {}) {
 			setCurrent(multiple ? [] : undefined);
 		}
 	}, [multiple]);
-	useEffect(() => onChange(current), [current]);
+	useEffect(() => onChange?.(current), [current]);
 
 	const context = {
 		...props,

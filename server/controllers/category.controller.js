@@ -1,10 +1,12 @@
 const Account = require('../models/Account');
 const Category = require('../models/Category');
 
-async function addCategory(accountId, category) {
-	const newCategory = await Category.create({ ...category, account: accountId });
+async function addCategory(category) {
+	const newCategory = await Category.create({ ...category });
 
-	await Account.findByIdAndUpdate(accountId, { $push: { categories: newCategory } });
+	await Account.findByIdAndUpdate(newCategory.account, {
+		$push: { categories: newCategory },
+	});
 
 	return newCategory;
 }

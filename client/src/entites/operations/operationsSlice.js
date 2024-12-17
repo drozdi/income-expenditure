@@ -51,7 +51,7 @@ export const getLoading = (state) => {
 	return state.operations.isLoading;
 };
 export const getOperations = (state) => {
-	return state.operations.operations || [];
+	return state.operations.operations;
 };
 
 export default reducer;

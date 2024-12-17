@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAccounts, resetAccounts } from '../entites/accounts/accountsSlice';
 import { getCurrentUserId } from '../entites/auth/authSlice';
+import { fetchCategories, resetCategories } from '../entites/categories/categoriesSlice';
 import { fetchOperations, resetOperations } from '../entites/operations/operationsSlice';
 
 import localStorageService from '../shared/services/localStorage.service';
@@ -16,11 +17,14 @@ export const AppLoader = ({ children }) => {
 	useEffect(() => {
 		dispatch(resetAccounts());
 		dispatch(resetOperations());
+		dispatch(resetCategories());
 		if (userId) {
 			setLoading(true);
-			Promise.all([dispatch(fetchOperations()), dispatch(fetchAccounts())]).finally(
-				() => setLoading(false),
-			);
+			Promise.all([
+				dispatch(fetchOperations()),
+				dispatch(fetchAccounts()),
+				dispatch(fetchCategories()),
+			]).finally(() => setLoading(false));
 		}
 	}, [userId]);
 	return (

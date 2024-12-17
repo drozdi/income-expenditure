@@ -22,6 +22,7 @@ export default ({ accountId, id, onSaved }) => {
 	const toast = useToast();
 	const isLoading = useSelector(getLoading);
 	const operations = useSelector(getOperations);
+
 	const category = useSelector(getCategory(accountId, id)) ?? {
 		_id: id,
 		account: accountId,

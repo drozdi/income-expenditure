@@ -242,12 +242,16 @@ export const getError = (state) => {
 };
 
 export const getCategories = (accountId) => (state) => {
-	return state.accounts.entities.find((t) => t._id === accountId)?.categories || [];
+	const accountIndex = state.accounts.entities.findIndex((t) => t._id === accountId);
+	if (accountIndex < 0) {
+		return [];
+	}
+	return state.accounts.entities[accountIndex].categories;
 };
 export const getCategory = (accountId, id) => (state) => {
 	const categories =
 		state.accounts.entities.find((t) => t._id === accountId)?.categories || [];
-	return categories.find((t) => t._id === id);
+	return categories?.find((t) => t._id === id) || {};
 };
 
 export default reducer;
