@@ -7,7 +7,7 @@ export function Sidebar({ className }) {
 				<XItem to="/">
 					<XItemSection>Главная</XItemSection>
 				</XItem>
-				<XItem to="/categories/675ed9c4444bb8cd1b565d2a">
+				<XItem to="/categories/">
 					<XItemSection>Категории</XItemSection>
 				</XItem>
 				<XItem to="/accounts">

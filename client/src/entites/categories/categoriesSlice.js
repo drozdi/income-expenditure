@@ -49,8 +49,8 @@ export const deleteCategory = createAsyncThunk(
 	'categories/delete',
 	async (id, { rejectWithValue }) => {
 		try {
-			await categoriesService.deleteCategory(id);
-			return id;
+			const { data } = await categoriesService.deleteCategory(id);
+			return data;
 		} catch (error) {
 			return rejectWithValue(error.response.data);
 		}
@@ -91,31 +91,26 @@ export const categoriesSlice = createSlice({
 			state.isLoading = false;
 		});
 
-		/*builder.addCase(addCategory.pending, (state, action) => {
+		builder.addCase(addCategory.pending, (state, action) => {
 			state.isLoading = true;
 		});
-		builder.addCase(addCategory.fulfilled, (state, action) => {
-			state.entities
-				.find((t) => t._id === action.payload.account)
-				.categories.push(action.payload);
+		builder.addCase(addCategory.fulfilled, (state, { payload }) => {
+			state.entities[payload.account].push(payload);
 			state.isLoading = false;
 		});
-		builder.addCase(addCategory.rejected, (state, action) => {
-			state.error = action.payload;
+		builder.addCase(addCategory.rejected, (state, { payload }) => {
+			state.error = payload;
 			state.isLoading = false;
 		});
 
 		builder.addCase(updateCategory.pending, (state, action) => {
 			state.isLoading = true;
 		});
-		builder.addCase(updateCategory.fulfilled, (state, action) => {
-			const accountIndex = state.entities.findIndex(
-				(t) => t._id === action.payload.account,
+		builder.addCase(updateCategory.fulfilled, (state, { payload }) => {
+			const index = state.entities[payload.account].findIndex(
+				(t) => t._id === payload._id,
 			);
-			const index = state.entities[accountIndex].categories.findIndex(
-				(t) => t._id === action.payload._id,
-			);
-			state.entities[accountIndex].categories[index] = action.payload;
+			state.entities[payload.account][index] = payload;
 			state.isLoading = false;
 		});
 		builder.addCase(updateCategory.rejected, (state, action) => {
@@ -126,19 +121,16 @@ export const categoriesSlice = createSlice({
 		builder.addCase(deleteCategory.pending, (state, action) => {
 			state.isLoading = true;
 		});
-		builder.addCase(deleteCategory.fulfilled, (state, action) => {
-			const accountIndex = state.entities.findIndex(
-				(t) => t._id === action.payload.account,
+		builder.addCase(deleteCategory.fulfilled, (state, { payload }) => {
+			state.entities[payload.account] = state.entities[payload.account].filter(
+				(t) => t._id !== payload._id,
 			);
-			state.entities[accountIndex].categories = state.entities[
-				accountIndex
-			].categories.filter((t) => t._id !== action.payload.id);
 			state.isLoading = false;
 		});
-		builder.addCase(deleteCategory.rejected, (state, action) => {
-			state.error = action.payload;
+		builder.addCase(deleteCategory.rejected, (state, { payload }) => {
+			state.error = payload;
 			state.isLoading = false;
-		});*/
+		}); //*/
 	},
 });
 

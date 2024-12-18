@@ -8,10 +8,9 @@ import {
 import { getOperations } from '../../entites/operations/operationsSlice';
 import localStorageService from '../../shared/services/localStorage.service';
 import { XBtn, XItem, XItemLabel, XItemSection, XList } from '../../shared/ui';
-import { Loader } from '../loader';
 import { useToast } from '../toast';
 
-export default function ({ accountId, operation }) {
+export default function ({ className, accountId, operation }) {
 	const dispatch = useDispatch();
 	const operations = useSelector(getOperations);
 	const isLoading = useSelector(getLoading);
@@ -25,7 +24,7 @@ export default function ({ accountId, operation }) {
 
 	const handlerDelete = async (id, label) => {
 		if (confirm(`Удалить категорию "${label}"?`)) {
-			dispatch(deleteCategory({ id }))
+			dispatch(deleteCategory(id))
 				.unwrap()
 				.then((data) => {
 					toast.show({
@@ -49,8 +48,7 @@ export default function ({ accountId, operation }) {
 	}
 	return (
 		<>
-			<Loader isActive={isLoading} />
-			<XList dense>
+			<XList className={className} dense>
 				{grouped.map((category) => (
 					<XItem key={category._id}>
 						<XItemSection>

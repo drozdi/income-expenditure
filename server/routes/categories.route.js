@@ -36,14 +36,14 @@ router.get('/', async (req, res) => {
 	}
 });
 
-router.get('/:id', async (req, res) => {
-	const category = await getCategory(req.params.id);
-	res.send({ data: category });
-});
-
 router.post('/', async (req, res) => {
 	const newCategory = await addCategory(req.body);
 	res.send({ data: newCategory });
+});
+
+router.get('/:id', async (req, res) => {
+	const category = await getCategory(req.params.id);
+	res.send({ data: category });
 });
 
 router.patch('/:id', async (req, res) => {
@@ -52,8 +52,8 @@ router.patch('/:id', async (req, res) => {
 });
 
 router.delete('/:id', async (req, res) => {
-	await deleteCategory(req.params.id);
-	res.send({ error: null });
+	const category = await deleteCategory(req.params.id);
+	res.send({ data: category });
 });
 
 module.exports = router;

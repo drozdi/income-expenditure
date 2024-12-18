@@ -1,14 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-import {
-	getCategories,
-	getLoading,
-	saveCategory,
-} from '../../entites/categories/categoriesSlice';
+import { getCategories, saveCategory } from '../../entites/categories/categoriesSlice';
 import { getOperations } from '../../entites/operations/operationsSlice';
 import { XBtn, XInput } from '../../shared/ui';
 import { useToast } from '../toast';
@@ -20,32 +16,30 @@ const categogySchema = yup.object().shape({
 export default ({ accountId, id, onSaved }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const isLoading = useSelector(getLoading);
 	const operations = useSelector(getOperations);
 	const categories = useSelector(getCategories(accountId)) || [];
+	const category = categories.find((t) => t._id === id);
 	const toast = useToast();
-
-	const [category, setCategory] = useState({
-		_id: id,
-		account: accountId,
-		label: '',
-		operation: operations[0],
-	});
-
-	useEffect(() => {
-		let category = categories.find((t) => t._id === id);
-		category && setCategory(category);
-	}, [categories]);
 
 	const {
 		register,
+		reset,
 		handleSubmit,
-		formState: { errors },
+		formState: { errors, isLoading },
 	} = useForm({
 		mode: 'onChange',
-		defaultValues: { ...category },
+		defaultValues: {
+			_id: id,
+			account: accountId,
+			label: '',
+			operation: operations[0],
+		},
 		resolver: yupResolver(categogySchema),
 	});
+
+	useEffect(() => {
+		category && reset(category);
+	}, [category]);
 
 	const onSubmit = async (data) => {
 		dispatch(saveCategory(data))
@@ -62,7 +56,7 @@ export default ({ accountId, id, onSaved }) => {
 					children: error.message,
 					color: 'negative',
 				});
-			});
+			}); //*/
 	};
 	return (
 		<form className="flex flex-col gap-2" onSubmit={handleSubmit(onSubmit)}>

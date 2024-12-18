@@ -3,14 +3,10 @@ import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-import {
-	getAccount,
-	getLoading,
-	saveAccount,
-} from '../../entites/accounts/accountsSlice';
+import { getAccount, saveAccount } from '../../entites/accounts/accountsSlice';
 
+import { useEffect } from 'react';
 import { XBtn, XInput } from '../../shared/ui';
-import { Loader } from '../loader';
 import { useToast } from '../toast';
 
 const accountSchema = yup.object().shape({
@@ -22,25 +18,26 @@ export default ({ id, onSave }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const toast = useToast();
-	const isLoading = useSelector(getLoading);
-	const account = useSelector(getAccount(id)) ?? {
-		_id: id,
-		label: '',
-		balance: 0.0,
-	};
+	const account = useSelector(getAccount(id));
+
 	const {
 		register,
 		handleSubmit,
-		formState: { errors },
+		reset,
+		formState: { isLoading, errors },
 	} = useForm({
 		mode: 'onChange',
 		defaultValues: {
-			_id: account._id,
-			label: account.label,
-			balance: account.balance,
+			_id: id,
+			label: '',
+			balance: 0.0,
 		},
 		resolver: yupResolver(accountSchema),
 	});
+
+	useEffect(() => {
+		account && reset(account);
+	}, [account]);
 
 	const onSubmit = async (data) => {
 		dispatch(saveAccount(data))
@@ -61,7 +58,6 @@ export default ({ id, onSave }) => {
 	};
 	return (
 		<form className="relative flex flex-col gap-2" onSubmit={handleSubmit(onSubmit)}>
-			<Loader isActive={isLoading} />
 			<XInput
 				label="Название счета"
 				placeholder="Заначка"

@@ -22,7 +22,7 @@ async function updateCategory(id, category) {
 // todo check operation
 async function deleteCategory(id) {
 	const category = await getCategory(id);
-	Account.findByIdAndUpdate(category.account._id, { $pull: { categories: id } });
+	Account.findByIdAndUpdate(category.account, { $pull: { categories: id } });
 	return await category.deleteOne();
 }
 
@@ -32,7 +32,7 @@ async function getCategories(filter = {}) {
 
 // get item
 async function getCategory(id) {
-	return await Category.findById(id).populate('account');
+	return await Category.findById(id);
 }
 
 module.exports = {

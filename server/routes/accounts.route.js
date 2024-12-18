@@ -32,7 +32,6 @@ router.get('/', async (req, res) => {
 			await account.populate('owner');
 			account.owner.password = null;
 			account.owner.accounts = null;
-			await account.populate('categories');
 		}
 
 		res.send({ data: user.accounts });

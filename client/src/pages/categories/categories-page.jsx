@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { getOperations } from '../../entites/operations/operationsSlice';
+import BackBtn from '../../features/btnBack';
 import CategoriesList from '../../features/categories/list';
+import CategoriesListAccount from '../../features/categories/list-account';
 import CategoryAddBtn from '../../features/category/add';
 import { XBtn } from '../../shared/ui';
 export function CategoriesPage() {
@@ -10,14 +12,10 @@ export function CategoriesPage() {
 	const operations = useSelector(getOperations);
 	const [currentOperation, setCurrentOperation] = useState(operations[0]);
 	useEffect(() => setCurrentOperation(operations[0]), [operations]);
-	return (
+	return accountId ? (
 		<>
 			{operations.length && (
-				<XBtn.Group
-					className="flex justify-center"
-					value={currentOperation}
-					onClick={setCurrentOperation}
-				>
+				<XBtn.Group className="flex justify-center" onClick={setCurrentOperation}>
 					{operations.map((operation) => (
 						<XBtn
 							key={operation}
@@ -30,11 +28,14 @@ export function CategoriesPage() {
 				</XBtn.Group>
 			)}
 			<CategoriesList accountId={accountId} operation={currentOperation} />
+			<BackBtn className="float-end" />
 			<CategoryAddBtn
 				accountId={accountId}
 				operation={currentOperation}
-				className="float-end"
+				className="float-star"
 			/>
 		</>
+	) : (
+		<CategoriesListAccount />
 	);
 }
