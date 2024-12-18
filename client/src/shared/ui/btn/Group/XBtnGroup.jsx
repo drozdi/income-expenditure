@@ -21,7 +21,7 @@ export function XBtnGroup(params = {}) {
 
 	const handleClick = useCallback(
 		(e, value) => {
-			onClick?.(e, value);
+			onClick?.(value);
 			if (!selected) {
 				return;
 			}

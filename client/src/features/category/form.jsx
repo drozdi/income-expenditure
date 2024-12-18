@@ -1,13 +1,14 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import {
-	getCategory,
+	getCategories,
 	getLoading,
 	saveCategory,
-} from '../../entites/accounts/accountsSlice';
+} from '../../entites/categories/categoriesSlice';
 import { getOperations } from '../../entites/operations/operationsSlice';
 import { XBtn, XInput } from '../../shared/ui';
 import { useToast } from '../toast';
@@ -19,16 +20,22 @@ const categogySchema = yup.object().shape({
 export default ({ accountId, id, onSaved }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const toast = useToast();
 	const isLoading = useSelector(getLoading);
 	const operations = useSelector(getOperations);
+	const categories = useSelector(getCategories(accountId)) || [];
+	const toast = useToast();
 
-	const category = useSelector(getCategory(accountId, id)) ?? {
+	const [category, setCategory] = useState({
 		_id: id,
 		account: accountId,
 		label: '',
 		operation: operations[0],
-	};
+	});
+
+	useEffect(() => {
+		let category = categories.find((t) => t._id === id);
+		category && setCategory(category);
+	}, [categories]);
 
 	const {
 		register,
@@ -36,12 +43,7 @@ export default ({ accountId, id, onSaved }) => {
 		formState: { errors },
 	} = useForm({
 		mode: 'onChange',
-		defaultValues: {
-			_id: category._id,
-			label: category.label,
-			account: category.account,
-			operation: category.operation,
-		},
+		defaultValues: { ...category },
 		resolver: yupResolver(categogySchema),
 	});
 

@@ -242,11 +242,8 @@ export const getError = (state) => {
 };
 
 export const getCategories = (accountId) => (state) => {
-	const accountIndex = state.accounts.entities.findIndex((t) => t._id === accountId);
-	if (accountIndex < 0) {
-		return [];
-	}
-	return state.accounts.entities[accountIndex].categories;
+	const accountIndex = state.accounts.entities.find((t) => t._id === accountId);
+	return state.accounts.entities[accountIndex]?.categories || [];
 };
 export const getCategory = (accountId, id) => (state) => {
 	const categories =

@@ -8,7 +8,7 @@ const initialState = {
 };
 
 export const fetchCategories = createAsyncThunk(
-	'categories/fetchCategories',
+	'categories/fetch',
 	async (_, { rejectWithValue }) => {
 		try {
 			const { data } = await categoriesService.getCategories();
@@ -20,7 +20,7 @@ export const fetchCategories = createAsyncThunk(
 );
 
 export const addCategory = createAsyncThunk(
-	'categories/addCategory',
+	'categories/add',
 	async (category, { rejectWithValue }) => {
 		try {
 			const { data } = await categoriesService.addCategory(category);
@@ -31,7 +31,7 @@ export const addCategory = createAsyncThunk(
 	},
 );
 export const updateCategory = createAsyncThunk(
-	'categories/updateCategory',
+	'categories/update',
 	async (category, { rejectWithValue }) => {
 		try {
 			const { data } = await categoriesService.updateCategory(
@@ -46,7 +46,7 @@ export const updateCategory = createAsyncThunk(
 );
 
 export const deleteCategory = createAsyncThunk(
-	'categories/deleteCategory',
+	'categories/delete',
 	async (id, { rejectWithValue }) => {
 		try {
 			await categoriesService.deleteCategory(id);
@@ -58,7 +58,7 @@ export const deleteCategory = createAsyncThunk(
 );
 
 export const saveCategory = createAsyncThunk(
-	'categories/saveCategory',
+	'categories/save',
 	async (category, { dispatch }) => {
 		if (category._id) {
 			return await dispatch(updateCategory(category));
@@ -153,11 +153,7 @@ export const getError = (state) => {
 };
 
 export const getCategories = (accountId) => (state) => {
-	return state.categories.entities[accountId] ?? [];
-};
-export const getCategory = (accountId, id) => (state) => {
-	const categories = state.categories.entities[accountId] ?? [];
-	return categories?.find((t) => t._id === id) || {};
+	return state.categories.entities[accountId];
 };
 
 export default reducer;
