@@ -15,7 +15,12 @@ export function CategoriesPage() {
 	return accountId ? (
 		<>
 			{operations.length && (
-				<XBtn.Group className="flex justify-center" onClick={setCurrentOperation}>
+				<XBtn.Group
+					spread
+					switchable
+					value={currentOperation}
+					onChange={setCurrentOperation}
+				>
 					{operations.map((operation) => (
 						<XBtn
 							key={operation}

@@ -8,14 +8,16 @@ export function XBtnGroup(params = {}) {
 	const {
 		children,
 		className,
-		vertical,
-		selected,
+		selectable,
+		switchable,
 		multiple,
+		vertical,
 		separator,
 		onClick,
 		onChange,
 		value,
 		align,
+		spread,
 		...props
 	} = params;
 
@@ -24,7 +26,11 @@ export function XBtnGroup(params = {}) {
 	const handleClick = useCallback(
 		(value) => {
 			onClick?.(value);
-			if (!selected) {
+			if (switchable) {
+				setCurrent(value);
+				return;
+			}
+			if (!selectable) {
 				return;
 			}
 			if (multiple) {
@@ -36,7 +42,7 @@ export function XBtnGroup(params = {}) {
 				setCurrent((v) => (v === value ? undefined : value));
 			}
 		},
-		[selected, multiple, onClick],
+		[selectable, multiple, onClick],
 	);
 
 	useEffect(() => {
@@ -48,20 +54,25 @@ export function XBtnGroup(params = {}) {
 			setCurrent(multiple ? [] : undefined);
 		}
 	}, [multiple]);
+
 	useEffect(() => {
 		setCurrent(value ?? (multiple ? [] : undefined));
 	}, [value]);
+
 	useEffect(() => onChange?.(current), [current]);
 
 	const context = {
 		btnProps: props,
-		selected,
+		selectable,
 		multiple,
 		current,
 		onChange: handleClick,
 		//isDisabled: (value) => {},
 		isActive: (value) => {
-			if (!selected) {
+			if (switchable) {
+				return current === value;
+			}
+			if (!selectable) {
 				return false;
 			}
 			if (multiple && Array.isArray(current)) {
@@ -75,7 +86,7 @@ export function XBtnGroup(params = {}) {
 			className={classNames('x-btn-group', className, {
 				'x-btn-group--vertical': vertical,
 				'x-btn-group--separator': separator,
-				'x-btn-group--spread': props.spread,
+				'x-btn-group--spread': spread,
 				'x-btn-group--round': props.round,
 				[`justify-` + align]: !vertical && align,
 				[`items-` + align]: vertical && align,
@@ -92,9 +103,11 @@ XBtnGroup.propTypes = {
 	children: PropTypes.node,
 	className: PropTypes.string,
 	vertical: PropTypes.bool,
-	selected: PropTypes.bool,
+	selectable: PropTypes.bool,
+	switchable: PropTypes.bool,
 	multiple: PropTypes.bool,
 	separator: PropTypes.bool,
+	spread: PropTypes.bool,
 	onClick: PropTypes.func,
 	onChange: PropTypes.func,
 	value: PropTypes.any,
