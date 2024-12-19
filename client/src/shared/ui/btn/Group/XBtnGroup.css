@@ -5,6 +5,10 @@
 	@apply shadow-none !important;
 }
 
+.x-btn-group--spread > * {
+	@apply flex-auto;
+}
+
 .x-btn-group:not(.x-btn-group--vertical):not(.x-btn-group--round) > * {
 	&:not(:first-child) {
 		@apply -ml-[1px] rounded-l-none;

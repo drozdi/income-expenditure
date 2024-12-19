@@ -4,9 +4,6 @@ import { extractEventHandlers } from '../utils/extractEventHandlers';
 import { isFocusVisible } from '../utils/is';
 import { useForkRef } from './useForkRef';
 export function useBtn({
-	selected,
-	multiple,
-	current,
 	disabled,
 	ref: externalRef,
 	type,
@@ -31,16 +28,6 @@ export function useBtn({
 	};
 	const [focusVisible, setFocusVisible] = useState(false);
 	const [active, setActive] = useState(false);
-
-	const isSelected = useMemo(() => {
-		if (!selected) {
-			return false;
-		}
-		if (multiple && Array.isArray(current)) {
-			return current.includes(value);
-		}
-		return current === value;
-	}, [selected, current, value, multiple]);
 
 	const isNativeButton = () => {
 		const button = buttonRef.current;
@@ -163,7 +150,6 @@ export function useBtn({
 
 	return {
 		TagProp,
-		isSelected,
 		isLink: TagProp === LinkComponent,
 		focusVisible,
 		active,

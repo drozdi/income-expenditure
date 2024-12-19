@@ -20,6 +20,24 @@
 	@apply rounded-none;
 }
 
+.x-card > * {
+	&:first-child {
+		@apply rounded-t-inherit;
+	}
+	&:last-child {
+		@apply rounded-b-inherit;
+	}
+}
+
+.x-card__section--horizontal > * {
+	&:first-child {
+		@apply rounded-tl-inherit;
+	}
+	&:last-child {
+		@apply rounded-tr-inherit;
+	}
+}
+
 .x-card__section {
 	@apply relative;
 }

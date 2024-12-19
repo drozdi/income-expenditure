@@ -8,10 +8,21 @@ import { useXBtnGroupContext, XBtnGroup } from './Group';
 import './style.css';
 
 const XBtnRoot = forwardRef(function XBtn(params = {}, ref) {
-	const props = useXBtnGroupContext(params);
-	const { children, className, active, icon, iconRight, color, size } = props;
+	const ctx = useXBtnGroupContext();
+	const props = { ...ctx?.btnProps, ...params };
 
-	const { isSelected, isLink, attrs, TagProp } = useBtn({ ...props, ref });
+	if (ctx) {
+		props.onClick = (event, value) => {
+			ctx.onChange?.(props.value);
+			params.onClick?.(event, value);
+		};
+		props.active = ctx.isActive?.(props.value);
+		props.disabled = ctx.isDisabled?.(props.value);
+	}
+
+	const { children, className, active, icon, iconRight, color, size, value } = props;
+
+	const { isLink, attrs, TagProp } = useBtn({ ...props, ref });
 
 	const isIcon = useMemo(
 		() =>
@@ -19,7 +30,6 @@ const XBtnRoot = forwardRef(function XBtn(params = {}, ref) {
 			(children?.type === XIcon && !icon && !iconRight),
 		[children, icon, iconRight],
 	);
-	const selected = useMemo(() => active || isSelected, [isSelected, active]);
 
 	return (
 		<TagProp
@@ -27,7 +37,7 @@ const XBtnRoot = forwardRef(function XBtn(params = {}, ref) {
 			className={classNames(
 				'x-btn',
 				{
-					'x-btn--flat': props.flat || props.link || isLink,
+					'x-btn--flat': props.flat,
 					'x-btn--text': props.text,
 					'x-btn--tonal': props.tonal,
 					'x-btn--plain': props.plain,
@@ -37,9 +47,9 @@ const XBtnRoot = forwardRef(function XBtn(params = {}, ref) {
 					'x-btn--round': props.round,
 					'x-btn--rounded': props.rounded,
 					'x-btn--dimmed': props.dimmed,
-					'x-btn--link': props.link || isLink,
+					'x-btn--link': props.link,
 					'x-btn--icon': isIcon,
-					'x-btn--active': selected,
+					'x-btn--active': props.active,
 					[`x-btn--${color}`]: color,
 					[`x-btn--${size}`]: size,
 				},
