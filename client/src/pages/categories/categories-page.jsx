@@ -22,11 +22,7 @@ export function CategoriesPage() {
 					onChange={setCurrentOperation}
 				>
 					{operations.map((operation) => (
-						<XBtn
-							key={operation}
-							value={operation}
-							active={currentOperation === operation}
-						>
+						<XBtn key={operation} value={operation}>
 							{operation}
 						</XBtn>
 					))}
