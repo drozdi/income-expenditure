@@ -16,58 +16,6 @@ const initialState = localStorageService.getAccessToken()
 			isAuth: false,
 		};
 
-export const authSlice = createSlice({
-	name: 'auth',
-	initialState,
-	reducers: {},
-	selectors: {},
-	extraReducers: (builder) => {
-		builder.addCase(registerUser.pending, (state, action) => {
-			state.isLoading = true;
-		});
-		builder.addCase(registerUser.fulfilled, (state, action) => {
-			state.isLoading = false;
-			state.isAuth = true;
-			state.auth = action.payload;
-		});
-		builder.addCase(registerUser.rejected, (state, action) => {
-			state.isLoading = false;
-			state.isAuth = false;
-			state.error = action.payload;
-		});
-
-		builder.addCase(loginUser.pending, (state, action) => {
-			state.isLoading = true;
-		});
-		builder.addCase(loginUser.fulfilled, (state, action) => {
-			state.isLoading = false;
-			state.isAuth = true;
-			state.auth = action.payload;
-		});
-		builder.addCase(loginUser.rejected, (state, action) => {
-			state.isLoading = false;
-			state.isAuth = false;
-			state.error = action.payload;
-		});
-		builder.addCase(logoutUser.pending, (state, action) => {
-			state.isLoading = true;
-		});
-		builder.addCase(logoutUser.fulfilled, (state, action) => {
-			state.isLoading = false;
-			state.isAuth = false;
-			state.auth = null;
-			state.dataLoaded = false;
-		});
-		builder.addCase(logoutUser.rejected, (state, action) => {
-			state.isLoading = false;
-			state.isAuth = false;
-			state.error = action.payload;
-		});
-	},
-});
-
-const { reducer } = authSlice;
-
 export const registerUser = createAsyncThunk(
 	'auth/register',
 	async (data, { rejectWithValue }) => {
@@ -103,6 +51,59 @@ export const logoutUser = createAsyncThunk(
 		}
 	},
 );
+
+export const authSlice = createSlice({
+	name: 'auth',
+	initialState,
+	reducers: {},
+	selectors: {},
+	extraReducers: (builder) => {
+		builder.addCase(registerUser.pending, (state, action) => {
+			state.isLoading = true;
+		});
+		builder.addCase(registerUser.fulfilled, (state, action) => {
+			state.isLoading = false;
+			state.isAuth = true;
+			state.auth = action.payload;
+		});
+		builder.addCase(registerUser.rejected, (state, action) => {
+			state.isLoading = false;
+			state.isAuth = false;
+			state.error = action.payload;
+		});
+
+		builder.addCase(loginUser.pending, (state, action) => {
+			state.isLoading = true;
+		});
+		builder.addCase(loginUser.fulfilled, (state, action) => {
+			state.isLoading = false;
+			state.isAuth = true;
+			state.auth = action.payload;
+		});
+		builder.addCase(loginUser.rejected, (state, action) => {
+			state.isLoading = false;
+			state.isAuth = false;
+			state.error = action.payload;
+		});
+
+		builder.addCase(logoutUser.pending, (state, action) => {
+			state.isLoading = true;
+		});
+		builder.addCase(logoutUser.fulfilled, (state, action) => {
+			state.isLoading = false;
+			state.isAuth = false;
+			state.auth = null;
+			state.dataLoaded = false;
+		});
+		builder.addCase(logoutUser.rejected, (state, action) => {
+			state.isLoading = false;
+			state.isAuth = false;
+			state.error = action.payload;
+		});
+	},
+});
+
+const { reducer } = authSlice;
 
 export const getIsAuth = (state) => state.auth.isAuth;
 export const getIsLoading = (state) => state.auth.isLoading;
