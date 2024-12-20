@@ -16,6 +16,7 @@ export function CategoriesPage() {
 		<>
 			{operations.length && (
 				<XBtn.Group
+					className="mb-4"
 					spread
 					switchable
 					value={currentOperation}
@@ -28,7 +29,11 @@ export function CategoriesPage() {
 					))}
 				</XBtn.Group>
 			)}
-			<CategoriesList accountId={accountId} operation={currentOperation} />
+			<CategoriesList
+				className="mb-4"
+				accountId={accountId}
+				operation={currentOperation}
+			/>
 			<BackBtn className="float-end" />
 			<CategoryAddBtn
 				accountId={accountId}
