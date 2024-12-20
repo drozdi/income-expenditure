@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import * as yup from 'yup';
 import { getCategories, saveCategory } from '../../entites/categories/categoriesSlice';
 import { getOperations } from '../../entites/operations/operationsSlice';
@@ -20,7 +20,7 @@ export default ({ accountId, id, onSaved }) => {
 	const categories = useSelector(getCategories(accountId)) || [];
 	const category = categories.find((t) => t._id === id);
 	const toast = useToast();
-
+	const [searchParams, setSearchParams] = useSearchParams();
 	const {
 		register,
 		reset,
@@ -32,7 +32,7 @@ export default ({ accountId, id, onSaved }) => {
 			_id: id,
 			account: accountId,
 			label: '',
-			operation: operations[0],
+			operation: searchParams.get('operation') || operations[0],
 		},
 		resolver: yupResolver(categogySchema),
 	});
