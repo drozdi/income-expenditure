@@ -7,9 +7,10 @@ const CategorySchema = mongoose.Schema(
 			type: String,
 			required: true,
 		},
-		operation: {
+		type: {
 			type: String,
 			required: true,
+			enum: ['income', 'expense', 'transfer'],
 		},
 	},
 	{ timestamps: true },

@@ -1,29 +1,35 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import * as yup from 'yup';
-import {
-	getCategories,
-	getTypes,
-	saveCategory,
-} from '../../entites/categories/categoriesSlice';
+import { getCategories } from '../../entites/categories/categoriesSlice';
+
 import { XBtn, XInput } from '../../shared/ui';
 import { useToast } from '../toast';
 
 const categogySchema = yup.object().shape({
-	label: yup.string().required('Заполните название'),
+	account: yup.required('Выберите счет!'),
+	type: yup.string().enum(['income', 'expense', 'transfer']).required(),
+	category: yup.required('Выберите категорию!'),
+
+	sum: { type: Number, required: true },
+	comment: { type: String, required: false },
+
+	date: { type: Date, default: Date.now },
 });
 
 export default ({ accountId, id, onSaved }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const types = useSelector(getTypes);
+	const getAccounts = useSelector(getAccounts);
+	const types = useSelector(getAccounts);
+
 	const categories = useSelector(getCategories(accountId)) || [];
 	const category = categories.find((t) => t._id === id);
 	const toast = useToast();
 	const [searchParams, setSearchParams] = useSearchParams();
+
 	const {
 		register,
 		reset,
@@ -32,20 +38,21 @@ export default ({ accountId, id, onSaved }) => {
 	} = useForm({
 		mode: 'onChange',
 		defaultValues: {
-			_id: id,
+			/*_id: id,
 			account: accountId,
 			label: '',
-			type: searchParams.get('type'),
+			operation: searchParams.get('operation') || operations[0],*/
 		},
 		resolver: yupResolver(categogySchema),
 	});
 
-	useEffect(() => {
+	/*useEffect(() => {
 		category && reset(category);
-	}, [category]);
+	}, [category]);*/
 
 	const onSubmit = async (data) => {
-		dispatch(saveCategory(data))
+		console.log(data);
+		/*dispatch(saveCategory(data))
 			.unwrap()
 			.then((data) => {
 				toast.show({
@@ -77,14 +84,15 @@ export default ({ accountId, id, onSaved }) => {
 				<div className="x-input-container">
 					<div className="x-input-underlay"></div>
 					<div className="x-input-control">
+						<div className="x-input-label">Категория</div>
 						<select
-							{...register('type', { required: true })}
+							{...register('operation', { required: true })}
 							className="x-input-native"
 							disabled={id}
 						>
-							{Object.entries(types).map(([key, label]) => (
-								<option key={key} value={key}>
-									{label}
+							{operations.map((value) => (
+								<option key={value} value={value}>
+									{value}
 								</option>
 							))}
 						</select>

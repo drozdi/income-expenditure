@@ -17,6 +17,10 @@ const {
 
 router.use(auth);
 
+router.get('/types', async (req, res) => {
+	res.send({ data: { income: 'Доход', expense: 'Расход' /*transfer: 'Перевод'*/ } });
+});
+
 router.get('/', async (req, res) => {
 	try {
 		const user = await User.findById(req.user._id).populate('accounts');

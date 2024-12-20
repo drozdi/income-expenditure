@@ -3,6 +3,7 @@ import categoriesService from '../../shared/services/categories.service';
 
 const initialState = {
 	entities: {},
+	types: {},
 	isLoading: false,
 	error: null,
 };
@@ -12,6 +13,17 @@ export const fetchCategories = createAsyncThunk(
 	async (_, { rejectWithValue }) => {
 		try {
 			const { data } = await categoriesService.getCategories();
+			return data;
+		} catch (error) {
+			return rejectWithValue(error.response.data);
+		}
+	},
+);
+export const fetchTypes = createAsyncThunk(
+	'categories/fetchTypes',
+	async (_, { rejectWithValue }) => {
+		try {
+			const { data } = await categoriesService.getTypes();
 			return data;
 		} catch (error) {
 			return rejectWithValue(error.response.data);
@@ -82,12 +94,24 @@ export const categoriesSlice = createSlice({
 		builder.addCase(fetchCategories.pending, (state, action) => {
 			state.isLoading = true;
 		});
-		builder.addCase(fetchCategories.fulfilled, (state, action) => {
-			state.entities = action.payload;
+		builder.addCase(fetchCategories.fulfilled, (state, { payload }) => {
+			state.entities = payload;
 			state.isLoading = false;
 		});
-		builder.addCase(fetchCategories.rejected, (state, action) => {
-			state.error = action.payload;
+		builder.addCase(fetchCategories.rejected, (state, { payload }) => {
+			state.error = payload;
+			state.isLoading = false;
+		});
+
+		builder.addCase(fetchTypes.pending, (state, action) => {
+			state.isLoading = true;
+		});
+		builder.addCase(fetchTypes.fulfilled, (state, { payload }) => {
+			state.types = payload;
+			state.isLoading = false;
+		});
+		builder.addCase(fetchTypes.rejected, (state, { payload }) => {
+			state.error = payload;
 			state.isLoading = false;
 		});
 
@@ -146,6 +170,10 @@ export const getError = (state) => {
 
 export const getCategories = (accountId) => (state) => {
 	return state.categories.entities[accountId];
+};
+
+export const getTypes = (state) => {
+	return state.categories.types;
 };
 
 export default reducer;

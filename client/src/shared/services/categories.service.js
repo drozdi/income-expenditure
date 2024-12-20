@@ -22,5 +22,9 @@ const categoriesService = {
 		const { data } = await httpService.delete(categoriesEndpoint + id);
 		return data;
 	},
+	getTypes: async () => {
+		const { data } = await httpService.get(categoriesEndpoint + 'types');
+		return data;
+	},
 };
 export default categoriesService;

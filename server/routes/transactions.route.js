@@ -18,42 +18,28 @@ const {
 router.use(auth);
 
 router.get('/', async (req, res) => {
-	try {
-		const user = await User.findById(req.user._id).populate('accounts');
-		const result = {};
-		for (let account of user.accounts) {
-			await account.populate('owner');
-			account.owner.password = null;
-			account.owner.accounts = null;
-			await account.populate('categories');
-			result[account._id] = account.categories;
-		}
-		res.send({ data: result });
-	} catch (error) {
-		res.status(500).send({
-			message: 'На сервере произошла ошибка. Попробуйте позже',
-		});
-	}
+	const transactions = await getTransactions();
+	res.send({ data: transactions });
 });
 
 router.post('/', async (req, res) => {
-	const newCategory = await addCategory(req.body);
-	res.send({ data: newCategory });
+	const newTransaction = await addTransaction({ ...req.body, owner: req.user._id });
+	res.send({ data: newTransaction });
 });
 
 router.get('/:id', async (req, res) => {
-	const category = await getCategory(req.params.id);
-	res.send({ data: category });
+	const transaction = await getTransaction(req.params.id);
+	res.send({ data: transaction });
 });
 
 router.patch('/:id', async (req, res) => {
-	const newCategory = await updateCategory(req.params.id, req.body);
-	res.send({ data: newCategory });
+	const newTransaction = await updateTransaction(req.params.id, req.body);
+	res.send({ data: newTransaction });
 });
 
 router.delete('/:id', async (req, res) => {
-	const category = await deleteCategory(req.params.id);
-	res.send({ data: category });
+	const transaction = await deleteTransaction(req.params.id);
+	res.send({ data: transaction });
 });
 
 module.exports = router;

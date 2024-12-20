@@ -4,23 +4,23 @@ import {
 	deleteCategory,
 	getCategories,
 	getLoading,
+	getTypes,
 } from '../../entites/categories/categoriesSlice';
-import { getOperations } from '../../entites/operations/operationsSlice';
 import localStorageService from '../../shared/services/localStorage.service';
 import { XBtn, XItem, XItemLabel, XItemSection, XList } from '../../shared/ui';
 import { useToast } from '../toast';
 
-export default function ({ className, accountId, operation }) {
+export default function ({ className, accountId, type }) {
 	const dispatch = useDispatch();
-	const operations = useSelector(getOperations);
+	const types = useSelector(getTypes);
 	const isLoading = useSelector(getLoading);
 	const categories = useSelector(getCategories(accountId)) || [];
 	const userId = localStorageService.getUserId();
 	const toast = useToast();
 
 	const grouped = useMemo(() => {
-		return categories.filter((category) => category.operation === operation);
-	}, [categories, operation]);
+		return categories.filter((category) => category.type === type);
+	}, [categories, type]);
 
 	const handlerDelete = async (id, label) => {
 		if (confirm(`Удалить категорию "${label}"?`)) {

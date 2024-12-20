@@ -19,7 +19,7 @@ async function updateCategory(id, category) {
 	return updatedCategory;
 }
 
-// todo check operation
+// todo check transaction
 async function deleteCategory(id) {
 	const category = await getCategory(id);
 	Account.findByIdAndUpdate(category.account, { $pull: { categories: id } });

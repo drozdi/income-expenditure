@@ -2,8 +2,11 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAccounts, resetAccounts } from '../entites/accounts/accountsSlice';
 import { getCurrentUserId } from '../entites/auth/authSlice';
-import { fetchCategories, resetCategories } from '../entites/categories/categoriesSlice';
-import { fetchOperations, resetOperations } from '../entites/operations/operationsSlice';
+import {
+	fetchCategories,
+	fetchTypes,
+	resetCategories,
+} from '../entites/categories/categoriesSlice';
 
 import localStorageService from '../shared/services/localStorage.service';
 import { XSpinner } from '../shared/ui';
@@ -13,15 +16,13 @@ export const AppLoader = ({ children }) => {
 	const dispatch = useDispatch();
 	const _userId = localStorageService.getUserId();
 	const userId = useSelector(getCurrentUserId);
-	fetchOperations();
 	useEffect(() => {
 		dispatch(resetAccounts());
-		dispatch(resetOperations());
 		dispatch(resetCategories());
 		if (userId) {
 			setLoading(true);
 			Promise.all([
-				dispatch(fetchOperations()),
+				dispatch(fetchTypes()),
 				dispatch(fetchAccounts()),
 				dispatch(fetchCategories()),
 			]).finally(() => setLoading(false));
