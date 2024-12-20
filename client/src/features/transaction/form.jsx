@@ -8,15 +8,17 @@ import { getCategories } from '../../entites/categories/categoriesSlice';
 import { XBtn, XInput } from '../../shared/ui';
 import { useToast } from '../toast';
 
-const categogySchema = yup.object().shape({
+const transactionSchema = yup.object().shape({
 	account: yup.required('Выберите счет!'),
 	type: yup.string().enum(['income', 'expense', 'transfer']).required(),
 	category: yup.required('Выберите категорию!'),
+	comment: yup.string(),
+	sum: yup
+		.number()
+		.required('Поле обязательно')
+		.positive('Сумма должна быть положительной'),
 
-	sum: { type: Number, required: true },
-	comment: { type: String, required: false },
-
-	date: { type: Date, default: Date.now },
+	//date: { type: Date, default: Date.now },
 });
 
 export default ({ accountId, id, onSaved }) => {
@@ -26,7 +28,6 @@ export default ({ accountId, id, onSaved }) => {
 	const types = useSelector(getAccounts);
 
 	const categories = useSelector(getCategories(accountId)) || [];
-	const category = categories.find((t) => t._id === id);
 	const toast = useToast();
 	const [searchParams, setSearchParams] = useSearchParams();
 
@@ -90,6 +91,7 @@ export default ({ accountId, id, onSaved }) => {
 							className="x-input-native"
 							disabled={id}
 						>
+							<option value="">Выберите тип операции</option>
 							{operations.map((value) => (
 								<option key={value} value={value}>
 									{value}
