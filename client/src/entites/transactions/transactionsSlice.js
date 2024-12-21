@@ -19,6 +19,28 @@ export const fetchTransactions = createAsyncThunk(
 	},
 );
 
+export const addTransaction = createAsyncThunk(
+	'transactions/add',
+	async (transaction, { rejectWithValue }) => {
+		try {
+			const { data } = await transactionsService.addTransaction(transaction);
+			return data;
+		} catch (error) {
+			return rejectWithValue(error.response.data);
+		}
+	},
+);
+
+export const saveTransaction = createAsyncThunk(
+	'transactions/add',
+	async (transaction, { dispatch }) => {
+		if (transaction._id) {
+		} else {
+			dispatch(addTransaction(transaction));
+		}
+	},
+);
+
 export const transactionsSlice = createSlice({
 	name: 'transactions',
 	initialState,

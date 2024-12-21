@@ -1,59 +1,72 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import * as yup from 'yup';
-import { getCategories } from '../../entites/categories/categoriesSlice';
 
+import { getAccounts } from '../../entites/accounts/accountsSlice';
+import { getCategories, getTypes } from '../../entites/categories/categoriesSlice';
+import { saveTransaction } from '../../entites/transactions/transactionsSlice';
 import { XBtn, XInput } from '../../shared/ui';
 import { useToast } from '../toast';
 
 const transactionSchema = yup.object().shape({
-	account: yup.required('Выберите счет!'),
-	type: yup.string().enum(['income', 'expense', 'transfer']).required(),
-	category: yup.required('Выберите категорию!'),
+	account: yup.string().required('Выберите счет!'),
+	type: yup.string().oneOf(['income', 'expense', 'transfer']).required(),
+	category: yup.string().required('Выберите категорию!'),
 	comment: yup.string(),
-	sum: yup
-		.number()
-		.required('Поле обязательно')
-		.positive('Сумма должна быть положительной'),
-
+	//sum: yup
+	//	.number()
+	//	.positive('Сумма должна быть положительной')
+	//	.required('Поле обязательно'),
 	//date: { type: Date, default: Date.now },
 });
 
-export default ({ accountId, id, onSaved }) => {
-	const navigate = useNavigate();
-	const dispatch = useDispatch();
-	const getAccounts = useSelector(getAccounts);
-	const types = useSelector(getAccounts);
-
-	const categories = useSelector(getCategories(accountId)) || [];
-	const toast = useToast();
-	const [searchParams, setSearchParams] = useSearchParams();
-
+export default ({ id, onSaved }) => {
 	const {
 		register,
+		watch,
 		reset,
 		handleSubmit,
 		formState: { errors, isLoading },
 	} = useForm({
 		mode: 'onChange',
 		defaultValues: {
-			/*_id: id,
-			account: accountId,
-			label: '',
-			operation: searchParams.get('operation') || operations[0],*/
+			_id: '',
+			account: '',
+			category: '',
+			type: '',
+			comment: '',
+			sum: '',
 		},
-		resolver: yupResolver(categogySchema),
+		resolver: yupResolver(transactionSchema),
 	});
+
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
+
+	const accounts = useSelector(getAccounts);
+	const types = useSelector(getTypes);
+
+	const type = watch('type');
+	const accountId = watch('account');
+
+	const categories = useSelector(getCategories(accountId)) || [];
+	const grouped = useMemo(
+		() => categories.filter((c) => c.type === type),
+		[categories, type],
+	);
+
+	const toast = useToast();
+	const [searchParams, setSearchParams] = useSearchParams();
 
 	/*useEffect(() => {
 		category && reset(category);
 	}, [category]);*/
 
 	const onSubmit = async (data) => {
-		console.log(data);
-		/*dispatch(saveCategory(data))
+		dispatch(saveTransaction(data))
 			.unwrap()
 			.then((data) => {
 				toast.show({
@@ -71,36 +84,71 @@ export default ({ accountId, id, onSaved }) => {
 	};
 	return (
 		<form className="flex flex-col gap-2" onSubmit={handleSubmit(onSubmit)}>
+			<select
+				{...register('account', { required: true })}
+				className="border border-color p-3 bg-dimmed"
+			>
+				<option value="" disabled>
+					Выберите счет
+				</option>
+				{accounts.map(({ _id, label }) => (
+					<option key={_id} value={_id}>
+						{label}
+					</option>
+				))}
+			</select>
+
+			<select
+				{...register('type', { required: true })}
+				className="border border-color p-3 bg-dimmed"
+				disabled={!accountId}
+			>
+				<option value="">Выберите тип операции</option>
+				{Object.entries(types).map(([value, label]) => (
+					<option key={value} value={value}>
+						{label}
+					</option>
+				))}
+			</select>
+
+			<select
+				{...register('category', { required: true })}
+				className="border border-color p-3 bg-dimmed"
+				disabled={!type}
+			>
+				<option value="">Выберите категорию</option>
+				{grouped.map(({ _id, label }) => (
+					<option key={_id} value={_id}>
+						{label}
+					</option>
+				))}
+			</select>
+
 			<XInput
-				label="Название категории"
-				placeholder="Зарплата/Магазин"
-				name="label"
+				label="Сумма"
+				placeholder="0.00"
+				name="sum"
 				field
+				type="number"
+				step="0.01"
 				hideHint
-				hint="Введите название категории"
-				errorMessage={errors?.label?.message}
-				{...register('label', { required: true })}
+				hint="Введите сумму операция"
+				errorMessage={errors?.sum?.message}
+				{...register('sum', { required: true })}
 			/>
-			<div className={'x-input x-input--field' + (id ? ' x-input--disabled' : '')}>
-				<div className="x-input-container">
-					<div className="x-input-underlay"></div>
-					<div className="x-input-control">
-						<div className="x-input-label">Категория</div>
-						<select
-							{...register('operation', { required: true })}
-							className="x-input-native"
-							disabled={id}
-						>
-							<option value="">Выберите тип операции</option>
-							{operations.map((value) => (
-								<option key={value} value={value}>
-									{value}
-								</option>
-							))}
-						</select>
-					</div>
-				</div>
-			</div>
+
+			<XInput
+				label="Коментарий"
+				placeholder="Коментарий"
+				name="comment"
+				field
+				type="textarea"
+				rows="4"
+				hideHint
+				hint="Введите сумму операция"
+				errorMessage={errors?.sum?.message}
+				{...register('comment')}
+			/>
 
 			<div className="flex gap-4 justify-center">
 				<XBtn color="primary" type="submit">

@@ -1,5 +1,5 @@
 import httpService from './http.service';
-const transactionsEndpoint = 'transactiona/';
+const transactionsEndpoint = 'transactions/';
 
 const transactionsService = {
 	getTransactions: async () => {

@@ -1,6 +1,12 @@
 import { Navigate, useRoutes } from 'react-router-dom';
 import { DefaultLayout, MainLayout } from '../layout';
-import { AccountPage, AccountsPage, CategoriesPage, CategoryPage } from '../pages';
+import {
+	AccountPage,
+	AccountsPage,
+	CategoriesPage,
+	CategoryPage,
+	TransactionPage,
+} from '../pages';
 
 import { SignIn } from '../pages/sign-in/sign-in';
 import { SignUp } from '../pages/sign-up/sign-up';
@@ -85,7 +91,14 @@ export const AppRouter = () => {
 						},
 					],
 				},
-
+				{
+					path: 'transaction/',
+					element: <DefaultLayout />,
+					children: [
+						{ path: ':id', element: <TransactionPage /> },
+						{ path: '', element: <TransactionPage /> },
+					],
+				},
 				{
 					path: '404',
 					element: (

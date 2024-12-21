@@ -30,15 +30,23 @@
 .x-input-native {
 	@apply block w-full bg-transparent px-3 pt-6 pb-2 outline-none transition-all ease-in-out duration-200 placeholder:opacity-0 focus:placeholder:opacity-100 focus:outline-none;
 }
+textarea.x-input-native {
+	@apply mt-6 pt-0;
+}
+
 .x-input-label {
 	@apply pointer-events-none opacity-70 truncate absolute ml-3 left-0 top-1/2 max-w-[calc(100%-2rem)] -translate-y-1/2 transition-all ease-in-out duration-200;
 }
-.x-input:has(input:focus) .x-input-label {
+.x-input:has(input:focus) .x-input-label,
+.x-input:has(textarea:focus) .x-input-label {
 	@apply opacity-100;
 }
 
 .x-input-control:not(:has(*.x-input-label)) .x-input-native {
 	@apply py-4;
+}
+.x-input-control:not(:has(*.x-input-label)) textarea.x-input-native {
+	@apply mt-4 pt-0;
 }
 .x-input--stack-label .x-input-native {
 	@apply placeholder:opacity-100;
@@ -53,12 +61,18 @@
 	.x-input-native {
 		@apply pt-3 pb-1;
 	}
+	textarea.x-input-native {
+		@apply pt-0 mt-3;
+	}
 	.x-input-native:focus ~ .x-input-label,
 	.x-input-native:not(:placeholder-shown) ~ .x-input-label {
 		@apply text-[0.8em] top-2;
 	}
 	.x-input-control:not(:has(*.x-input-label)) .x-input-native {
 		@apply py-2;
+	}
+	.x-input-control:not(:has(*.x-input-label)) textarea.x-input-native {
+		@apply pt-0 mt-2;
 	}
 }
 .x-input--dense.x-input--stack-label .x-input-native ~ .x-input-label {
@@ -68,7 +82,7 @@
 .x-input-underlay,
 .x-input-underlined,
 .x-input-outline {
-	@apply hidden absolute bottom-0 left-0 w-full rounded-inherit border-inherit contain-layout box-border;
+	@apply hidden absolute bottom-0 left-0 w-full rounded-inherit border-inherit contain-layout box-border -z-10;
 }
 
 .x-input-underlay {
@@ -110,13 +124,22 @@
 	.x-input-control .x-input-native {
 		@apply py-2;
 	}
+	.x-input-control textarea.x-input-native {
+		@apply pt-0 mt-2;
+	}
 	.x-input-control:has(input:focus) .x-input-label,
-	.x-input-control:has(input:not(:placeholder-shown)) .x-input-label {
+	.x-input-control:has(textarea:focus) .x-input-label,
+	.x-input-control:has(input:not(:placeholder-shown)) .x-input-label,
+	.x-input-control:has(textarea:not(:placeholder-shown)) .x-input-label {
 		@apply top-0 ml-3;
 	}
 
 	.x-input-control:has(input:focus) ~ .x-input-outline > .x-input-outline-notch,
+	.x-input-control:has(textarea:focus) ~ .x-input-outline > .x-input-outline-notch,
 	.x-input-control:has(input:not(:placeholder-shown))
+		~ .x-input-outline
+		> .x-input-outline-notch,
+	.x-input-control:has(textarea:not(:placeholder-shown))
 		~ .x-input-outline
 		> .x-input-outline-notch {
 		@apply border-t-transparent;
@@ -126,6 +149,9 @@
 .x-input--dense.x-input--outline.x-input--stack-label {
 	.x-input-control .x-input-native {
 		@apply py-2;
+	}
+	.x-input-control textarea.x-input-native {
+		@apply pt-0 mt-0;
 	}
 	.x-input-control .x-input-label {
 		@apply top-0 ml-3;
@@ -142,7 +168,8 @@
 .x-input--underlined .x-input-underlined {
 	@apply block;
 }
-.x-input--underlined:has(input:focus) .x-input-underlined {
+.x-input--underlined:has(input:focus) .x-input-underlined,
+.x-input--underlined:has(textarea:focus) .x-input-underlined {
 	@apply border-b-3;
 }
 
@@ -156,7 +183,8 @@
 	@apply block;
 }
 
-.x-input:has(input:focus) {
+.x-input:has(input:focus),
+.x-input:has(textarea:focus) {
 	@apply border-blue-600;
 }
 
@@ -177,7 +205,9 @@
 		@apply border-current opacity-60;
 	}
 	&:has(input:focus) .x-input-outline,
-	&:has(input:focus) .x-input-underlined {
+	&:has(textarea:focus) .x-input-outline,
+	&:has(input:focus) .x-input-underlined,
+	&:has(textarea:focus) .x-input-underlined {
 		@apply opacity-100;
 	}
 }
@@ -240,6 +270,9 @@
 	@apply top-1 translate-y-0;
 }
 .x-input:has(input:focus)
+	.x-input-messages:not(.x-input-messages--error)
+	.x-input-message--hint,
+.x-input:has(textarea:focus)
 	.x-input-messages:not(.x-input-messages--error)
 	.x-input-message--hint,
 .x-input-messages--hint .x-input-message--hint {

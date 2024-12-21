@@ -69,6 +69,11 @@ const XInputRoot = forwardRef(function XInput(props, ref) {
 		..._attrs,
 		className: classNames('x-input-native', className),
 	};
+	const isTextarea = attrs.type === 'textarea';
+	if (isTextarea) {
+		delete attrs.type;
+	}
+	const Tag = isTextarea ? 'textarea' : 'input';
 
 	const modColor = isError ? 'negative' : color;
 
@@ -87,22 +92,9 @@ const XInputRoot = forwardRef(function XInput(props, ref) {
 		>
 			{before && <div className="x-input-before">{before}</div>}
 			<div className="x-input-container">
-				<div className="x-input-underlay"></div>
-				<div className="x-input-outline">
-					<div className="x-input-outline-start"></div>
-					<div className="x-input-outline-notch">
-						{label && (
-							<label htmlFor={props.id} className="x-input-label">
-								{label}
-							</label>
-						)}
-					</div>
-					<div className="x-input-outline-end"></div>
-				</div>
-				<div className="x-input-underlined"></div>
 				{prepend && <div className="x-input-prepend">{prepend}</div>}
 				<div className="x-input-control" ref={controlRef}>
-					<input {...attrs} />
+					<Tag {...attrs} />
 					{label && (
 						<label
 							htmlFor={props.id}
@@ -119,6 +111,19 @@ const XInputRoot = forwardRef(function XInput(props, ref) {
 					)}
 				</div>
 				{append && <div className="x-input-append">{append}</div>}
+				<div className="x-input-underlay"></div>
+				<div className="x-input-outline">
+					<div className="x-input-outline-start"></div>
+					<div className="x-input-outline-notch">
+						{label && (
+							<label htmlFor={props.id} className="x-input-label">
+								{label}
+							</label>
+						)}
+					</div>
+					<div className="x-input-outline-end"></div>
+				</div>
+				<div className="x-input-underlined"></div>
 			</div>
 			{after && <div className="x-input-after">{after}</div>}
 			{!hideMessage && (

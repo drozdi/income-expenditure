@@ -3,11 +3,8 @@ const Category = require('../models/Category');
 const Transaction = require('../models/Transaction');
 
 async function addTransaction(transaction) {
+	delete transaction._id;
 	const newTransaction = await Transaction.create({ ...transaction });
-
-	await Account.findByIdAndUpdate(newTransaction.account, {
-		$push: { categories: newTransaction },
-	});
 
 	return newTransaction;
 }
