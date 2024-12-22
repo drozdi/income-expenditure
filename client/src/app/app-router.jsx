@@ -5,6 +5,7 @@ import {
 	AccountsPage,
 	CategoriesPage,
 	CategoryPage,
+	MainPage,
 	TransactionPage,
 } from '../pages';
 
@@ -19,11 +20,7 @@ export const AppRouter = () => {
 			children: [
 				{
 					path: '',
-					element: (
-						<div className="flex flex-col items-center text-xl">
-							<h2 className="text-2xl">Main</h2>
-						</div>
-					),
+					element: <MainPage />,
 				},
 				{
 					path: 'auth',

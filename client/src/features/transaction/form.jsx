@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import * as yup from 'yup';
 
-import { getAccounts } from '../../entites/accounts/accountsSlice';
+import { addTransaction, getAccounts } from '../../entites/accounts/accountsSlice';
 import { getCategories, getTypes } from '../../entites/categories/categoriesSlice';
 import { saveTransaction } from '../../entites/transactions/transactionsSlice';
 import { XBtn, XInput } from '../../shared/ui';
@@ -16,10 +16,10 @@ const transactionSchema = yup.object().shape({
 	type: yup.string().oneOf(['income', 'expense', 'transfer']).required(),
 	category: yup.string().required('Выберите категорию!'),
 	comment: yup.string(),
-	//sum: yup
-	//	.number()
-	//	.positive('Сумма должна быть положительной')
-	//	.required('Поле обязательно'),
+	amount: yup
+		.number()
+		.positive('Сумма должна быть положительной')
+		.required('Поле обязательно'),
 	//date: { type: Date, default: Date.now },
 });
 
@@ -38,7 +38,7 @@ export default ({ id, onSaved }) => {
 			category: '',
 			type: '',
 			comment: '',
-			sum: '',
+			amount: '',
 		},
 		resolver: yupResolver(transactionSchema),
 	});
@@ -69,6 +69,7 @@ export default ({ id, onSaved }) => {
 		dispatch(saveTransaction(data))
 			.unwrap()
 			.then((data) => {
+				dispatch(addTransaction(data));
 				toast.show({
 					children: 'Сохранено',
 					color: 'positive',
@@ -127,14 +128,14 @@ export default ({ id, onSaved }) => {
 			<XInput
 				label="Сумма"
 				placeholder="0.00"
-				name="sum"
+				name="amount"
 				field
 				type="number"
 				step="0.01"
 				hideHint
 				hint="Введите сумму операция"
-				errorMessage={errors?.sum?.message}
-				{...register('sum', { required: true })}
+				errorMessage={errors?.amount?.message}
+				{...register('amount', { required: true })}
 			/>
 
 			<XInput
@@ -146,7 +147,7 @@ export default ({ id, onSaved }) => {
 				rows="4"
 				hideHint
 				hint="Введите сумму операция"
-				errorMessage={errors?.sum?.message}
+				errorMessage={errors?.comment?.message}
 				{...register('comment')}
 			/>
 

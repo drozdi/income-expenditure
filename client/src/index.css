@@ -65,7 +65,7 @@
 @tailwind variants;
 
 @layer base {
-	*,
+	/**,
 	*:before,
 	*::after {
 		box-sizing: border-box;
@@ -88,12 +88,12 @@
 	}
 	a[href]:hover {
 		/*color: rgb(var(--link-hover-color));*/
-		text-decoration: underlined;
+	/*text-decoration: underlined;
 	}
 	* {
 		scrollbar-color: var(--scrollbar-color);
 		scrollbar-width: thin;
-	}
+	}*/
 	/**::-moz-selection,
 	*::selection {
 		color: #eee;

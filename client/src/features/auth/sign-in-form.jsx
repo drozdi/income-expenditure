@@ -1,10 +1,12 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import LoginIcon from '@mui/icons-material/Login';
+import LoadingButton from '@mui/lab/LoadingButton';
+import { Button, Stack, TextField } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { getIsLoading, loginUser } from '../../entites/auth/authSlice';
-import { XBtn, XInput } from '../../shared/ui';
 import { useToast } from '../toast';
 
 const loginFormSchema = yup.object().shape({
@@ -44,36 +46,46 @@ export default () => {
 			});
 	};
 	return (
-		<form className="flex flex-col gap-2" onSubmit={handleSubmit(onSubmit)}>
-			<XInput
+		<Stack
+			direction="column"
+			spacing={2}
+			component="form"
+			onSubmit={handleSubmit(onSubmit)}
+		>
+			<TextField
+				id="sign-in-email"
 				label="Email"
 				placeholder="Email"
-				name="email"
-				field
-				hideHint
-				hint="Введите email"
-				errorMessage={errors?.email?.message}
+				variant="filled"
+				error={!!errors?.email?.message}
+				helperText={errors?.email?.message || ' '}
 				{...register('email', { required: true })}
 			/>
-			<XInput
+			<TextField
+				id="sign-in-password"
 				label="Password"
 				placeholder="Password"
-				name="password"
 				type="password"
-				field
-				hideHint
-				hint="Введите пароль"
-				errorMessage={errors?.password?.message}
+				variant="filled"
+				error={!!errors?.password?.message}
+				helperText={errors?.password?.message || ' '}
 				{...register('password', { required: true })}
 			/>
-			<div className="text-center">
-				<XBtn color="primary" type="submit">
-					{isLoading ? 'Loading...' : 'Ввойти'}
-				</XBtn>
-				<XBtn text flat to="/auth/signUp">
-					{isLoading ? 'Loading...' : 'Регистрация'}
-				</XBtn>
-			</div>
-		</form>
+			<Stack direction="row" spacing={2}>
+				<LoadingButton
+					loading={isLoading}
+					loadingPosition="start"
+					startIcon={<LoginIcon />}
+					color="success"
+					type="submit"
+					variant="contained"
+				>
+					{isLoading ? 'Вход...' : 'Ввойти'}
+				</LoadingButton>
+				<Button component={Link} to="/auth/signUp" disabled={isLoading}>
+					Регистрация
+				</Button>
+			</Stack>
+		</Stack>
 	);
 };

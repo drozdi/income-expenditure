@@ -31,12 +31,12 @@ async function updateAccount(id, account) {
 
 // delete
 async function deleteAccount(id) {
-	const account = await Account.findById(id).populate('owner');
+	const account = await Account.findById(id);
 	await account.populate('categories');
 	account.categories.map(async (category) => {
 		await category.deleteOne();
 	});
-	await User.findByIdAndUpdate(account.owner._id, { $push: { accounts: newAccount } });
+	await User.findByIdAndUpdate(account.owner, { $pull: { accounts: id } });
 
 	return await account.deleteOne();
 }
@@ -60,6 +60,17 @@ async function getAccount(id) {
 	account.owner.password = null;
 	account.owner.accounts = null;
 	return account;
+}
+
+async function calluletIncome(id, amount) {
+	const account = await getAccount(id);
+	account.balance += amount;
+	await account.save();
+}
+async function calluletExpense(id, amount) {
+	const account = await getAccount(id);
+	account.balance -= amount;
+	await account.save();
 }
 
 module.exports = {

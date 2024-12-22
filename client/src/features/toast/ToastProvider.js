@@ -1,10 +1,9 @@
 import { useRef } from 'react';
-import { XToast } from '../../shared/ui';
 import { ToastContext } from './ToastContext';
 
 export function ToastProvider({ children }) {
 	const toast = useRef(null);
-	return (
+	/*return (
 		<>
 			<XToast
 				underlined
@@ -15,6 +14,11 @@ export function ToastProvider({ children }) {
 				ref={toast}
 			/>
 			<ToastContext.Provider value={toast}>{children}</ToastContext.Provider>
+		</>
+	);*/
+	return (
+		<>
+			<ToastContext.Provider value={null}>{children}</ToastContext.Provider>
 		</>
 	);
 }

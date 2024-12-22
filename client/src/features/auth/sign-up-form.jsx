@@ -1,10 +1,12 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import SaveIcon from '@mui/icons-material/Save';
+import LoadingButton from '@mui/lab/LoadingButton';
+import { Stack, TextField } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { getIsLoading, registerUser } from '../../entites/auth/authSlice';
-import { XBtn, XInput } from '../../shared/ui';
 import { useToast } from '../toast';
 
 const regFormSchema = yup.object().shape({
@@ -63,54 +65,64 @@ export default () => {
 			});
 	};
 	return (
-		<form className="flex flex-col gap-2" onSubmit={handleSubmit(onSubmit)}>
-			<XInput
+		<Stack
+			direction="column"
+			spacing={2}
+			component="form"
+			onSubmit={handleSubmit(onSubmit)}
+		>
+			<TextField
+				id="sign-in-username"
 				label="Имя"
 				placeholder="Ваше имя"
-				name="username"
-				field
-				hideHint
-				hint="Введите username"
-				errorMessage={errors?.username?.message}
+				variant="filled"
+				error={!!errors?.username?.message}
+				helperText={errors?.username?.message || ' '}
 				{...register('username', { required: true })}
 			/>
-			<XInput
+			<TextField
+				id="sign-in-email"
 				label="Email"
 				placeholder="Email"
-				name="email"
-				field
-				hideHint
-				hint="Введите email"
-				errorMessage={errors?.email?.message}
+				variant="filled"
+				error={!!errors?.email?.message}
+				helperText={errors?.email?.message || ' '}
 				{...register('email', { required: true })}
 			/>
-			<XInput
+
+			<TextField
+				id="sign-in-password"
 				label="Password"
 				placeholder="Password"
-				name="password"
 				type="password"
-				field
-				hideHint
-				hint="Введите пароль"
-				errorMessage={errors?.password?.message}
+				variant="filled"
+				error={!!errors?.password?.message}
+				helperText={errors?.password?.message || ' '}
 				{...register('password', { required: true })}
 			/>
-			<XInput
+			<TextField
+				id="sign-in-re-password"
 				label="Re Password"
 				placeholder="Repeat password"
-				name="re_password"
 				type="password"
-				field
-				hideHint
-				hint="Повторите пароль"
-				errorMessage={errors?.re_password?.message}
+				variant="filled"
+				error={!!errors?.re_password?.message}
+				helperText={errors?.re_password?.message || ' '}
 				{...register('re_password', { required: true })}
 			/>
-			<div className="text-center">
-				<XBtn color="primary" type="submit">
-					{isLoading ? 'Loading...' : 'Зарегистрироваться'}
-				</XBtn>
-			</div>
-		</form>
+
+			<Stack direction="row" spacing={2}>
+				<LoadingButton
+					loading={isLoading}
+					loadingPosition="start"
+					startIcon={<SaveIcon />}
+					variant="contained"
+					color="success"
+					type="submit"
+				>
+					{isLoading ? 'Регистрация...' : 'Зарегистрироваться'}
+				</LoadingButton>
+			</Stack>
+		</Stack>
 	);
 };

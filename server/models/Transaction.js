@@ -16,7 +16,7 @@ const TransactionSchema = mongoose.Schema(
 		owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
 		link: { type: mongoose.Schema.Types.ObjectId, ref: 'Transaction' },
 		date: { type: Date, default: Date.now },
-		sum: { type: Number, required: true },
+		amount: { type: Number, required: true },
 		comment: { type: String, required: false },
 	},
 	{ timestamps: true },

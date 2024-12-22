@@ -1,9 +1,10 @@
+import { Button } from '@mui/material';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { getIsAuth } from '../../entites/auth/authSlice';
 import LogOutBtn from '../../features/auth/sign-out';
 import logoSvg from '../../shared/images/logo.svg';
-import { XBtn } from '../../shared/ui';
 
 export function Header({ className }) {
 	const isAuth = useSelector(getIsAuth);
@@ -18,7 +19,15 @@ export function Header({ className }) {
 				<div className="text-white">email</div>
 
 				<div className="flex items-center">
-					<div>{isAuth ? <LogOutBtn /> : <XBtn to="/auth">Ввойти</XBtn>}</div>
+					<div>
+						{isAuth ? (
+							<LogOutBtn />
+						) : (
+							<Button component={Link} to="/auth">
+								Ввойти
+							</Button>
+						)}
+					</div>
 				</div>
 			</div>
 		</header>

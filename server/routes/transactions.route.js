@@ -24,6 +24,21 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
 	const newTransaction = await addTransaction({ ...req.body, owner: req.user._id });
+
+	if (newTransaction.type === 'income') {
+		const account = await Account.findById(newTransaction.account);
+		account.balance += newTransaction.amount;
+		await account.save();
+	} else if (newTransaction.type === 'expense') {
+		const account = await Account.findById(newTransaction.account);
+		account.balance -= newTransaction.amount;
+		await account.save();
+	} /*else if (newTransaction.type === 'transfer') {
+		const account = await Account.findById(newTransaction.account);
+		account.balance -= newTransaction.amount;
+		await account.save();
+	}*/
+
 	res.send({ data: newTransaction });
 });
 

@@ -71,6 +71,17 @@ export const accountsSlice = createSlice({
 			state.isLoading = false;
 			state.error = null;
 		},
+		addTransaction: (state, { payload }) => {
+			const { transaction } = payload;
+			const index = state.entities.findIndex((t) => t._id === transaction.account);
+			if (index !== -1) {
+				if (transaction.type === 'income') {
+					state.entities[index].balance += transaction.amount;
+				} else if (transaction.type === 'expense') {
+					state.entities[index].balance += transaction.amount;
+				}
+			}
+		},
 	},
 	extraReducers: (builder) => {
 		builder.addCase(fetchAccounts.pending, (state, action) => {
@@ -127,7 +138,7 @@ export const accountsSlice = createSlice({
 });
 
 const { actions, reducer } = accountsSlice;
-export const { reset: resetAccounts } = actions;
+export const { reset: resetAccounts, addTransaction } = actions;
 
 export const getAccounts = (state) => {
 	return state.accounts.entities;
