@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { getTypes } from '../../entites/categories/categoriesSlice';
-import CategoriesListAccount from '../../features/categories/list-account';
+import CategoriesList from '../../features/categories/list';
 
 export function CategoriesPage() {
 	const { accountId } = useParams();
@@ -15,14 +15,20 @@ export function CategoriesPage() {
 			{types && (
 				<ButtonGroup fullWidth value={currentType} onChange={setCurrentType}>
 					{Object.entries(types).map(([value, label]) => (
-						<Button key={value} value={value}>
+						<Button
+							variant={currentType === value ? 'contained' : ''}
+							key={value}
+							value={value}
+							onClick={() => setCurrentType(value)}
+						>
 							{label}
 						</Button>
 					))}
 				</ButtonGroup>
 			)}
+			<CategoriesList accountId={accountId} type={currentType} />
 		</>
 	) : (
-		<CategoriesListAccount />
+		<></>
 	);
 }

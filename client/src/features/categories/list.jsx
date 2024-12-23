@@ -1,3 +1,15 @@
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import {
+	Button,
+	ButtonGroup,
+	List,
+	ListItem,
+	ListItemButton,
+	ListItemIcon,
+	ListSubheader,
+} from '@mui/material';
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -7,7 +19,7 @@ import {
 	getTypes,
 } from '../../entites/categories/categoriesSlice';
 import localStorageService from '../../shared/services/localStorage.service';
-import { XBtn, XItem, XItemLabel, XItemSection, XList } from '../../shared/ui';
+import Link from '../../shared/ui/link';
 import { useToast } from '../toast';
 
 export default function ({ className, accountId, type }) {
@@ -41,38 +53,55 @@ export default function ({ className, accountId, type }) {
 		}
 	};
 
-	if (!categories.length) {
-		return (
-			<div className="text-center">Нет категорий. Добавьте новую категорию.</div>
-		);
-	}
 	return (
-		<>
-			<XList className={className} dense>
-				{grouped.map((category) => (
-					<XItem key={category._id}>
-						<XItemSection>
-							<XItemLabel>{category.label}</XItemLabel>
-						</XItemSection>
-						<XItemSection side>
-							<XBtn.Group>
-								<XBtn
-									to={`/account/${category.account}/category/${category._id}`}
-									icon="mdi-file-edit-outline"
-									title="Редактировать"
-								/>
-								<XBtn
-									onClick={() =>
-										handlerDelete(category._id, category.label)
-									}
-									icon="mdi-delete-alert"
-									title="Удалить"
-								/>
-							</XBtn.Group>
-						</XItemSection>
-					</XItem>
-				))}
-			</XList>
-		</>
+		<List className={className}>
+			{!categories.length && (
+				<ListItem>
+					<ListSubheader>
+						Нет категорий. Добавьте новую категорию.
+					</ListSubheader>
+				</ListItem>
+			)}
+			{grouped.map((category) => (
+				<ListItem
+					key={category._id}
+					divider
+					disablePadding
+					disableGutters
+					secondaryAction={
+						<ButtonGroup variant="text">
+							<Button
+								component={Link}
+								to={`/account/${category.account}/category/${category._id}`}
+								title="Редактировать"
+							>
+								<EditIcon />
+							</Button>
+							<Button
+								onClick={() =>
+									handlerDelete(category._id, category.label)
+								}
+								title="Удалить"
+							>
+								<DeleteIcon />
+							</Button>
+						</ButtonGroup>
+					}
+				>
+					<ListItemButton>{category.label}</ListItemButton>
+				</ListItem>
+			))}
+			<ListItem disablePadding disableGutters>
+				<ListItemButton
+					component={Link}
+					to={`/account/${accountId}/category/?type=${type}`}
+				>
+					<ListItemIcon>
+						<AddIcon />
+					</ListItemIcon>
+					Добавить категорию
+				</ListItemButton>
+			</ListItem>
+		</List>
 	);
 }

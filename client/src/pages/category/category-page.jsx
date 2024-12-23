@@ -3,7 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { getLoading } from '../../entites/accounts/accountsSlice';
 import CategoryForm from '../../features/category/form';
-import { Loader } from '../../features/loader';
 import { useToast } from '../../features/toast';
 export function CategoryPage() {
 	const { accountId, id } = useParams();
@@ -19,7 +18,6 @@ export function CategoryPage() {
 				id={id}
 				onSaved={() => navigate(`/categories/${accountId}/`)}
 			/>
-			<Loader isActive={isLoading} />
 		</>
 	);
 }

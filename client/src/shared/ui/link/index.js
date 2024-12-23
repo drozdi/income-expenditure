@@ -1,11 +1,11 @@
 import { Link } from '@mui/material';
-import React from 'react';
+import { forwardRef } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
-export default function ({ children, ...props }) {
+export default forwardRef(function ({ children, ...props }, ref) {
 	return (
-		<Link {...props} component={RouterLink}>
+		<Link {...props} component={RouterLink} ref={ref}>
 			{children}
 		</Link>
 	);
-}
+});
