@@ -10,8 +10,9 @@ import { useToast } from '../toast';
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import BookmarkRemoveIcon from '@mui/icons-material/BookmarkRemove';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes';
 import { Button, ButtonGroup, Card, CardContent, CardHeader, Stack } from '@mui/material';
-import Link from '../../shared/ui/link';
+import { default as Link, default as link } from '../../shared/ui/link';
 import { currencyFormat } from '../../shared/utils/currency-format';
 
 export default () => {
@@ -79,6 +80,13 @@ export default () => {
 							orientation="vertical"
 						>
 							<Button>Hist</Button>
+							<Button
+								component={link}
+								to={`/categories/${account._id}`}
+								title="Категории"
+							>
+								<SpeakerNotesIcon />
+							</Button>
 							<Button title="Доход">
 								<BookmarkAddIcon />
 							</Button>
@@ -123,6 +131,9 @@ export default () => {
 						disabled
 					>
 						<Button>Hist</Button>
+						<Button component={link} to={`/categories/`} title="Категории">
+							<SpeakerNotesIcon />
+						</Button>
 						<Button title="Доход">
 							<BookmarkAddIcon />
 						</Button>
