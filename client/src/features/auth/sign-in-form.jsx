@@ -71,7 +71,7 @@ export default () => {
 				helperText={errors?.password?.message || ' '}
 				{...register('password', { required: true })}
 			/>
-			<Stack direction="row" spacing={2}>
+			<Stack direction="row" justifyContent="center" spacing={2}>
 				<LoadingButton
 					loading={isLoading}
 					loadingPosition="start"

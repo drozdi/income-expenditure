@@ -111,7 +111,7 @@ export default () => {
 				{...register('re_password', { required: true })}
 			/>
 
-			<Stack direction="row" spacing={2}>
+			<Stack direction="row" justifyContent="center" spacing={2}>
 				<LoadingButton
 					loading={isLoading}
 					loadingPosition="start"

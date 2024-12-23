@@ -6,8 +6,10 @@ import * as yup from 'yup';
 import { getAccount, saveAccount } from '../../entites/accounts/accountsSlice';
 
 import { useEffect } from 'react';
-import { XBtn, XInput } from '../../shared/ui';
 import { useToast } from '../toast';
+
+import LoadingButton from '@mui/lab/LoadingButton';
+import { Button, Stack, TextField } from '@mui/material';
 
 const accountSchema = yup.object().shape({
 	label: yup.string().required('Заполните название'),
@@ -57,38 +59,52 @@ export default ({ id, onSave }) => {
 			});
 	};
 	return (
-		<form className="relative flex flex-col gap-2" onSubmit={handleSubmit(onSubmit)}>
-			<XInput
+		<Stack
+			direction="column"
+			spacing={2}
+			component="form"
+			onSubmit={handleSubmit(onSubmit)}
+		>
+			<TextField
 				label="Название счета"
 				placeholder="Заначка"
 				name="label"
-				field
-				hideHint
-				hint="Введите название счета"
-				errorMessage={errors?.label?.message}
+				variant="filled"
+				error={!!errors?.label?.message}
+				helperText={errors?.label?.message || ' '}
 				{...register('label', { required: true })}
 			/>
-			<XInput
+			<TextField
 				label="Сумма"
 				placeholder="0.00"
 				type="number"
 				name="balance"
 				step="0.01"
-				disabled={id}
-				field
-				hideHint
-				hint="Введите начальную сумму счета"
-				errorMessage={errors?.balance?.message}
+				disabled={!!id}
+				variant="filled"
+				error={!!errors?.balance?.message}
+				helperText={errors?.balance?.message || ' '}
 				{...register('balance', { required: true })}
 			/>
-			<div className="flex gap-4 justify-center">
-				<XBtn color="primary" type="submit" disabled={isLoading}>
-					{isLoading ? 'Loading...' : id ? 'Сохранить' : 'Создать'}
-				</XBtn>
-				<XBtn color="secondary" disabled={isLoading} onClick={() => navigate(-1)}>
-					{isLoading ? 'Loading...' : 'Назад'}
-				</XBtn>
-			</div>
-		</form>
+
+			<Stack direction="row" justifyContent="center" spacing={2}>
+				<LoadingButton
+					loading={isLoading}
+					color="success"
+					type="submit"
+					variant="contained"
+				>
+					{isLoading ? 'Сохранятся...' : id ? 'Сохранить' : 'Создать'}
+				</LoadingButton>
+				<Button
+					color="secondary"
+					disabled={isLoading}
+					onClick={() => navigate(-1)}
+					variant="contained"
+				>
+					{isLoading ? 'Сохранятся...' : 'Назад'}
+				</Button>
+			</Stack>
+		</Stack>
 	);
 };

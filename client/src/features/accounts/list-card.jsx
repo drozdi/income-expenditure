@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAccounts, getLoading } from '../../entites/accounts/accountsSlice';
 import localStorageService from '../../shared/services/localStorage.service';
 import Link from '../../shared/ui/link';
+import { currencyFormat } from '../../shared/utils/currency-format';
 import { useToast } from '../toast';
 export default () => {
 	const dispatch = useDispatch();
@@ -18,19 +19,22 @@ export default () => {
 			direction="row"
 			spacing={2}
 			useFlexGap
-			sx={{
-				justifyContent: 'flex-start',
-				alignItems: 'stretch',
-			}}
+			alignItems="stretch"
+			justifyContent="flex-start"
 		>
 			{accounts.map((account) => (
-				<Link key={account._id} to={`/account/${account._id}`} underline="hover">
+				<Link
+					key={account._id}
+					to={`/account/${account._id}`}
+					underline="none"
+					className="hover:shadow-sm hover:shadow-black"
+				>
 					<Stack
 						direction="column"
 						spacing={2}
+						justifyContent="space-between"
+						alignItems="stretch"
 						sx={{
-							justifyContent: 'space-between',
-							alignItems: 'stretch',
 							minHeight: '100%',
 						}}
 						component={Card}
@@ -39,11 +43,15 @@ export default () => {
 						<CardMedia className="text-center">
 							<CloseIcon />
 						</CardMedia>
-						<CardContent>Новый счет</CardContent>
+						<CardContent>{currencyFormat(account.balance)}</CardContent>
 					</Stack>
 				</Link>
 			))}
-			<Link to={`/account/`} underline="hover">
+			<Link
+				to={`/account/`}
+				underline="none"
+				className="hover:shadow-sm hover:shadow-black"
+			>
 				<Stack
 					direction="column"
 					spacing={2}

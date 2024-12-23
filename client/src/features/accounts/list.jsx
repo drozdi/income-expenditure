@@ -1,14 +1,25 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteAccount, getLoading } from '../../entites/accounts/accountsSlice';
+import {
+	deleteAccount,
+	getAccounts,
+	getLoading,
+} from '../../entites/accounts/accountsSlice';
 import localStorageService from '../../shared/services/localStorage.service';
-import { XBtn, XItem, XItemLabel, XItemSection, XList } from '../../shared/ui';
-import { Loader } from '../loader';
 import { useToast } from '../toast';
-export default ({ accounts = [] }) => {
+
+import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
+import BookmarkRemoveIcon from '@mui/icons-material/BookmarkRemove';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import { Button, ButtonGroup, Card, CardContent, CardHeader, Stack } from '@mui/material';
+import Link from '../../shared/ui/link';
+import { currencyFormat } from '../../shared/utils/currency-format';
+
+export default () => {
 	const dispatch = useDispatch();
 	const isLoading = useSelector(getLoading);
 	const userId = localStorageService.getUserId();
 	const toast = useToast();
+	const accounts = useSelector(getAccounts) || [];
 	const handlerDelete = async (id, label) => {
 		if (confirm(`Удалить счет "${label}"?`)) {
 			dispatch(deleteAccount(id))
@@ -34,49 +45,96 @@ export default ({ accounts = [] }) => {
 	}
 	return (
 		<>
-			<Loader isActive={isLoading} />
-			<XList>
+			<Stack direction="column" spacing={2}>
 				{accounts.map((account) => (
-					<XItem key={account._id}>
-						<XItemSection>
-							<XItemLabel>{account.label}</XItemLabel>
-						</XItemSection>
-						<XItemSection>
-							<XItemLabel>
-								{account?.owner?._id === userId
-									? 'Мой'
-									: account.owner.name}
-							</XItemLabel>
-						</XItemSection>
-						<XItemSection side>
-							<XItemLabel>
-								{(account.balance || 0).toLocaleString('ru-RU', {
-									style: 'currency',
-									currency: 'RUB',
-								})}
-							</XItemLabel>
-						</XItemSection>
-						<XItemSection side>
-							<XBtn.Group>
-								{account?.owner?._id === userId && (
-									<XBtn
-										to={`/account/${account._id}`}
-										icon="mdi-file-edit-outline"
-										title="Редактировать"
-									/>
-								)}
-								<XBtn
-									onClick={() =>
-										handlerDelete(account._id, account.label)
-									}
-									icon="mdi-delete-alert"
-									title="Удалить"
-								/>
-							</XBtn.Group>
-						</XItemSection>
-					</XItem>
+					<Stack
+						component={Card}
+						key={account._id}
+						direction="row"
+						justifyContent="space-between"
+						className="hover:shadow-sm hover:shadow-black"
+					>
+						<Stack
+							component={Link}
+							to={`/account/${account._id}`}
+							direction="column"
+							underline="none"
+							sx={{
+								flex: '1 1 auto',
+							}}
+						>
+							<CardHeader
+								title={account.label}
+								subheader={
+									account?.owner?._id === userId
+										? 'Мой'
+										: account.owner.name
+								}
+							/>
+							<CardContent>{currencyFormat(account.balance)}</CardContent>
+						</Stack>
+						<ButtonGroup
+							sx={{ flex: '0 0 0 auto' }}
+							variant="text"
+							orientation="vertical"
+						>
+							<Button>Hist</Button>
+							<Button title="Доход">
+								<BookmarkAddIcon />
+							</Button>
+							<Button title="Расход">
+								<BookmarkRemoveIcon />
+							</Button>
+							<Button
+								onClick={() => handlerDelete(account._id, account.label)}
+								title="Удалить"
+							>
+								<DeleteOutlineIcon />
+							</Button>
+						</ButtonGroup>
+					</Stack>
 				))}
-			</XList>
+
+				<Stack
+					component={Card}
+					direction="row"
+					justifyContent="space-between"
+					alignItems="stretch"
+					className="hover:shadow-sm hover:shadow-black"
+				>
+					<Stack
+						component={Link}
+						to={`/account/`}
+						direction="column"
+						underline="none"
+						sx={{
+							flex: '1 1 auto',
+						}}
+					>
+						<CardHeader title="Новый " subheader="Счет" />
+						<CardContent>Новый счет</CardContent>
+					</Stack>
+					<ButtonGroup
+						sx={{
+							flex: '0 0 0 auto',
+						}}
+						variant="text"
+						orientation="vertical"
+						disabled
+					>
+						<Button>Hist</Button>
+						<Button title="Доход">
+							<BookmarkAddIcon />
+						</Button>
+						<Button title="Расход">
+							<BookmarkRemoveIcon />
+						</Button>
+						<Button title="Удалить">
+							<DeleteOutlineIcon />
+						</Button>
+					</ButtonGroup>
+				</Stack>
+			</Stack>
 		</>
 	);
 };

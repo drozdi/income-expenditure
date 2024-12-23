@@ -2,7 +2,7 @@ import { Button } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logoutUser } from '../../entites/auth/authSlice';
-export default () => {
+export default (props) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const logOut = () =>
@@ -12,7 +12,7 @@ export default () => {
 				navigate('/');
 			});
 	return (
-		<Button variant="contained" onClick={logOut}>
+		<Button {...props} onClick={logOut}>
 			Выйти
 		</Button>
 	);

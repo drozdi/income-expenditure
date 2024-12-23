@@ -152,5 +152,8 @@ export const getLoading = (state) => {
 export const getError = (state) => {
 	return state.accounts.error;
 };
+export const getTotalBalance = (state) => {
+	return state.accounts.entities.reduce((acc, cur) => acc + cur.balance, 0);
+};
 
 export default reducer;
