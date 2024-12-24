@@ -4,7 +4,6 @@ import {
 	AccountPage,
 	AccountsPage,
 	CategoriesPage,
-	CategoryPage,
 	MainPage,
 	TransactionPage,
 } from '../pages';
@@ -77,14 +76,6 @@ export const AppRouter = () => {
 						{
 							path: '',
 							element: <AccountPage />,
-						},
-						{
-							path: ':accountId/category/:id',
-							element: <CategoryPage />,
-						},
-						{
-							path: ':accountId/category/',
-							element: <CategoryPage />,
 						},
 					],
 				},

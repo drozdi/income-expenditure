@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { getTypes } from '../../entites/categories/categoriesSlice';
 import CategoriesList from '../../features/categories/list';
+import AccountCategoriesList from '../../features/categories/list-account';
 
 export function CategoriesPage() {
 	const { accountId } = useParams();
@@ -26,9 +27,9 @@ export function CategoriesPage() {
 					))}
 				</ButtonGroup>
 			)}
-			<CategoriesList accountId={accountId} type={currentType} />
+			<CategoriesList account={accountId} type={currentType} />
 		</>
 	) : (
-		<></>
+		<AccountCategoriesList />
 	);
 }

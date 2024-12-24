@@ -4,6 +4,7 @@ import categoriesService from '../../shared/services/categories.service';
 const initialState = {
 	entities: {},
 	types: {},
+	editId: null,
 	isLoading: false,
 	error: null,
 };
@@ -89,6 +90,9 @@ export const categoriesSlice = createSlice({
 			state.isLoading = false;
 			state.error = null;
 		},
+		edit: (state, { payload }) => {
+			state.editId = payload;
+		},
 	},
 	extraReducers: (builder) => {
 		builder.addCase(fetchCategories.pending, (state, action) => {
@@ -134,6 +138,7 @@ export const categoriesSlice = createSlice({
 			const index = state.entities[payload.account].findIndex(
 				(t) => t._id === payload._id,
 			);
+			state.editId = null;
 			state.entities[payload.account][index] = payload;
 			state.isLoading = false;
 		});
@@ -159,13 +164,17 @@ export const categoriesSlice = createSlice({
 });
 
 const { actions, reducer } = categoriesSlice;
-export const { reset: resetCategories } = actions;
+export const { reset: resetCategories, edit: editCategory } = actions;
 
 export const getLoading = (state) => {
 	return state.categories.isLoading;
 };
 export const getError = (state) => {
 	return state.categories.error;
+};
+
+export const getEditId = (state) => {
+	return state.categories.editId;
 };
 
 export const getCategories = (accountId) => (state) => {

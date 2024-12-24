@@ -1,49 +1,156 @@
+import CancelIcon from '@mui/icons-material/Cancel';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { Button, ButtonGroup, ListItem, ListItemButton } from '@mui/material';
+import SaveIcon from '@mui/icons-material/Save';
+import {
+	Button,
+	ButtonGroup,
+	ListItem,
+	ListItemButton,
+	ListItemText,
+	TextField,
+} from '@mui/material';
+import { useDialogs } from '@toolpad/core/useDialogs';
+import { useNotifications } from '@toolpad/core/useNotifications';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-	getCategories,
-	getLoading,
-	getTypes,
+	deleteCategory,
+	editCategory,
+	getEditId,
+	updateCategory,
 } from '../../entites/categories/categoriesSlice';
-import localStorageService from '../../shared/services/localStorage.service';
-import Link from '../../shared/ui/link';
-import { useToast } from '../toast';
 
-export default function () {
+export default function ({ category }) {
+	const inputRef = useRef();
+	const notifications = useNotifications();
+	const dialogs = useDialogs();
 	const dispatch = useDispatch();
-	const types = useSelector(getTypes);
-	const isLoading = useSelector(getLoading);
-	const categories = useSelector(getCategories(accountId)) || [];
-	const userId = localStorageService.getUserId();
-	const toast = useToast();
+	const isEditing = useSelector(getEditId) === category._id;
+	const [newLabel, setNewitLabel] = useState(category.label);
+
+	const handlerSave = () => {
+		dispatch(updateCategory({ ...category, label: newLabel }))
+			.unwrap()
+			.then((data) => {
+				notifications.show(`Категория "${data.label}" успешна изменена!`, {
+					severity: 'success',
+					autoHideDuration: 3000,
+				});
+			})
+			.catch(({ error }) => {
+				notifications.show(error, {
+					severity: 'error',
+					autoHideDuration: 3000,
+				});
+			});
+	};
+	const handlerDelete = async () => {
+		const deleteConfirmed = await dialogs.confirm(
+			`Точно хотите удалить категорию "${category.label}"?`,
+			{
+				title: 'Удалить?',
+				okText: 'Да',
+				cancelText: 'Отмена',
+			},
+		);
+
+		if (deleteConfirmed) {
+			dispatch(deleteCategory(category._id))
+				.unwrap()
+				.then((data) => {
+					notifications.show(`Категория "${category.label}" успешно удалена!`, {
+						severity: 'success',
+						autoHideDuration: 3000,
+					});
+				})
+				.catch(({ error }) => {
+					notifications.show(error, {
+						severity: 'error',
+						autoHideDuration: 3000,
+					});
+				});
+		}
+	};
+
+	const handlerEdit = () => {
+		dispatch(editCategory(category._id));
+	};
+	const handlerCancel = () => {
+		dispatch(editCategory(null));
+	};
+
+	const handlerBlur = ({ relatedTarget }) => {
+		if (relatedTarget?.closest('li')?.dataset?.id === category._id) {
+			return;
+		}
+		handlerSave();
+	};
+	const handlerKeyPress = ({ key }) => {
+		if (key === 'Enter') {
+			handlerSave();
+		}
+	};
+
+	const handlerDblclick = () => {
+		dispatch(editCategory(category._id));
+	};
+
+	useEffect(() => {
+		if (isEditing && inputRef.current) {
+			inputRef.current.focus();
+		}
+	}, [inputRef, isEditing]);
 
 	return (
 		<ListItem
 			key={category._id}
+			onDoubleClick={handlerDblclick}
 			divider
 			disablePadding
 			disableGutters
+			data-id={category._id}
 			secondaryAction={
-				<ButtonGroup variant="text">
-					<Button
-						component={Link}
-						to={`/account/${category.account}/category/${category._id}`}
-						title="Редактировать"
-					>
-						<EditIcon />
-					</Button>
-					<Button
-						onClick={() => handlerDelete(category._id, category.label)}
-						title="Удалить"
-					>
-						<DeleteIcon />
-					</Button>
-				</ButtonGroup>
+				isEditing ? (
+					<ButtonGroup variant="text">
+						<Button onClick={handlerSave} title="Сохранить">
+							<SaveIcon />
+						</Button>
+						<Button onClick={handlerCancel} title="Отмена">
+							<CancelIcon />
+						</Button>
+					</ButtonGroup>
+				) : (
+					<ButtonGroup variant="text">
+						<Button onClick={handlerEdit} title="Редактировать">
+							<EditIcon />
+						</Button>
+						<Button onClick={handlerDelete} title="Удалить">
+							<DeleteIcon />
+						</Button>
+					</ButtonGroup>
+				)
 			}
 		>
-			<ListItemButton>{category.label}</ListItemButton>
+			{isEditing ? (
+				<ListItemText>
+					<TextField
+						inputRef={inputRef}
+						fullWidth
+						hiddenLabel
+						variant="filled"
+						size="small"
+						value={newLabel}
+						onChange={({ target }) => setNewitLabel(target.value)}
+						onBlur={handlerBlur}
+						onKeyPress={handlerKeyPress}
+					/>
+				</ListItemText>
+			) : (
+				<ListItemButton>
+					<ListItemText>{category.label}</ListItemText>
+				</ListItemButton>
+			)}
 		</ListItem>
 	);
 }
