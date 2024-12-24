@@ -10,6 +10,8 @@ import {
 	ListItemIcon,
 	ListSubheader,
 } from '@mui/material';
+import { useDialogs } from '@toolpad/core/useDialogs';
+import { useNotifications } from '@toolpad/core/useNotifications';
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -22,13 +24,18 @@ import localStorageService from '../../shared/services/localStorage.service';
 import Link from '../../shared/ui/link';
 import { useToast } from '../toast';
 
+import DialogFormCategory from '../category/dialog-form';
+
 export default function ({ className, accountId, type }) {
+	const account = accountId;
+	const dialogs = useDialogs();
 	const dispatch = useDispatch();
 	const types = useSelector(getTypes);
 	const isLoading = useSelector(getLoading);
-	const categories = useSelector(getCategories(accountId)) || [];
+	const categories = useSelector(getCategories(account)) || [];
 	const userId = localStorageService.getUserId();
 	const toast = useToast();
+	const notifications = useNotifications();
 
 	const grouped = useMemo(() => {
 		return categories.filter((category) => category.type === type);
@@ -39,18 +46,26 @@ export default function ({ className, accountId, type }) {
 			dispatch(deleteCategory(id))
 				.unwrap()
 				.then((data) => {
-					toast.show({
-						children: 'Удалено',
-						color: 'positive',
+					notifications.show('Удалено', {
+						severity: 'success',
+						autoHideDuration: 3000,
 					});
 				})
 				.catch(({ error }) => {
-					toast.show({
-						children: error,
-						color: 'negative',
+					notifications.show(error, {
+						severity: 'error',
+						autoHideDuration: 3000,
 					});
 				});
 		}
+	};
+
+	const handlerAdd = async () => {
+		dialogs.open(DialogFormCategory, {
+			id: '',
+			account,
+			type,
+		});
 	};
 
 	return (
@@ -93,8 +108,9 @@ export default function ({ className, accountId, type }) {
 			))}
 			<ListItem disablePadding disableGutters>
 				<ListItemButton
-					component={Link}
-					to={`/account/${accountId}/category/?type=${type}`}
+					onClick={() => handlerAdd()}
+					//component={Link}
+					//to={`/account/${accountId}/category/?type=${type}`}
 				>
 					<ListItemIcon>
 						<AddIcon />

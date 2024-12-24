@@ -1,18 +1,30 @@
-import { Button, Dialog, DialogActions, DialogContent, Stack } from '@mui/material';
+import { yupResolver } from '@hookform/resolvers/yup';
+import {
+	Button,
+	Dialog,
+	DialogActions,
+	DialogContent,
+	DialogTitle,
+	Stack,
+	TextField,
+} from '@mui/material';
+import { useNotifications } from '@toolpad/core/useNotifications';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
-import { getCategories, getTypes } from '../../entites/categories/categoriesSlice';
+import { getTypes } from '../../entites/categories/categoriesSlice';
+import { useToast } from '../toast';
 
 const categogySchema = yup.object().shape({
 	label: yup.string().required('Заполните название'),
 });
 
-export default function ({ id, account, type, onSave, onClose }) {
+export default function ({ open, onClose, payload: { account, type } }) {
 	const dispatch = useDispatch();
+	const notifications = useNotifications();
 	const types = useSelector(getTypes);
-	const categories = useSelector(getCategories(accountId)) || [];
-	const category = categories.find((t) => t._id === id);
+
 	const toast = useToast();
 	const {
 		register,
@@ -30,28 +42,30 @@ export default function ({ id, account, type, onSave, onClose }) {
 		resolver: yupResolver(categogySchema),
 	});
 
+	useEffect(() => reset(category), [reset, category]);
+
 	const onSubmit = async (data) => {
 		console.log(data);
 		return;
 		dispatch(saveCategory(data))
 			.unwrap()
 			.then((data) => {
-				toast.show({
-					children: 'Сохранено',
-					color: 'positive',
+				notifications.show('Сохранено!', {
+					severity: 'success',
+					autoHideDuration: 3000,
 				});
 				onSaved?.(data);
 			})
 			.catch(({ error }) => {
-				toast.show({
-					children: error.message,
-					color: 'negative',
+				notifications.show(error.message, {
+					severity: 'error',
+					autoHideDuration: 3000,
 				});
 			}); //*/
 	};
 	return (
 		<Dialog fullWidth open={open} onClose={() => onClose()}>
-			<DialogTitle>Custom Error Handler</DialogTitle>
+			<DialogTitle>Добавить категорию "${types[type]}"</DialogTitle>
 			<DialogContent>
 				<Stack
 					direction="column"
@@ -71,7 +85,7 @@ export default function ({ id, account, type, onSave, onClose }) {
 				</Stack>
 			</DialogContent>
 			<DialogActions>
-				<Button onClick={() => onClose()}>Close me</Button>
+				<Button onClick={() => onClose()}>Закрыть</Button>
 			</DialogActions>
 		</Dialog>
 	);
