@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
 import {
 	deleteAccount,
-	getAccounts,
-	getLoading,
+	selectAccounts,
+	selectLoading,
 } from '../../entites/accounts/accountsSlice';
 import localStorageService from '../../shared/services/localStorage.service';
 import { useToast } from '../toast';
@@ -17,10 +17,10 @@ import { currencyFormat } from '../../shared/utils/currency-format';
 
 export default () => {
 	const dispatch = useDispatch();
-	const isLoading = useSelector(getLoading);
+	const isLoading = useSelector(selectLoading);
 	const userId = localStorageService.getUserId();
 	const toast = useToast();
-	const accounts = useSelector(getAccounts) || [];
+	const accounts = useSelector(selectAccounts) || [];
 	const handlerDelete = async (id, label) => {
 		if (confirm(`Удалить счет "${label}"?`)) {
 			dispatch(deleteAccount(id))

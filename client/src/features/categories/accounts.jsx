@@ -6,12 +6,12 @@ import {
 	ListSubheader,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAccounts } from '../../entites/accounts/accountsSlice';
+import { selectAccounts } from '../../entites/accounts/accountsSlice';
 import Link from '../../shared/ui/link';
 import { currencyFormat } from '../../shared/utils/currency-format';
 export default function () {
 	const dispatch = useDispatch();
-	const accounts = useSelector(getAccounts);
+	const accounts = useSelector(selectAccounts);
 
 	return (
 		<List>

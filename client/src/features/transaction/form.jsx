@@ -1,3 +1,4 @@
+//expense: 'Расход', income: 'Доход', transfer: 'Перевод'
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
@@ -5,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import * as yup from 'yup';
 
-import { addTransaction, getAccounts } from '../../entites/accounts/accountsSlice';
+import { addTransaction, selectAccounts } from '../../entites/accounts/accountsSlice';
 import { selectCategories, selectTypes } from '../../entites/categories/categoriesSlice';
 import { saveTransaction } from '../../entites/transactions/transactionsSlice';
 import { XBtn, XInput } from '../../shared/ui';
@@ -46,7 +47,7 @@ export default ({ id, onSaved }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
-	const accounts = useSelector(getAccounts);
+	const accounts = useSelector(selectAccounts);
 	const types = useSelector(selectTypes);
 
 	const type = watch('type');

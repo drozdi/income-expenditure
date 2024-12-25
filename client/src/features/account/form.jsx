@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-import { getAccount, saveAccount } from '../../entites/accounts/accountsSlice';
+import { saveAccount, selectAccount } from '../../entites/accounts/accountsSlice';
 
 import { useEffect } from 'react';
 import { useToast } from '../toast';
@@ -20,7 +20,7 @@ export default ({ id, onSave }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const toast = useToast();
-	const account = useSelector(getAccount(id));
+	const account = useSelector(selectAccount(id));
 
 	const {
 		register,

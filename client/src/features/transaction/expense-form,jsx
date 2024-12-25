@@ -1,0 +1,11 @@
+//expense: 'Расход'
+
+import { useDispatch, useSelector } from 'react-redux';
+import { getAccounts } from '../../entites/accounts/accountsSlice';
+import { selectTypes } from '../../entites/categories/categoriesSlice';
+
+export default function () {
+	const dispatch = useDispatch();
+	const accounts = useSelector(getAccounts());
+	const types = useSelector(selectTypes);
+}

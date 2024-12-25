@@ -135,25 +135,23 @@ export const accountsSlice = createSlice({
 			state.isLoading = false;
 		});
 	},
+	selectors: {
+		selectAccounts: (state) => state.entities,
+		selectLoading: (state) => state.isLoading,
+		selectError: (state) => state.error,
+		selectTotalBalance: (state) =>
+			state.entities.reduce((acc, cur) => acc + cur.balance, 0),
+	},
 });
 
-const { actions, reducer } = accountsSlice;
+const { actions, selectors, reducer } = accountsSlice;
 export const { reset: resetAccounts, addTransaction } = actions;
 
-export const getAccounts = (state) => {
-	return state.accounts.entities;
-};
-export const getAccount = (id) => (state) => {
+export const { selectAccounts, selectLoading, selectError, selectTotalBalance } =
+	selectors;
+
+export const selectAccount = (id) => (state) => {
 	return state.accounts.entities.find((t) => t._id === id);
-};
-export const getLoading = (state) => {
-	return state.accounts.isLoading;
-};
-export const getError = (state) => {
-	return state.accounts.error;
-};
-export const getTotalBalance = (state) => {
-	return state.accounts.entities.reduce((acc, cur) => acc + cur.balance, 0);
 };
 
 export default reducer;

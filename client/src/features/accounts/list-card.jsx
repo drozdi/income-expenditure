@@ -3,17 +3,17 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import { Card, CardContent, CardHeader, CardMedia, Stack } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAccounts, getLoading } from '../../entites/accounts/accountsSlice';
+import { selectAccounts, selectLoading } from '../../entites/accounts/accountsSlice';
 import localStorageService from '../../shared/services/localStorage.service';
 import Link from '../../shared/ui/link';
 import { currencyFormat } from '../../shared/utils/currency-format';
 import { useToast } from '../toast';
 export default () => {
 	const dispatch = useDispatch();
-	const isLoading = useSelector(getLoading);
+	const isLoading = useSelector(selectLoading);
 	const userId = localStorageService.getUserId();
 	const toast = useToast();
-	const accounts = useSelector(getAccounts) || [];
+	const accounts = useSelector(selectAccounts) || [];
 	return (
 		<Stack
 			direction="row"
