@@ -84,13 +84,12 @@ export function Header({ className }) {
 							open={Boolean(anchorEl)}
 							onClose={handleClose}
 						>
-							<MenuItem>{user.username}</MenuItem>
 							<MenuItem
 								component={Link}
 								onClick={handleClose}
 								to="/settings"
 							>
-								Профиль
+								{user.username}
 							</MenuItem>
 							<MenuItem>
 								<LogOutBtn />
