@@ -6,7 +6,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import * as yup from 'yup';
 
 import { addTransaction, getAccounts } from '../../entites/accounts/accountsSlice';
-import { getCategories, getTypes } from '../../entites/categories/categoriesSlice';
+import { selectCategories, selectTypes } from '../../entites/categories/categoriesSlice';
 import { saveTransaction } from '../../entites/transactions/transactionsSlice';
 import { XBtn, XInput } from '../../shared/ui';
 import { useToast } from '../toast';
@@ -47,12 +47,12 @@ export default ({ id, onSaved }) => {
 	const dispatch = useDispatch();
 
 	const accounts = useSelector(getAccounts);
-	const types = useSelector(getTypes);
+	const types = useSelector(selectTypes);
 
 	const type = watch('type');
 	const accountId = watch('account');
 
-	const categories = useSelector(getCategories(accountId)) || [];
+	const categories = useSelector(selectCategories(accountId)) || [];
 	const grouped = useMemo(
 		() => categories.filter((c) => c.type === type),
 		[categories, type],

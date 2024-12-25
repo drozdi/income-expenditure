@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
 	deleteCategory,
 	editCategory,
-	getEditId,
+	selectEditId,
 	updateCategory,
 } from '../../entites/categories/categoriesSlice';
 
@@ -26,11 +26,18 @@ export default function ({ category }) {
 	const notifications = useNotifications();
 	const dialogs = useDialogs();
 	const dispatch = useDispatch();
-	const isEditing = useSelector(getEditId) === category._id;
+	const isEditing = useSelector(selectEditId) === category._id;
 	const [newLabel, setNewitLabel] = useState(category.label);
 
-	const handlerSave = () => {
-		dispatch(updateCategory({ ...category, label: newLabel }))
+	const handlerSave = async () => {
+		const label = newLabel.trim();
+		if (!label) {
+			await dialogs.alert('Введите название!', {
+				title: 'Ошибка!',
+			});
+			return;
+		}
+		dispatch(updateCategory({ ...category, label }))
 			.unwrap()
 			.then((data) => {
 				notifications.show(`Категория "${data.label}" успешна изменена!`, {

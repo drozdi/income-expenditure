@@ -1,188 +1,177 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import categoriesService from '../../shared/services/categories.service';
+import { createSlice } from '../utils/createSlice';
 
 const initialState = {
 	entities: {},
 	types: {},
 	editId: null,
-	isLoading: false,
+	loading: false,
 	error: null,
 };
-
-export const fetchCategories = createAsyncThunk(
-	'categories/fetch',
-	async (_, { rejectWithValue }) => {
-		try {
-			const { data } = await categoriesService.getCategories();
-			return data;
-		} catch (error) {
-			return rejectWithValue(error.response.data);
-		}
-	},
-);
-export const fetchTypes = createAsyncThunk(
-	'categories/fetchTypes',
-	async (_, { rejectWithValue }) => {
-		try {
-			const { data } = await categoriesService.getTypes();
-			return data;
-		} catch (error) {
-			return rejectWithValue(error.response.data);
-		}
-	},
-);
-
-export const addCategory = createAsyncThunk(
-	'categories/add',
-	async (category, { rejectWithValue }) => {
-		try {
-			const { data } = await categoriesService.addCategory(category);
-			return data;
-		} catch (error) {
-			return rejectWithValue(error.response.data);
-		}
-	},
-);
-export const updateCategory = createAsyncThunk(
-	'categories/update',
-	async (category, { rejectWithValue }) => {
-		try {
-			const { data } = await categoriesService.updateCategory(
-				category._id,
-				category,
-			);
-			return data;
-		} catch (error) {
-			return rejectWithValue(error.response.data);
-		}
-	},
-);
-
-export const deleteCategory = createAsyncThunk(
-	'categories/delete',
-	async (id, { rejectWithValue }) => {
-		try {
-			const { data } = await categoriesService.deleteCategory(id);
-			return data;
-		} catch (error) {
-			return rejectWithValue(error.response.data);
-		}
-	},
-);
-
-export const saveCategory = createAsyncThunk(
-	'categories/save',
-	async (category, { dispatch }) => {
-		if (category._id) {
-			return await dispatch(updateCategory(category));
-		} else {
-			return await dispatch(addCategory(category));
-		}
-	},
-);
 
 export const categoriesSlice = createSlice({
 	name: 'categories',
 	initialState,
-	reducers: {
-		reset: (state) => {
-			state.entities = {};
-			state.isLoading = false;
-			state.error = null;
-		},
-		edit: (state, { payload }) => {
+	reducers: (create) => ({
+		reset: create.reducer(() => initialState),
+		edit: create.reducer((state, { payload }) => {
 			state.editId = payload;
-		},
-	},
-	extraReducers: (builder) => {
-		builder.addCase(fetchCategories.pending, (state, action) => {
-			state.isLoading = true;
-		});
-		builder.addCase(fetchCategories.fulfilled, (state, { payload }) => {
-			state.entities = payload;
-			state.isLoading = false;
-		});
-		builder.addCase(fetchCategories.rejected, (state, { payload }) => {
-			state.error = payload;
-			state.isLoading = false;
-		});
-
-		builder.addCase(fetchTypes.pending, (state, action) => {
-			state.isLoading = true;
-		});
-		builder.addCase(fetchTypes.fulfilled, (state, { payload }) => {
-			state.types = payload;
-			state.isLoading = false;
-		});
-		builder.addCase(fetchTypes.rejected, (state, { payload }) => {
-			state.error = payload;
-			state.isLoading = false;
-		});
-
-		builder.addCase(addCategory.pending, (state, action) => {
-			state.isLoading = true;
-		});
-		builder.addCase(addCategory.fulfilled, (state, { payload }) => {
-			state.entities[payload.account].push(payload);
-			state.isLoading = false;
-		});
-		builder.addCase(addCategory.rejected, (state, { payload }) => {
-			state.error = payload;
-			state.isLoading = false;
-		});
-
-		builder.addCase(updateCategory.pending, (state, action) => {
-			state.isLoading = true;
-		});
-		builder.addCase(updateCategory.fulfilled, (state, { payload }) => {
-			const index = state.entities[payload.account].findIndex(
-				(t) => t._id === payload._id,
-			);
-			state.editId = null;
-			state.entities[payload.account][index] = payload;
-			state.isLoading = false;
-		});
-		builder.addCase(updateCategory.rejected, (state, action) => {
-			state.error = action.payload;
-			state.isLoading = false;
-		});
-
-		builder.addCase(deleteCategory.pending, (state, action) => {
-			state.isLoading = true;
-		});
-		builder.addCase(deleteCategory.fulfilled, (state, { payload }) => {
-			state.entities[payload.account] = state.entities[payload.account].filter(
-				(t) => t._id !== payload._id,
-			);
-			state.isLoading = false;
-		});
-		builder.addCase(deleteCategory.rejected, (state, { payload }) => {
-			state.error = payload;
-			state.isLoading = false;
-		}); //*/
+		}),
+		fetchCategories: create.asyncThunk(
+			async (payload, { rejectWithValue }) => {
+				try {
+					const { data } = await categoriesService.getCategories();
+					return data;
+				} catch (error) {
+					return rejectWithValue(error.response.data);
+				}
+			},
+			{
+				pending: (state) => {
+					state.loading = true;
+				},
+				fulfilled: (state, { payload }) => {
+					state.entities = payload;
+					state.loading = false;
+				},
+				rejected: (state, { payload, error }) => {
+					state.error = payload ?? error;
+					state.loading = false;
+				},
+			},
+		),
+		fetchTypes: create.asyncThunk(
+			async (payload, { rejectWithValue }) => {
+				try {
+					const { data } = await categoriesService.getTypes();
+					return data;
+				} catch (error) {
+					return rejectWithValue(error.response.data);
+				}
+			},
+			{
+				pending: (state) => {
+					state.loading = true;
+				},
+				fulfilled: (state, { payload }) => {
+					state.types = payload;
+					state.loading = false;
+				},
+				rejected: (state, { payload, error }) => {
+					state.error = payload ?? error;
+					state.loading = false;
+				},
+			},
+		),
+		addCategory: create.asyncThunk(
+			async (payload, { rejectWithValue }) => {
+				try {
+					const { data } = await categoriesService.addCategory(payload);
+					return data;
+				} catch (error) {
+					return rejectWithValue(error.response.data);
+				}
+			},
+			{
+				pending: (state) => {
+					state.loading = true;
+				},
+				fulfilled: (state, { payload }) => {
+					state.entities[payload.account].push(payload);
+					state.loading = false;
+				},
+				rejected: (state, { payload, error }) => {
+					state.error = payload ?? error;
+					state.loading = false;
+				},
+			},
+		),
+		updateCategory: create.asyncThunk(
+			async (payload, { rejectWithValue }) => {
+				try {
+					const { data } = await categoriesService.updateCategory(
+						payload._id,
+						payload,
+					);
+					return data;
+				} catch (error) {
+					return rejectWithValue(error.response.data);
+				}
+			},
+			{
+				pending: (state) => {
+					state.loading = true;
+				},
+				fulfilled: (state, { payload }) => {
+					const index = state.entities[payload.account].findIndex(
+						(t) => t._id === payload._id,
+					);
+					state.editId = null;
+					state.entities[payload.account][index] = payload;
+					state.loading = false;
+				},
+				rejected: (state, { payload, error }) => {
+					state.error = payload ?? error;
+					state.loading = false;
+				},
+			},
+		),
+		deleteCategory: create.asyncThunk(
+			async (payload, { rejectWithValue }) => {
+				try {
+					const { data } = await categoriesService.deleteCategory(payload);
+					return data;
+				} catch (error) {
+					return rejectWithValue(error.response.data);
+				}
+			},
+			{
+				pending: (state) => {
+					state.loading = true;
+				},
+				fulfilled: (state, { payload }) => {
+					state.entities[payload.account] = state.entities[
+						payload.account
+					].filter((t) => t._id !== payload._id);
+					state.loading = false;
+				},
+				rejected: (state, { payload, error }) => {
+					state.error = payload ?? error;
+					state.loading = false;
+				},
+			},
+		),
+		saveCategory: create.asyncThunk(async (payload, { dispatch }) => {
+			if (payload._id) {
+				return await dispatch(categoriesSlice.actions.updateCategory(payload));
+			} else {
+				return await dispatch(categoriesSlice.actions.addCategory(payload));
+			}
+		}),
+	}),
+	selectors: {
+		selectError: (state) => state.error,
+		selectLoading: (state) => state.loading,
+		selectEditId: (state) => state.editId,
+		selectTypes: (state) => state.types,
 	},
 });
 
-const { actions, reducer } = categoriesSlice;
-export const { reset: resetCategories, edit: editCategory } = actions;
+const { actions, selectors, reducer } = categoriesSlice;
+export const {
+	reset: resetCategories,
+	edit: editCategory,
+	fetchCategories,
+	fetchTypes,
+	addCategory,
+	updateCategory,
+	deleteCategory,
+} = actions;
 
-export const getLoading = (state) => {
-	return state.categories.isLoading;
-};
-export const getError = (state) => {
-	return state.categories.error;
-};
+export const { selectError, selectLoading, selectEditId, selectTypes } = selectors;
 
-export const getEditId = (state) => {
-	return state.categories.editId;
-};
-
-export const getCategories = (accountId) => (state) => {
+export const selectCategories = (accountId) => (state) => {
 	return state.categories.entities[accountId];
-};
-
-export const getTypes = (state) => {
-	return state.categories.types;
 };
 
 export default reducer;

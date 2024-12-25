@@ -24,7 +24,9 @@ export default function () {
 				>
 					<ListItemButton>
 						<ListItemText>{account.label}</ListItemText>
-						<ListItemText>{currencyFormat(account.balance)}</ListItemText>
+						<ListItemText sx={{ textAlign: 'right' }}>
+							{currencyFormat(account.balance)}
+						</ListItemText>
 					</ListItemButton>
 				</ListItem>
 			))}

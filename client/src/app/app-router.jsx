@@ -5,6 +5,7 @@ import {
 	AccountsPage,
 	CategoriesPage,
 	MainPage,
+	SettingsPage,
 	TransactionPage,
 } from '../pages';
 
@@ -47,6 +48,7 @@ export const AppRouter = () => {
 						},
 					],
 				},
+				{ path: 'settings', element: <SettingsPage /> },
 				{
 					path: 'categories',
 					element: <DefaultLayout />,

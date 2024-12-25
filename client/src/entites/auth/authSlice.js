@@ -56,7 +56,7 @@ export const authSlice = createSlice({
 	name: 'auth',
 	initialState,
 	reducers: {},
-	selectors: {},
+
 	extraReducers: (builder) => {
 		builder.addCase(registerUser.pending, (state, action) => {
 			state.isLoading = true;
@@ -101,13 +101,17 @@ export const authSlice = createSlice({
 			state.error = action.payload;
 		});
 	},
+
+	selectors: {
+		selectIsAuth: (state) => state.isAuth,
+		selectLoading: (state) => state.isLoading,
+		selectUserId: (state) => state.auth?.userId,
+		selectError: (state) => state.error,
+	},
 });
 
-const { reducer } = authSlice;
+const { reducer, selectors, actions } = authSlice;
 
-export const getIsAuth = (state) => state.auth.isAuth;
-export const getIsLoading = (state) => state.auth.isLoading;
-export const getCurrentUserId = (state) => state.auth.auth?.userId;
-export const getAuthError = (state) => state.auth.error;
+export const { selectIsAuth, selectLoading, selectUserId, selectError } = selectors;
 
 export default reducer;

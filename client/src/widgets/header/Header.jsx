@@ -12,12 +12,12 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { getIsAuth } from '../../entites/auth/authSlice';
+import { selectIsAuth } from '../../entites/auth/authSlice';
 import LogOutBtn from '../../features/auth/sign-out';
 import Link from '../../shared/ui/link';
 
 export function Header({ className }) {
-	const isAuth = useSelector(getIsAuth);
+	const isAuth = useSelector(selectIsAuth);
 	const [anchorEl, setAnchorEl] = useState(null);
 
 	const handleMenu = (event) => {
@@ -82,8 +82,13 @@ export function Header({ className }) {
 							open={Boolean(anchorEl)}
 							onClose={handleClose}
 						>
-							<MenuItem onClick={handleClose}>Profile</MenuItem>
-							<MenuItem onClick={handleClose}>My account</MenuItem>
+							<MenuItem
+								component={Link}
+								onClick={handleClose}
+								to="/settings"
+							>
+								Профиль
+							</MenuItem>
 							<MenuItem>
 								<LogOutBtn />
 							</MenuItem>

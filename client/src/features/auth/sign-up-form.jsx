@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-import { getIsLoading, registerUser } from '../../entites/auth/authSlice';
+import { registerUser, selectLoading } from '../../entites/auth/authSlice';
 import { useToast } from '../toast';
 
 const regFormSchema = yup.object().shape({
@@ -35,7 +35,7 @@ export default () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const toast = useToast();
-	const isLoading = useSelector(getIsLoading);
+	const isLoading = useSelector(selectLoading);
 	const {
 		register,
 		handleSubmit,

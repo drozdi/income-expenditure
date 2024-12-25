@@ -18,7 +18,7 @@ const {
 router.use(auth);
 
 router.get('/types', async (req, res) => {
-	res.send({ data: { income: 'Доход', expense: 'Расход' /*transfer: 'Перевод'*/ } });
+	res.send({ data: { expense: 'Расход', income: 'Доход' /*transfer: 'Перевод'*/ } });
 });
 
 router.get('/', async (req, res) => {

@@ -1,10 +1,23 @@
+import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { XBtn } from '../../shared/ui';
-export default function ({ className }) {
+import Link from '../../shared/ui/link';
+export default function ({
+	className,
+	children = 'Назад',
+	color = 'grey-600',
+	disabled,
+}) {
 	const navigate = useNavigate();
 	return (
-		<XBtn className={className} onClick={() => navigate(-1)} color="primary">
-			Назад
-		</XBtn>
+		<Button
+			color={color}
+			className={className}
+			disabled={disabled}
+			component={Link}
+			variant="contained"
+			onClick={() => navigate(-1)}
+		>
+			{children}
+		</Button>
 	);
 }
