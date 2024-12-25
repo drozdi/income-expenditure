@@ -13,12 +13,14 @@ import {
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectIsAuth } from '../../entites/auth/authSlice';
+import { selectUser } from '../../entites/settings/settingsSlice';
 import LogOutBtn from '../../features/auth/sign-out';
 import Link from '../../shared/ui/link';
 
 export function Header({ className }) {
 	const isAuth = useSelector(selectIsAuth);
 	const [anchorEl, setAnchorEl] = useState(null);
+	const user = useSelector(selectUser);
 
 	const handleMenu = (event) => {
 		setAnchorEl(event.currentTarget);
@@ -82,6 +84,7 @@ export function Header({ className }) {
 							open={Boolean(anchorEl)}
 							onClose={handleClose}
 						>
+							<MenuItem>{user.username}</MenuItem>
 							<MenuItem
 								component={Link}
 								onClick={handleClose}
