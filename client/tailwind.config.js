@@ -8,7 +8,6 @@
         'surface': '#15171e',
         'dimmed': 'rgba(0, 0, 0, .4)',
         'divider': 'rgba(255, 255, 255, 0.15)',*/
-const plugin = require('tailwindcss/plugin');
 module.exports = {
 	content: ['./public/index.html', './src/**/*.{js,jsx,ts,tsx}'],
 	darkMode: ['selector'],

@@ -1,92 +1,82 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import transactionsService from '../../shared/services/transactions.service';
+import { createSlice } from '../utils/createSlice';
 
 const initialState = {
 	entities: [],
-	isLoading: false,
+	loading: false,
 	error: null,
 };
-
-export const fetchTransactions = createAsyncThunk(
-	'transactions/fetch',
-	async (_, { rejectWithValue }) => {
-		try {
-			const { data } = await transactionsService.getTransactions();
-			return data;
-		} catch (error) {
-			return rejectWithValue(error.response.data);
-		}
-	},
-);
-
-export const addTransaction = createAsyncThunk(
-	'transactions/add',
-	async (transaction, { rejectWithValue }) => {
-		try {
-			const { data } = await transactionsService.addTransaction(transaction);
-			return data;
-		} catch (error) {
-			return rejectWithValue(error.response.data);
-		}
-	},
-);
-
-export const saveTransaction = createAsyncThunk(
-	'transactions/add',
-	async (transaction, { dispatch }) => {
-		if (transaction._id) {
-		} else {
-			dispatch(addTransaction(transaction));
-		}
-	},
-);
 
 export const transactionsSlice = createSlice({
 	name: 'transactions',
 	initialState,
-	reducers: {},
-	extraReducers: (builder) => {
-		builder.addCase(fetchTransactions.pending, (state, actions) => {
-			state.isLoading = true;
-		});
-		builder.addCase(fetchTransactions.fulfilled, (state, { payload }) => {
+	reducers: (create) => ({
+		reset: () => initialState,
+		setTransaction: (state, { payload }) => {
 			state.entities = payload;
-			state.isLoading = false;
-		});
-		builder.addCase(fetchTransactions.rejected, (state, { payload }) => {
-			state.error = payload;
-			state.isLoading = false;
-		});
+		},
+		fetchTransactions: create.asyncThunk(
+			async (payload, { rejectWithValue }) => {
+				try {
+					const { data } = await transactionsService.getTransactions();
+					return data;
+				} catch (error) {
+					return rejectWithValue(error.response.data);
+				}
+			},
+			{
+				pending: (state) => {
+					state.loading = true;
+				},
+				fulfilled: (state, { payload }) => {
+					state.entities = payload;
+					state.loading = false;
+				},
+				rejected: (state, { payload, error }) => {
+					state.error = payload ?? error;
+					state.loading = false;
+				},
+			},
+		),
+		saveTransaction: create.asyncThunk(async (payload, { dispatch }) => {
+			if (transaction._id) {
+			} else {
+				dispatch(transactionsSlice.actions.addTransaction(payload));
+			}
+		}),
+		addTransaction: create.asyncThunk(
+			async (payload, { rejectWithValue }) => {
+				try {
+					const { data } = await transactionsService.addTransaction(payload);
+					return { ...data, _req: payload };
+				} catch (error) {
+					return rejectWithValue(error.response.data);
+				}
+			},
+			{
+				pending: (state) => {
+					state.loading = true;
+				},
+				fulfilled: (state, { payload }) => {
+					state.entities = [...state.entities, payload];
+					state.loading = false;
+				},
+				rejected: (state, { payload, error }) => {
+					state.error = payload ?? error;
+					state.loading = false;
+				},
+			},
+		),
+	}),
+	selectors: {
+		selectTransactions: (state) => state.transactions.entities,
+		selectLoading: (state) => state.loading,
+		selectError: (state) => state.error,
 	},
 });
 
-const { actions, reducer } = transactionsSlice;
-export const {} = actions;
-
-export const getTransactions = (state) => {
-	return state.transactions.entities;
-};
+const { actions, reducer, selectors } = transactionsSlice;
+export const { fetchTransactions, saveTransaction, addTransaction } = actions;
+export const { selectTransactions, selectLoading, selectError } = selectors;
 
 export default reducer;
-
-// const postReducer = (state = initialState, action) => {
-//  switch (action.type) {
-//   case 'DELETE_POST':
-//    return {
-//     ...state,
-//     entities: state.entities.filter((post) => post.id !== action.payload),
-//    }
-//   case 'ADD_POST':
-//    return {
-//     ...state,
-//     entities: [...state.entities, action.payload],
-//    }
-//   case 'UPDATE_POST':
-//    return {
-//     ...state,
-//     entities: state.entities.map((post) => {
-//      if (post.id === action.payload.id) {
-//       return {
-//        ...post,
-//        ...action.payload, }
-//       }

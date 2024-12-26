@@ -1,9 +1,8 @@
-import TransactionForm from '../../features/transaction/form';
+import ExpenseForm from '../../features/transaction/expense-form';
 export function TransactionPage() {
 	return (
 		<div>
-			<h1>Transaction Page</h1>
-			<TransactionForm />
+			<ExpenseForm />
 		</div>
 	);
 }

@@ -5,17 +5,30 @@ export function Sidebar({ className }) {
 	return (
 		<aside className={classNames('relative bg-sidebar shadow-xl', className)}>
 			<List>
-				<ListItem>
+				<ListItem disablePadding>
 					<ListItemButton component={Link} to="/">
 						Главная
 					</ListItemButton>
 				</ListItem>
-				<ListItem>
+
+				<ListItem disablePadding>
+					<ListItemButton component={Link} to="/transaction/expense">
+						Расход
+					</ListItemButton>
+				</ListItem>
+
+				<ListItem disablePadding>
+					<ListItemButton component={Link} to="/transaction/income">
+						Доход
+					</ListItemButton>
+				</ListItem>
+
+				<ListItem disablePadding>
 					<ListItemButton component={Link} to="/categories/">
 						Категории
 					</ListItemButton>
 				</ListItem>
-				<ListItem>
+				<ListItem disablePadding>
 					<ListItemButton component={Link} to="/accounts">
 						Счета
 					</ListItemButton>
