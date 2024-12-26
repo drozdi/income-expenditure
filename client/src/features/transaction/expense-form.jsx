@@ -12,14 +12,17 @@ import {
 	Typography,
 } from '@mui/material';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
+import { useNotifications } from '@toolpad/core/useNotifications';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectAccounts } from '../../entites/accounts/accountsSlice';
+import { calcTransaction, selectAccounts } from '../../entites/accounts/accountsSlice';
 import { selectCategories } from '../../entites/categories/categoriesSlice';
+import { addTransaction } from '../../entites/transactions/transactionsSlice';
 import { currencyFormat } from '../../shared/utils/currency-format';
 
 export default function () {
+	const notifications = useNotifications();
 	const dispatch = useDispatch();
 	const accounts = useSelector(selectAccounts) || [];
 	const [type, setType] = useState(null);
@@ -62,7 +65,22 @@ export default function () {
 			amount,
 			comment,
 		};
-		console.log(formData);
+		dispatch(addTransaction(formData))
+			.unwrap()
+			.then((data) => {
+				dispatch(calcTransaction(data));
+				console.log(data);
+				notifications.show(`Транзакция успешна создана!`, {
+					severity: 'success',
+					autoHideDuration: 3000,
+				});
+			})
+			.catch(({ error }) => {
+				notifications.show(error, {
+					severity: 'error',
+					autoHideDuration: 3000,
+				});
+			}); //*/
 	};
 
 	const cheack =

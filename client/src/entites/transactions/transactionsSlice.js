@@ -48,8 +48,9 @@ export const transactionsSlice = createSlice({
 			async (payload, { rejectWithValue }) => {
 				try {
 					const { data } = await transactionsService.addTransaction(payload);
-					return { ...data, _req: payload };
+					return data;
 				} catch (error) {
+					console.log(error);
 					return rejectWithValue(error.response.data);
 				}
 			},
