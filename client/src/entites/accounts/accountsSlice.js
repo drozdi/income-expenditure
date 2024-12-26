@@ -77,7 +77,7 @@ export const accountsSlice = createSlice({
 				if (payload.type === 'income') {
 					state.entities[index].balance += payload.amount;
 				} else if (payload.type === 'expense') {
-					state.entities[index].balance += payload.amount;
+					state.entities[index].balance -= payload.amount;
 				}
 			}
 		},
