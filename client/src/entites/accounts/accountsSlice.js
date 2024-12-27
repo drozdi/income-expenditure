@@ -71,14 +71,10 @@ export const accountsSlice = createSlice({
 			state.isLoading = false;
 			state.error = null;
 		},
-		calcTransaction: (state, { payload }) => {
+		accountBalance: (state, { payload }) => {
 			const index = state.entities.findIndex((t) => t._id === payload.account);
-			if (index !== -1) {
-				if (payload.type === 'income') {
-					state.entities[index].balance += payload.amount;
-				} else if (payload.type === 'expense') {
-					state.entities[index].balance -= payload.amount;
-				}
+			if (index !== -1 && payload.accountBalance) {
+				state.entities[index].balance = payload.accountBalance;
 			}
 		},
 	},
@@ -144,7 +140,7 @@ export const accountsSlice = createSlice({
 });
 
 const { actions, selectors, reducer } = accountsSlice;
-export const { reset: resetAccounts, calcTransaction } = actions;
+export const { reset: resetAccounts, accountBalance } = actions;
 
 export const { selectAccounts, selectLoading, selectError, selectTotalBalance } =
 	selectors;

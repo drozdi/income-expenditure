@@ -16,22 +16,22 @@ import { useNotifications } from '@toolpad/core/useNotifications';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { calcTransaction, selectAccounts } from '../../entites/accounts/accountsSlice';
+import { accountBalance, selectAccounts } from '../../entites/accounts/accountsSlice';
 import { selectCategories } from '../../entites/categories/categoriesSlice';
 import { addTransaction } from '../../entites/transactions/transactionsSlice';
 import { currencyFormat } from '../../shared/utils/currency-format';
 
-export default function () {
+export default function ({ account }) {
 	const notifications = useNotifications();
 	const dispatch = useDispatch();
 	const accounts = useSelector(selectAccounts) || [];
 	const [type, setType] = useState(null);
-	const [currentAccount, setCurrentAccount] = useState(null);
+	const [currentAccount, setCurrentAccount] = useState(account);
 	const [currentCategory, setCurrentCategory] = useState(null);
 	const [transferCategory, setTransferCategory] = useState(null);
 	const [date, setDate] = useState(dayjs());
-	const [amount, setAmount] = useState(0);
-	const [comment, setComment] = useState(null);
+	const [amount, setAmount] = useState(null);
+	const [comment, setComment] = useState('');
 	const categories = useSelector(selectCategories(currentAccount)) || [];
 	const groupedCategories = categories.filter(
 		(category) => category.type === 'expense',
@@ -60,7 +60,7 @@ export default function () {
 			type,
 			account: currentAccount,
 			category: currentCategory,
-			link: transferCategory,
+			to: transferCategory,
 			date: date.$d,
 			amount,
 			comment,
@@ -68,8 +68,13 @@ export default function () {
 		dispatch(addTransaction(formData))
 			.unwrap()
 			.then((data) => {
-				dispatch(calcTransaction(data));
-				console.log(data);
+				const transactions = [].concat(data);
+				for (let transaction of transactions) {
+					dispatch(accountBalance(transaction));
+				}
+				setCurrentAccount(null);
+				setAmount(null);
+				setComment('');
 				notifications.show(`Транзакция успешна создана!`, {
 					severity: 'success',
 					autoHideDuration: 3000,
@@ -181,11 +186,13 @@ export default function () {
 				<FilledInput
 					required
 					type="number"
+					value={amount}
 					onChange={({ target }) => setAmount(target.value)}
 					startAdornment={<InputAdornment position="start">₽</InputAdornment>}
 				/>
 			</FormControl>
 			<TextField
+				value={comment}
 				onChange={({ target }) => setComment(target.value)}
 				label="Коментарий"
 				variant="filled"

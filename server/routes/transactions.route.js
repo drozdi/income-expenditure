@@ -13,6 +13,8 @@ const {
 	deleteTransaction,
 	getTransactions,
 	getTransaction,
+	incomeTransaction,
+	expenseTransaction,
 } = require('../controllers/transaction.controller.js');
 
 router.use(auth);
@@ -23,23 +25,57 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-	const newTransaction = await addTransaction({ ...req.body, owner: req.user._id });
+	const reqData = { ...req.body, owner: req.user._id };
+	if (reqData.type === 'transfer' && reqData.to) {
+		const expense = await expenseTransaction({
+			...reqData,
+			to: undefined,
+			category: (
+				await Category.find({
+					account: reqData.account,
+					type: 'transfer',
+				})
+			)[0],
+		});
+		const income = await incomeTransaction({
+			...reqData,
+			account: reqData.to,
+			to: undefined,
+			link: expense,
+			category: (
+				await Category.find({
+					account: reqData.to,
+					type: 'transfer',
+				})
+			)[0],
+		});
+		expense.link = income;
+		await expense.save();
+		res.send({
+			data: [
+				{ ...expense._doc, link: undefined },
+				{ ...income._doc, link: undefined },
+			],
+		});
+		return;
+	} else if (reqData.account === 'transfer') {
+		return res.status(400).send({
+			error: 'Transfer transaction must have a "to" account',
+		});
+	}
 
+	const account = await Account.findById(reqData.account);
+	const newTransaction = await addTransaction(reqData);
 	if (newTransaction.type === 'income') {
-		const account = await Account.findById(newTransaction.account);
 		account.balance += newTransaction.amount;
 		await account.save();
 	} else if (newTransaction.type === 'expense') {
-		const account = await Account.findById(newTransaction.account);
 		account.balance -= newTransaction.amount;
 		await account.save();
-	} /*else if (newTransaction.type === 'transfer') {
-		const account = await Account.findById(newTransaction.account);
-		account.balance -= newTransaction.amount;
-		await account.save();
-	}*/
+	}
 
-	res.send({ data: newTransaction });
+	const accountBalance = account.balance;
+	res.send({ data: { ...newTransaction._doc, accountBalance } });
 });
 
 router.get('/:id', async (req, res) => {
