@@ -9,7 +9,6 @@ async function addTransaction(transaction) {
 }
 
 async function incomeTransaction(transaction) {
-	delete transaction._id;
 	const newTransaction = await addTransaction({ ...transaction, type: 'income' });
 	const account = await Account.findById(newTransaction.account);
 	account.balance += newTransaction.amount;
@@ -19,7 +18,6 @@ async function incomeTransaction(transaction) {
 }
 
 async function expenseTransaction(transaction) {
-	delete transaction._id;
 	const newTransaction = await addTransaction({ ...transaction, type: 'expense' });
 	const account = await Account.findById(newTransaction.account);
 	account.balance -= newTransaction.amount;

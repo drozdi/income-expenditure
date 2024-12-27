@@ -64,18 +64,13 @@ router.post('/', async (req, res) => {
 		});
 	}
 
-	const account = await Account.findById(reqData.account);
-	const newTransaction = await addTransaction(reqData);
-	if (newTransaction.type === 'income') {
-		account.balance += newTransaction.amount;
-		await account.save();
-	} else if (newTransaction.type === 'expense') {
-		account.balance -= newTransaction.amount;
-		await account.save();
+	let newTransaction;
+	if (reqData.type === 'income') {
+		newTransaction = await incomeTransaction(reqData);
+	} else if (reqData.type === 'expense') {
+		newTransaction = await expenseTransaction(reqData);
 	}
-
-	const accountBalance = account.balance;
-	res.send({ data: { ...newTransaction._doc, accountBalance } });
+	res.send({ data: newTransaction });
 });
 
 router.get('/:id', async (req, res) => {

@@ -30,7 +30,7 @@ export default function ({ account }) {
 	const [currentCategory, setCurrentCategory] = useState(null);
 	const [transferCategory, setTransferCategory] = useState(null);
 	const [date, setDate] = useState(dayjs());
-	const [amount, setAmount] = useState(null);
+	const [amount, setAmount] = useState('');
 	const [comment, setComment] = useState('');
 	const categories = useSelector(selectCategories(currentAccount)) || [];
 	const groupedCategories = categories.filter(
@@ -73,7 +73,7 @@ export default function ({ account }) {
 					dispatch(accountBalance(transaction));
 				}
 				setCurrentAccount(null);
-				setAmount(null);
+				setAmount('');
 				setComment('');
 				notifications.show(`Транзакция успешна создана!`, {
 					severity: 'success',
