@@ -21,6 +21,7 @@ router.use(auth);
 
 router.get('/', async (req, res) => {
 	const transactions = await getTransactions();
+	//await transactions.exec();
 	res.send({ data: transactions });
 });
 
@@ -30,24 +31,20 @@ router.post('/', async (req, res) => {
 		const expense = await expenseTransaction({
 			...reqData,
 			to: undefined,
-			category: (
-				await Category.find({
-					account: reqData.account,
-					type: 'transfer',
-				})
-			)[0],
+			category: await Category.findOne({
+				account: reqData.account,
+				type: 'transfer',
+			}),
 		});
 		const income = await incomeTransaction({
 			...reqData,
 			account: reqData.to,
 			to: undefined,
 			link: expense,
-			category: (
-				await Category.find({
-					account: reqData.to,
-					type: 'transfer',
-				})
-			)[0],
+			category: await Category.findOne({
+				account: reqData.to,
+				type: 'transfer',
+			}),
 		});
 		expense.link = income;
 		await expense.save();
@@ -85,7 +82,11 @@ router.patch('/:id', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
 	const transaction = await deleteTransaction(req.params.id);
-	res.send({ data: transaction });
+	const result = [transaction];
+	if (transaction.link) {
+		result.push(await deleteTransaction(transaction.link));
+	}
+	res.send({ data: result });
 });
 
 module.exports = router;

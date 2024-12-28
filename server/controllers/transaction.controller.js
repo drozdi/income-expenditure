@@ -37,12 +37,19 @@ async function updateTransaction(id, transaction) {
 // todo check operation
 async function deleteTransaction(id) {
 	const transaction = await getTransaction(id);
-	Account.findByIdAndUpdate(transaction.account, { $pull: { categories: id } });
+	const account = await Account.findById(transaction.account);
+	if (transaction.type === 'expense') {
+		account.balance += transaction.amount;
+	} else if (transaction.type === 'income') {
+		account.balance -= transaction.amount;
+	}
+	await account.save();
+	transaction._doc.accountBalance = account.balance;
 	return await transaction.deleteOne();
 }
 
 async function getTransactions(filter = {}) {
-	return await Transaction.find(filter);
+	return await Transaction.find(filter).populate('category').populate('account');
 }
 
 // get item

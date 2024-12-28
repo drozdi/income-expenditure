@@ -46,6 +46,7 @@ export default function CategoriesAddItem({ className, account, type }) {
 
 	return (
 		<ListItem
+			className={className}
 			disablePadding
 			disableGutters
 			secondaryAction={

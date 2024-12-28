@@ -36,7 +36,7 @@ export const AppRouter = () => {
 					<Route path=":id" element={<AccountPage />} />
 				</Route>
 				<Route
-					path="transaction/:type"
+					path="transaction/:type/:id"
 					//path="transaction/:type(income|expense)"
 					element={<TransactionPage />}
 				/>

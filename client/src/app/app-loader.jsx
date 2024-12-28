@@ -8,6 +8,10 @@ import {
 	resetCategories,
 } from '../entites/categories/categoriesSlice';
 import { fetchUser, resetSettings } from '../entites/settings/settingsSlice';
+import {
+	fetchTransactions,
+	resetTransactions,
+} from '../entites/transactions/transactionsSlice';
 
 import { CircularProgress } from '@mui/material';
 
@@ -19,12 +23,14 @@ export const AppLoader = ({ children }) => {
 		dispatch(resetAccounts());
 		dispatch(resetCategories());
 		dispatch(resetSettings());
+		dispatch(resetTransactions());
 		if (userId) {
 			setLoading(true);
 			Promise.all([
 				dispatch(fetchTypes()),
 				dispatch(fetchAccounts()),
 				dispatch(fetchCategories()),
+				dispatch(fetchTransactions()),
 			])
 				.then(() => {
 					return dispatch(fetchUser());

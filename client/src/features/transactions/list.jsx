@@ -1,7 +1,4 @@
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 import {
-	IconButton,
 	Paper,
 	Table,
 	TableBody,
@@ -12,14 +9,20 @@ import {
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { currencyFormat } from '../../shared/utils/currency-format';
+import {
+	selectCurrentPage,
+	selectLimitItems,
+	selectTotalPages,
+	selectTransactions,
+} from '../../entites/transactions/transactionsSlice';
+
+import TransactionsItem from './item';
+
 export default function TransactionsList({ className }) {
-	const {
-		entities: transactions,
-		limitItems,
-		totalPages,
-		currentPage,
-	} = useSelector((state) => state.transactions);
+	const transactions = useSelector(selectTransactions);
+	const currentPage = useSelector(selectCurrentPage);
+	const totalPages = useSelector(selectTotalPages);
+	const limitItems = useSelector(selectLimitItems);
 
 	return (
 		<div className={className}>
@@ -28,32 +31,18 @@ export default function TransactionsList({ className }) {
 					<TableHead>
 						<TableRow>
 							<TableCell>Дата</TableCell>
-							<TableCell>Категория</TableCell>
+							<TableCell>Счет</TableCell>
 							<TableCell>Сумма</TableCell>
-							<TableCell>Комментарий</TableCell>
+							<TableCell>Категория</TableCell>
 							<TableCell>Действия</TableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>
 						{transactions.map((transaction) => (
-							<TableRow key={transaction._id}>
-								<TableCell>
-									{new Date(transaction.date).toLocaleDateString()}
-								</TableCell>
-								<TableCell>{transaction.category}</TableCell>
-								<TableCell>
-									{currencyFormat(transaction.amount)}
-								</TableCell>
-								<TableCell>{transaction.comment}</TableCell>
-								<TableCell>
-									<IconButton aria-label="Изменить" title="Изменить">
-										<EditIcon />
-									</IconButton>
-									<IconButton aria-label="Удалить" title="Удалить">
-										<DeleteIcon />
-									</IconButton>
-								</TableCell>
-							</TableRow>
+							<TransactionsItem
+								transaction={transaction}
+								key={transaction._id}
+							/>
 						))}
 					</TableBody>
 				</Table>
