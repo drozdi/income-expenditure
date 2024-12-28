@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +10,7 @@ import { Button, Stack, TextField } from '@mui/material';
 import { useDialogs } from '@toolpad/core/useDialogs';
 import { useNotifications } from '@toolpad/core/useNotifications';
 
-export default ({ onSaved }) => {
+export default function SettingsForm({ className, onSaved }) {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const dialogs = useDialogs();
@@ -34,7 +35,7 @@ export default ({ onSaved }) => {
 					severity: 'success',
 					autoHideDuration: 3000,
 				});
-				onSave?.(data);
+				onSaved?.(data);
 			})
 			.catch(({ error }) => {
 				notifications.show(error, {
@@ -45,6 +46,7 @@ export default ({ onSaved }) => {
 	};
 	return (
 		<Stack
+			className={className}
 			direction="column"
 			spacing={2}
 			component="form"
@@ -90,4 +92,9 @@ export default ({ onSaved }) => {
 			</Stack>
 		</Stack>
 	);
+}
+
+SettingsForm.propTypes = {
+	className: PropTypes.string,
+	onSaved: PropTypes.func,
 };

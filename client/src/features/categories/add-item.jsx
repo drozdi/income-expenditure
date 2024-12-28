@@ -2,10 +2,12 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { Button, ListItem, ListItemText, TextField } from '@mui/material';
 import { useDialogs } from '@toolpad/core/useDialogs';
 import { useNotifications } from '@toolpad/core/useNotifications';
+import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addCategory } from '../../entites/categories/categoriesSlice';
-export default function ({ account, type }) {
+
+export default function CategoriesAddItem({ className, account, type }) {
 	const dialogs = useDialogs();
 	const dispatch = useDispatch();
 	const notifications = useNotifications();
@@ -67,3 +69,9 @@ export default function ({ account, type }) {
 		</ListItem>
 	);
 }
+
+CategoriesAddItem.propTypes = {
+	className: PropTypes.string,
+	account: PropTypes.string,
+	type: PropTypes.string,
+};

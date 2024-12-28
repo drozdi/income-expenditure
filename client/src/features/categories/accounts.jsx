@@ -5,16 +5,17 @@ import {
 	ListItemText,
 	ListSubheader,
 } from '@mui/material';
+import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAccounts } from '../../entites/accounts/accountsSlice';
 import Link from '../../shared/ui/link';
 import { currencyFormat } from '../../shared/utils/currency-format';
-export default function () {
+export default function CategoriesAddItem({ className }) {
 	const dispatch = useDispatch();
 	const accounts = useSelector(selectAccounts);
 
 	return (
-		<List>
+		<List className={className}>
 			<ListSubheader>Категории счетов</ListSubheader>
 			{accounts.map((account) => (
 				<ListItem
@@ -33,3 +34,7 @@ export default function () {
 		</List>
 	);
 }
+
+CategoriesAddItem.propTypes = {
+	className: PropTypes.string,
+};

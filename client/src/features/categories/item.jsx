@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import { useDialogs } from '@toolpad/core/useDialogs';
 import { useNotifications } from '@toolpad/core/useNotifications';
+import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -21,7 +22,7 @@ import {
 	updateCategory,
 } from '../../entites/categories/categoriesSlice';
 
-export default function ({ category }) {
+export default function CategoriesItem({ className, category }) {
 	const inputRef = useRef();
 	const notifications = useNotifications();
 	const dialogs = useDialogs();
@@ -111,6 +112,7 @@ export default function ({ category }) {
 
 	return (
 		<ListItem
+			className={className}
 			key={category._id}
 			onDoubleClick={handlerDblclick}
 			divider
@@ -161,3 +163,8 @@ export default function ({ category }) {
 		</ListItem>
 	);
 }
+
+CategoriesItem.propTypes = {
+	className: PropTypes.string,
+	category: PropTypes.object,
+};

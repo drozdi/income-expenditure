@@ -14,6 +14,7 @@ import {
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import { useNotifications } from '@toolpad/core/useNotifications';
 import dayjs from 'dayjs';
+import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { accountBalance, selectAccounts } from '../../entites/accounts/accountsSlice';
@@ -21,7 +22,7 @@ import { selectCategories } from '../../entites/categories/categoriesSlice';
 import { addTransaction } from '../../entites/transactions/transactionsSlice';
 import { currencyFormat } from '../../shared/utils/currency-format';
 
-export default function ({ account }) {
+export default function ExpenseForm({ className, account }) {
 	const notifications = useNotifications();
 	const dispatch = useDispatch();
 	const accounts = useSelector(selectAccounts) || [];
@@ -94,7 +95,7 @@ export default function ({ account }) {
 		type && currentAccount && (currentCategory || transferCategory) && amount;
 
 	return (
-		<Stack orientation="column" spacing={1}>
+		<Stack className={className} orientation="column" spacing={1}>
 			<Typography variant="h6">Откуда:</Typography>
 			<Stack
 				direction="row"
@@ -178,6 +179,7 @@ export default function ({ account }) {
 			</Stack>
 			<Divider flexItem />
 			<MobileDateTimePicker
+				required
 				format="YYYY-MM-DD HH:mm"
 				views={['year', 'month', 'day', 'hours', 'minutes']}
 				defaultValue={date}
@@ -213,3 +215,8 @@ export default function ({ account }) {
 		</Stack>
 	);
 }
+
+ExpenseForm.propTypes = {
+	className: PropTypes.string,
+	account: PropTypes.string,
+};
