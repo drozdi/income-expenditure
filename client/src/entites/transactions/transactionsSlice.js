@@ -123,4 +123,7 @@ export const {
 	selectCurrentPage,
 } = selectors;
 
+export const selectTransaction = (id) => (state) =>
+	state.transactions.entities.find((t) => t._id === id);
+
 export default reducer;

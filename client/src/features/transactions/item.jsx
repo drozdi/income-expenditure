@@ -61,7 +61,7 @@ export default function TransactionsItem({ className, transaction }) {
 			<TableCell>
 				<IconButton
 					component={Link}
-					to={`/transaction/${transaction._id}`}
+					to={`/transaction/${transaction.type}/${transaction._id}`}
 					aria-label="Изменить"
 					title="Изменить"
 				>

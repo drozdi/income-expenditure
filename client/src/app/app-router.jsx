@@ -40,6 +40,11 @@ export const AppRouter = () => {
 					//path="transaction/:type(income|expense)"
 					element={<TransactionPage />}
 				/>
+				<Route
+					path="transaction/:type/"
+					//path="transaction/:type(income|expense)"
+					element={<TransactionPage />}
+				/>
 				<Route path="transactions/" element={<TransactionsPage />} />
 				<Route
 					path="404"
