@@ -122,19 +122,35 @@ export default function CategoriesItem({ className, category }) {
 			secondaryAction={
 				isEditing ? (
 					<ButtonGroup variant="text">
-						<Button onClick={handlerSave} title="Сохранить">
+						<Button
+							aria-label="Сохранить"
+							title="Сохранить"
+							onClick={handlerSave}
+						>
 							<SaveIcon />
 						</Button>
-						<Button onClick={handlerCancel} title="Отмена">
+						<Button
+							aria-label="Отмена"
+							title="Отмена"
+							onClick={handlerCancel}
+						>
 							<CancelIcon />
 						</Button>
 					</ButtonGroup>
 				) : (
 					<ButtonGroup variant="text">
-						<Button onClick={handlerEdit} title="Редактировать">
+						<Button
+							aria-label="Редактировать"
+							title="Редактировать"
+							onClick={handlerEdit}
+						>
 							<EditIcon />
 						</Button>
-						<Button onClick={handlerDelete} title="Удалить">
+						<Button
+							aria-label="Удалить"
+							title="Удалить"
+							onClick={handlerDelete}
+						>
 							<DeleteIcon />
 						</Button>
 					</ButtonGroup>

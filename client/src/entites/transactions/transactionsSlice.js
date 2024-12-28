@@ -5,6 +5,9 @@ const initialState = {
 	entities: [],
 	loading: false,
 	error: null,
+	limitItems: 10,
+	totalPages: 1,
+	currentPage: 1,
 };
 
 export const transactionsSlice = createSlice({
@@ -70,7 +73,7 @@ export const transactionsSlice = createSlice({
 		),
 	}),
 	selectors: {
-		selectTransactions: (state) => state.transactions.entities,
+		selectTransactions: (state) => state.entities,
 		selectLoading: (state) => state.loading,
 		selectError: (state) => state.error,
 	},

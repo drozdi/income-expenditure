@@ -7,6 +7,7 @@ import {
 	MainPage,
 	SettingsPage,
 	TransactionPage,
+	TransactionsPage,
 } from '../pages';
 
 import { SignIn } from '../pages/sign-in/sign-in';
@@ -34,7 +35,12 @@ export const AppRouter = () => {
 					<Route path="" element={<AccountPage />} />
 					<Route path=":id" element={<AccountPage />} />
 				</Route>
-				<Route path="transaction/:type" element={<TransactionPage />} />
+				<Route
+					path="transaction/:type"
+					//path="transaction/:type(income|expense)"
+					element={<TransactionPage />}
+				/>
+				<Route path="transactions/" element={<TransactionsPage />} />
 				<Route
 					path="404"
 					element={
