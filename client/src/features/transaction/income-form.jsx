@@ -16,58 +16,75 @@ import { useNotifications } from '@toolpad/core/useNotifications';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectAccounts } from '../../entites/accounts/accountsSlice';
+import { accountBalance, selectAccounts } from '../../entites/accounts/accountsSlice';
 import { selectCategories } from '../../entites/categories/categoriesSlice';
+import { addTransaction } from '../../entites/transactions/transactionsSlice';
 import { currencyFormat } from '../../shared/utils/currency-format';
 
 export default function ({ account }) {
 	const notifications = useNotifications();
 	const dispatch = useDispatch();
 	const accounts = useSelector(selectAccounts) || [];
-	const [type, setType] = useState(null);
+	const [type, setType] = useState();
 	const [currentAccount, setCurrentAccount] = useState(account);
-	const [currentCategory, setCurrentCategory] = useState(null);
-	const [transferCategory, setTransferCategory] = useState(null);
+	const [currentCategory, setCurrentCategory] = useState();
+	const [transferCategory, setTransferCategory] = useState();
 	const [date, setDate] = useState(dayjs());
-	const [amount, setAmount] = useState(0);
+	const [amount, setAmount] = useState('');
 	const [comment, setComment] = useState('');
 	const categories = useSelector(selectCategories(currentAccount)) || [];
 	const groupedCategories = categories.filter((category) => category.type === 'income');
 
 	useEffect(() => {
-		setType(null);
-		setCurrentCategory(null);
-		setTransferCategory(null);
+		setType(undefined);
+		setCurrentCategory(undefined);
+		setTransferCategory(undefined);
 	}, [currentAccount]);
 	useEffect(() => {
-		setTransferCategory(null);
+		setTransferCategory(undefined);
+		currentCategory && setTimeout(() => setCurrentCategory(currentCategory), 0);
 		if (currentCategory) {
 			setType('income');
 		}
 	}, [currentCategory]);
 	useEffect(() => {
-		setCurrentCategory(null);
+		setCurrentCategory(undefined);
+		transferCategory && setTimeout(() => setTransferCategory(transferCategory), 0);
 		if (transferCategory) {
 			setType('transfer');
 		}
 	}, [transferCategory]);
 
 	const onSave = async () => {
-		const formData = {
-			type,
-			account: currentAccount,
-			category: currentCategory,
-			link: transferCategory,
-			date: date.$d,
-			amount,
-			comment,
-		};
-		/*dispatch(addTransaction(formData))
+		const formData = transferCategory
+			? {
+					type,
+					amount,
+					comment,
+					account: transferCategory,
+					category: undefined,
+					to: currentAccount,
+					date: date.$d,
+				}
+			: {
+					type,
+					amount,
+					comment,
+					account: currentAccount,
+					category: currentCategory,
+					to: undefined,
+					date: date.$d,
+				};
+
+		dispatch(addTransaction(formData))
 			.unwrap()
 			.then((data) => {
-				dispatch(accountBalance(data));
-				setCurrentAccount(null);
-				setAmount(0);
+				const transactions = [].concat(data);
+				for (let transaction of transactions) {
+					dispatch(accountBalance(transaction));
+				}
+				setCurrentAccount(undefined);
+				setAmount('');
 				setComment('');
 				notifications.show(`Транзакция успешна создана!`, {
 					severity: 'success',

@@ -56,8 +56,18 @@ router.patch('/:id', async (req, res) => {
 });
 
 router.delete('/:id', async (req, res) => {
-	const category = await deleteCategory(req.params.id);
-	res.send({ data: category });
+	const transactions = await Transaction.find({
+		category: req.params.id,
+	}).limit(1);
+
+	if (transactions.length > 0) {
+		res.status(400).send({
+			error: 'Нельзя удалить пока есть транзакции',
+		});
+	} else {
+		const category = await deleteCategory(req.params.id);
+		res.send({ data: category });
+	}
 });
 
 module.exports = router;

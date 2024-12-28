@@ -71,7 +71,7 @@ export default function ({ category }) {
 						autoHideDuration: 3000,
 					});
 				})
-				.catch(({ error }) => {
+				.catch(({ error, payload }) => {
 					notifications.show(error, {
 						severity: 'error',
 						autoHideDuration: 3000,

@@ -1,3 +1,4 @@
+import { useNotifications } from '@toolpad/core/useNotifications';
 import { useDispatch, useSelector } from 'react-redux';
 import {
 	deleteAccount,
@@ -5,7 +6,6 @@ import {
 	selectLoading,
 } from '../../entites/accounts/accountsSlice';
 import localStorageService from '../../shared/services/localStorage.service';
-import { useToast } from '../toast';
 
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import BookmarkRemoveIcon from '@mui/icons-material/BookmarkRemove';
@@ -16,25 +16,25 @@ import { default as Link, default as link } from '../../shared/ui/link';
 import { currencyFormat } from '../../shared/utils/currency-format';
 
 export default () => {
+	const notifications = useNotifications();
 	const dispatch = useDispatch();
 	const isLoading = useSelector(selectLoading);
 	const userId = localStorageService.getUserId();
-	const toast = useToast();
 	const accounts = useSelector(selectAccounts) || [];
 	const handlerDelete = async (id, label) => {
 		if (confirm(`Удалить счет "${label}"?`)) {
 			dispatch(deleteAccount(id))
 				.unwrap()
 				.then((data) => {
-					toast.show({
-						children: 'Удалено',
-						color: 'positive',
+					notifications.show(`Удалено!`, {
+						severity: 'success',
+						autoHideDuration: 3000,
 					});
 				})
-				.catch(({ error }) => {
-					toast.show({
-						children: error,
-						color: 'negative',
+				.catch(({ error, payload }) => {
+					notifications.show(error, {
+						severity: 'error',
+						autoHideDuration: 3000,
 					});
 				});
 		}
@@ -87,10 +87,18 @@ export default () => {
 							>
 								<SpeakerNotesIcon />
 							</Button>
-							<Button title="Доход">
+							<Button
+								component={link}
+								to={`/transaction/income?account=${account._id}`}
+								title="Доход"
+							>
 								<BookmarkAddIcon />
 							</Button>
-							<Button title="Расход">
+							<Button
+								component={link}
+								to={`/transaction/expense?account=${account._id}`}
+								title="Расход"
+							>
 								<BookmarkRemoveIcon />
 							</Button>
 							<Button

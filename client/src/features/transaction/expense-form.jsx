@@ -44,12 +44,14 @@ export default function ({ account }) {
 	}, [currentAccount]);
 	useEffect(() => {
 		setTransferCategory(null);
+		currentCategory && setTimeout(() => setCurrentCategory(currentCategory), 0);
 		if (currentCategory) {
 			setType('expense');
 		}
 	}, [currentCategory]);
 	useEffect(() => {
 		setCurrentCategory(null);
+		transferCategory && setTimeout(() => setTransferCategory(transferCategory), 0);
 		if (transferCategory) {
 			setType('transfer');
 		}

@@ -2,12 +2,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import SaveIcon from '@mui/icons-material/Save';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Stack, TextField } from '@mui/material';
+import { useNotifications } from '@toolpad/core/useNotifications';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { registerUser, selectLoading } from '../../entites/auth/authSlice';
-import { useToast } from '../toast';
 
 const regFormSchema = yup.object().shape({
 	username: yup
@@ -32,9 +32,9 @@ const regFormSchema = yup.object().shape({
 });
 
 export default () => {
+	const notifications = useNotifications();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const toast = useToast();
 	const isLoading = useSelector(selectLoading);
 	const {
 		register,
@@ -58,9 +58,9 @@ export default () => {
 				navigate('/');
 			})
 			.catch(({ error }) => {
-				toast.show({
-					children: error.message,
-					color: 'negative',
+				notifications.show(error.message, {
+					severity: 'error',
+					autoHideDuration: 3000,
 				});
 			});
 	};

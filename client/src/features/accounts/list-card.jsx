@@ -7,12 +7,10 @@ import { selectAccounts, selectLoading } from '../../entites/accounts/accountsSl
 import localStorageService from '../../shared/services/localStorage.service';
 import Link from '../../shared/ui/link';
 import { currencyFormat } from '../../shared/utils/currency-format';
-import { useToast } from '../toast';
 export default () => {
 	const dispatch = useDispatch();
 	const isLoading = useSelector(selectLoading);
 	const userId = localStorageService.getUserId();
-	const toast = useToast();
 	const accounts = useSelector(selectAccounts) || [];
 	return (
 		<Stack

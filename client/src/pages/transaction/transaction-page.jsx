@@ -1,14 +1,16 @@
-import { Navigate, useParams } from 'react-router-dom';
+import { Navigate, useParams, useSearchParams } from 'react-router-dom';
 import ExpenseForm from '../../features/transaction/expense-form';
 import IncomeForm from '../../features/transaction/income-form';
 export function TransactionPage() {
 	const { type } = useParams();
+	const [search, setSearch] = useSearchParams();
+	const account = search.get('account');
 	return (
 		<div>
 			{type === 'income' ? (
-				<IncomeForm />
+				<IncomeForm account={account} />
 			) : type === 'expense' ? (
-				<ExpenseForm />
+				<ExpenseForm account={account} />
 			) : (
 				<Navigate to="/404" />
 			)}

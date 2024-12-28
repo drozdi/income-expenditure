@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useNotifications } from '@toolpad/core/useNotifications';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -6,7 +7,6 @@ import * as yup from 'yup';
 import { saveAccount, selectAccount } from '../../entites/accounts/accountsSlice';
 
 import { useEffect } from 'react';
-import { useToast } from '../toast';
 
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Button, Stack, TextField } from '@mui/material';
@@ -17,9 +17,9 @@ const accountSchema = yup.object().shape({
 });
 
 export default ({ id, onSave }) => {
+	const notifications = useNotifications();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const toast = useToast();
 	const account = useSelector(selectAccount(id));
 
 	const {
@@ -45,16 +45,16 @@ export default ({ id, onSave }) => {
 		dispatch(saveAccount(data))
 			.unwrap()
 			.then((data) => {
-				toast.show({
-					children: 'Сохранено',
-					color: 'positive',
+				notifications.show(`Сохранено!`, {
+					severity: 'success',
+					autoHideDuration: 3000,
 				});
 				onSave?.(data);
 			})
 			.catch(({ error }) => {
-				toast.show({
-					children: error.message,
-					color: 'negative',
+				notifications.show(error, {
+					severity: 'error',
+					autoHideDuration: 3000,
 				});
 			});
 	};
