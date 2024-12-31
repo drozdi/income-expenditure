@@ -67,9 +67,12 @@ export const transactionsSlice = createSlice({
 		),
 
 		saveTransaction: create.asyncThunk(async (payload, { dispatch }) => {
-			if (transaction._id) {
+			if (payload._id) {
+				return await dispatch(
+					transactionsSlice.actions.updateTransation(payload),
+				);
 			} else {
-				dispatch(transactionsSlice.actions.addTransaction(payload));
+				return await dispatch(transactionsSlice.actions.addTransaction(payload));
 			}
 		}),
 		addTransaction: create.asyncThunk(
@@ -87,6 +90,48 @@ export const transactionsSlice = createSlice({
 				},
 				fulfilled: (state, { payload }) => {
 					state.entities.concat(payload);
+					state.loading = false;
+				},
+				rejected: (state, { payload, error }) => {
+					state.error = payload ?? error;
+					state.loading = false;
+				},
+			},
+		),
+		updateTransation: create.asyncThunk(
+			async (payload, { rejectWithValue }) => {
+				try {
+					const { data } = await transactionsService.updateTransaction(
+						payload._id,
+						payload,
+					);
+					return data;
+				} catch (error) {
+					return rejectWithValue(error.response.data);
+				}
+			},
+			{
+				pending: (state) => {
+					state.loading = true;
+				},
+				fulfilled: (state, { payload }) => {
+					const transactions = [].concat(payload);
+					for (const transaction of transactions) {
+						if (transaction.removed) {
+							state.entities = state.entities.filter(
+								(t) => t._id !== transaction._id,
+							);
+						} else if (transaction.added) {
+							state.entities.push(transaction);
+						} else {
+							const index = state.entities.findIndex(
+								(t) => t._id === transaction._id,
+							);
+							if (index >= 0) {
+								state.entities[index] = { ...transaction };
+							}
+						}
+					}
 					state.loading = false;
 				},
 				rejected: (state, { payload, error }) => {
@@ -113,6 +158,7 @@ export const {
 	saveTransaction,
 	addTransaction,
 	deleteTransation,
+	updateTransation,
 } = actions;
 export const {
 	selectTransactions,

@@ -8,13 +8,12 @@ export function TransactionPage() {
 	const [search, setSearch] = useSearchParams();
 	const account = search.get('account');
 	const transaction = useSelector(selectTransaction(id));
-	console.log(transaction);
 	return (
 		<div>
 			{type === 'income' ? (
-				<IncomeForm account={account} />
+				<IncomeForm id={id} account={account} />
 			) : type === 'expense' ? (
-				<ExpenseForm account={account} />
+				<ExpenseForm id={id} account={account} />
 			) : (
 				<Navigate to="/404" />
 			)}

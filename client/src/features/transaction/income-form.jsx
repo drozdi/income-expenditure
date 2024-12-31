@@ -17,32 +17,49 @@ import dayjs from 'dayjs';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { accountBalance, selectAccounts } from '../../entites/accounts/accountsSlice';
 import { selectCategories } from '../../entites/categories/categoriesSlice';
-import { addTransaction } from '../../entites/transactions/transactionsSlice';
+import {
+	saveTransaction,
+	selectTransaction,
+} from '../../entites/transactions/transactionsSlice';
 import { currencyFormat } from '../../shared/utils/currency-format';
 
-export default function IncomeForm({ className, account }) {
+export default function IncomeForm({ className, id, account }) {
+	const navigate = useNavigate();
+	const transaction = useSelector(selectTransaction(id));
 	const notifications = useNotifications();
 	const dispatch = useDispatch();
 	const accounts = useSelector(selectAccounts) || [];
-	const [type, setType] = useState();
-	const [currentAccount, setCurrentAccount] = useState(account);
-	const [currentCategory, setCurrentCategory] = useState();
-	const [transferCategory, setTransferCategory] = useState();
-	const [date, setDate] = useState(dayjs());
-	const [amount, setAmount] = useState('');
-	const [comment, setComment] = useState('');
+
+	console.log(transaction);
+
+	const [type, setType] = useState(
+		(!transaction?.link && transaction?.type) || transaction?.link || 'transfer',
+	);
+	const [currentAccount, setCurrentAccount] = useState(
+		transaction?.account._id || transaction?.account || account,
+	);
+	const [currentCategory, setCurrentCategory] = useState(
+		(!transaction?.link && (transaction?.category._id || transaction?.category)) ||
+			undefined,
+	);
+	const [transferAccount, setTransferAccount] = useState(transaction?.link?.account);
+	const [date, setDate] = useState(dayjs(transaction?.date));
+	const [amount, setAmount] = useState(transaction?.amount);
+	const [comment, setComment] = useState(transaction?.comment);
+
 	const categories = useSelector(selectCategories(currentAccount)) || [];
 	const groupedCategories = categories.filter((category) => category.type === 'income');
 
 	useEffect(() => {
 		setType(undefined);
 		setCurrentCategory(undefined);
-		setTransferCategory(undefined);
+		setTransferAccount(undefined);
 	}, [currentAccount]);
 	useEffect(() => {
-		setTransferCategory(undefined);
+		setTransferAccount(undefined);
 		currentCategory && setTimeout(() => setCurrentCategory(currentCategory), 0);
 		if (currentCategory) {
 			setType('income');
@@ -50,24 +67,26 @@ export default function IncomeForm({ className, account }) {
 	}, [currentCategory]);
 	useEffect(() => {
 		setCurrentCategory(undefined);
-		transferCategory && setTimeout(() => setTransferCategory(transferCategory), 0);
-		if (transferCategory) {
+		transferAccount && setTimeout(() => setTransferAccount(transferAccount), 0);
+		if (transferAccount) {
 			setType('transfer');
 		}
-	}, [transferCategory]);
+	}, [transferAccount]);
 
 	const onSave = async () => {
-		const formData = transferCategory
+		const formData = transferAccount
 			? {
+					_id: id,
 					type,
 					amount,
 					comment,
-					account: transferCategory,
+					account: transferAccount,
 					category: undefined,
 					to: currentAccount,
 					date: date.$d,
 				}
 			: {
+					_id: id,
 					type,
 					amount,
 					comment,
@@ -77,7 +96,9 @@ export default function IncomeForm({ className, account }) {
 					date: date.$d,
 				};
 
-		dispatch(addTransaction(formData))
+		console.log(formData);
+
+		dispatch(saveTransaction(formData))
 			.unwrap()
 			.then((data) => {
 				const transactions = [].concat(data);
@@ -87,10 +108,16 @@ export default function IncomeForm({ className, account }) {
 				setCurrentAccount(undefined);
 				setAmount('');
 				setComment('');
-				notifications.show(`Транзакция успешна создана!`, {
-					severity: 'success',
-					autoHideDuration: 3000,
-				});
+				notifications.show(
+					id ? `Транзакция успешна изменена!` : `Транзакция успешна создана!`,
+					{
+						severity: 'success',
+						autoHideDuration: 3000,
+					},
+				);
+				if (id) {
+					navigate(-1);
+				}
 			})
 			.catch(({ error }) => {
 				notifications.show(error, {
@@ -101,7 +128,7 @@ export default function IncomeForm({ className, account }) {
 	};
 
 	const cheack =
-		type && currentAccount && (currentCategory || transferCategory) && amount;
+		type && currentAccount && (currentCategory || transferAccount) && amount;
 
 	return (
 		<Stack className={className} orientation="column" spacing={1}>
@@ -172,12 +199,12 @@ export default function IncomeForm({ className, account }) {
 						justifyContent="space-between"
 						alignItems="stretch"
 						variant={
-							transferCategory === account._id ? 'contained' : 'outlined'
+							transferAccount === account._id ? 'contained' : 'outlined'
 						}
 						component={Button}
 						value={account._id}
 						disabled={currentAccount === account._id}
-						onClick={() => setTransferCategory(account._id)}
+						onClick={() => setTransferAccount(account._id)}
 					>
 						<Typography variant="caption">{account.label}</Typography>
 						<Typography variant="caption" sx={{ marginTop: '0 !important' }}>
@@ -219,7 +246,7 @@ export default function IncomeForm({ className, account }) {
 				onClick={onSave}
 				disabled={!cheack}
 			>
-				Добавить
+				{id ? 'Сохранить' : 'Добавить'}
 			</Button>
 		</Stack>
 	);
@@ -227,5 +254,6 @@ export default function IncomeForm({ className, account }) {
 
 IncomeForm.propTypes = {
 	className: PropTypes.string,
+	id: PropTypes.string,
 	account: PropTypes.string,
 };

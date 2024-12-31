@@ -27,16 +27,86 @@ async function expenseTransaction(transaction) {
 }
 
 async function updateTransaction(id, transaction) {
-	const updatedTransaction = await Transaction.findByIdAndUpdate(id, transaction, {
-		returnDocument: 'after',
-	});
+	const updatedTransaction = await Transaction.findByIdAndUpdate(
+		id,
+		{ ...transaction, _id: undefined },
+		{
+			returnDocument: 'after',
+		},
+	);
+
+	return updatedTransaction;
+}
+
+async function updateIncomeTransaction(id, body) {
+	const transaction = await Transaction.findById(id);
+
+	const calcBalance =
+		transaction.account != body.account || transaction.amount != body.amount;
+
+	const account = await Account.findById(transaction.account);
+
+	if (calcBalance) {
+		account.balance -= transaction.amount;
+	}
+
+	await account.save();
+
+	const updatedTransaction = await updateTransaction(id, body);
+
+	const updatedAccount = await Account.findById(updatedTransaction.account);
+
+	if (calcBalance) {
+		updatedAccount.balance += updatedTransaction.amount;
+	}
+
+	await updatedAccount.save();
+
+	await updatedTransaction.populate('category');
+	await updatedTransaction.populate('account');
+	await updatedTransaction.populate('link');
+
+	updatedTransaction._doc.accountBalance = updatedAccount.balance;
+
+	return updatedTransaction;
+}
+
+async function updateExpenseTransaction(id, body) {
+	const transaction = await Transaction.findById(id);
+
+	const calcBalance =
+		transaction.account != body.account || transaction.amount != body.amount;
+
+	const account = await Account.findById(transaction.account);
+
+	if (calcBalance) {
+		account.balance += transaction.amount;
+	}
+
+	await account.save();
+
+	const updatedTransaction = await updateTransaction(id, body);
+
+	const updatedAccount = await Account.findById(updatedTransaction.account);
+
+	if (calcBalance) {
+		updatedAccount.balance -= updatedTransaction.amount;
+	}
+
+	await updatedAccount.save();
+
+	await updatedTransaction.populate('category');
+	await updatedTransaction.populate('account');
+	await updatedTransaction.populate('link');
+
+	updatedTransaction._doc.accountBalance = updatedAccount.balance;
 
 	return updatedTransaction;
 }
 
 // todo check operation
 async function deleteTransaction(id) {
-	const transaction = await getTransaction(id);
+	const transaction = await Transaction.findById(id);
 	const account = await Account.findById(transaction.account);
 	if (transaction.type === 'expense') {
 		account.balance += transaction.amount;
@@ -49,7 +119,10 @@ async function deleteTransaction(id) {
 }
 
 async function getTransactions(filter = {}) {
-	return await Transaction.find(filter).populate('category').populate('account');
+	return await Transaction.find(filter)
+		.populate('category')
+		.populate('account')
+		.populate('link');
 }
 
 // get item
@@ -65,4 +138,6 @@ module.exports = {
 	getTransaction,
 	incomeTransaction,
 	expenseTransaction,
+	updateIncomeTransaction,
+	updateExpenseTransaction,
 };
