@@ -118,7 +118,7 @@ router.patch('/:id', async (req, res) => {
 				to: undefined,
 				link: updatedTransaction,
 				category: await Category.findOne({
-					account: req.body.to,
+					account: req.body.account,
 					type: 'transfer',
 				}),
 			});
