@@ -1,6 +1,6 @@
 import { Box, List, ListItem, ListItemButton } from '@mui/material';
 import { Link } from 'react-router-dom';
-export function Sidebar({ className }) {
+export function Sidebar() {
 	return (
 		<Box component="aside" sx={{ boxShadow: 1 }}>
 			<List>
