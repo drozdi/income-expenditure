@@ -1,15 +1,25 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNotifications } from '@toolpad/core/useNotifications';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-import { saveAccount, selectAccount } from '../../entites/accounts/accountsSlice';
-
-import { useEffect } from 'react';
+import {
+	saveAccount,
+	selectAccount,
+	selectTypes,
+} from '../../entites/accounts/accountsSlice';
 
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Button, Stack, TextField } from '@mui/material';
+import {
+	Button,
+	FormControl,
+	InputLabel,
+	MenuItem,
+	Select,
+	Stack,
+	TextField,
+} from '@mui/material';
 
 const accountSchema = yup.object().shape({
 	label: yup.string().required('Заполните название'),
@@ -21,43 +31,42 @@ export default ({ id, onSave }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const account = useSelector(selectAccount(id));
+	const types = useSelector(selectTypes);
 
 	const {
+		control,
 		register,
 		handleSubmit,
-		reset,
 		formState: { isLoading, errors },
 	} = useForm({
 		mode: 'onChange',
 		defaultValues: {
-			_id: id,
-			label: '',
-			balance: 0.0,
+			_id: account?._id || undefined,
+			label: account?.label || '',
+			type: account?.type || '',
+			balance: account?.balance || 0.0,
 		},
 		resolver: yupResolver(accountSchema),
 	});
 
-	useEffect(() => {
-		account && reset(account);
-	}, [account]);
-
 	const onSubmit = async (data) => {
 		dispatch(saveAccount(data))
 			.unwrap()
-			.then((data) => {
+			.then(({ payload }) => {
 				notifications.show(`Сохранено!`, {
 					severity: 'success',
 					autoHideDuration: 3000,
 				});
-				onSave?.(data);
+				onSave?.(payload);
 			})
-			.catch(({ error }) => {
-				notifications.show(error, {
+			.catch(({ payload, error }) => {
+				notifications.show(payload ?? error, {
 					severity: 'error',
 					autoHideDuration: 3000,
 				});
 			});
 	};
+
 	return (
 		<Stack
 			direction="column"
@@ -68,17 +77,36 @@ export default ({ id, onSave }) => {
 			<TextField
 				label="Название счета"
 				placeholder="Заначка"
-				name="label"
 				variant="filled"
 				error={!!errors?.label?.message}
 				helperText={errors?.label?.message || ' '}
 				{...register('label', { required: true })}
 			/>
+
+			<FormControl variant="filled">
+				<InputLabel>Тип</InputLabel>
+				<Controller
+					name="type"
+					control={control}
+					render={({ field }) => (
+						<Select {...field}>
+							<MenuItem value="" disabled>
+								<em>Тип</em>
+							</MenuItem>
+							{Object.entries(types).map(([value, label]) => (
+								<MenuItem key={value} value={value}>
+									{label}
+								</MenuItem>
+							))}
+						</Select>
+					)}
+				></Controller>
+			</FormControl>
+
 			<TextField
 				label="Сумма"
 				placeholder="0.00"
 				type="number"
-				name="balance"
 				step="0.01"
 				disabled={!!id}
 				variant="filled"

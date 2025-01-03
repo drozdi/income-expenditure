@@ -17,7 +17,7 @@ import { selectUser } from '../../entites/settings/settingsSlice';
 import LogOutBtn from '../../features/auth/sign-out';
 import Link from '../../shared/ui/link';
 
-export function Header({ className }) {
+export function Header() {
 	const isAuth = useSelector(selectIsAuth);
 	const [anchorEl, setAnchorEl] = useState(null);
 	const user = useSelector(selectUser);
@@ -29,7 +29,7 @@ export function Header({ className }) {
 		setAnchorEl(null);
 	};
 	return (
-		<AppBar position="fixed">
+		<AppBar position="absolute">
 			<Toolbar>
 				<Stack
 					component={Link}

@@ -1,9 +1,8 @@
-import { List, ListItem, ListItemButton } from '@mui/material';
-import classNames from 'classnames';
+import { Box, List, ListItem, ListItemButton } from '@mui/material';
 import { Link } from 'react-router-dom';
 export function Sidebar({ className }) {
 	return (
-		<aside className={classNames('relative bg-sidebar shadow-xl', className)}>
+		<Box component="aside" sx={{ boxShadow: 1 }}>
 			<List>
 				<ListItem disablePadding>
 					<ListItemButton component={Link} to="/">
@@ -24,6 +23,12 @@ export function Sidebar({ className }) {
 				</ListItem>
 
 				<ListItem disablePadding>
+					<ListItemButton component={Link} to="/transactions/">
+						История
+					</ListItemButton>
+				</ListItem>
+
+				<ListItem disablePadding>
 					<ListItemButton component={Link} to="/categories/">
 						Категории
 					</ListItemButton>
@@ -34,6 +39,6 @@ export function Sidebar({ className }) {
 					</ListItemButton>
 				</ListItem>
 			</List>
-		</aside>
+		</Box>
 	);
 }

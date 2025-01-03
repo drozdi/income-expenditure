@@ -1,53 +1,73 @@
-import {
-	Paper,
-	Table,
-	TableBody,
-	TableCell,
-	TableContainer,
-	TableHead,
-	TableRow,
-} from '@mui/material';
+import { TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
 	selectCurrentPage,
 	selectLimitItems,
 	selectTotalPages,
 	selectTransactions,
+	setPpagination,
 } from '../../entites/transactions/transactionsSlice';
 
+import { useSearchParams } from 'react-router-dom';
+
+import { useEffect, useMemo } from 'react';
 import TransactionsItem from './item';
 
 export default function TransactionsList({ className }) {
+	const dispatch = useDispatch();
 	const transactions = useSelector(selectTransactions);
 	const currentPage = useSelector(selectCurrentPage);
 	const totalPages = useSelector(selectTotalPages);
 	const limitItems = useSelector(selectLimitItems);
 
+	const [search, setSearch] = useSearchParams();
+
+	const filtered = useMemo(() => {
+		const type = search.get('type') || '';
+		const account = search.get('account') || '';
+		const category = search.get('category') || '';
+
+		return (
+			transactions?.filter((transaction) => {
+				if (type && transaction.type !== type) return false;
+				if (account && transaction.account !== account) return false;
+				if (category && transaction.category !== category) return false;
+				return true;
+			}) || []
+		);
+	}, [transactions, search]);
+
+	const arr = useMemo(
+		() =>
+			filtered.slice(
+				currentPage * limitItems,
+				currentPage * limitItems + limitItems,
+			),
+		[filtered, currentPage, limitItems],
+	);
+
+	useEffect(() => {
+		dispatch(setPpagination({ totalItems: filtered.length }));
+	}, [filtered]);
+
 	return (
-		<div className={className}>
-			<TableContainer component={Paper}>
-				<Table aria-label="simple table">
-					<TableHead>
-						<TableRow>
-							<TableCell>Дата</TableCell>
-							<TableCell>Счет</TableCell>
-							<TableCell>Сумма</TableCell>
-							<TableCell>Категория</TableCell>
-							<TableCell>Действия</TableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{transactions.map((transaction) => (
-							<TransactionsItem
-								transaction={transaction}
-								key={transaction._id}
-							/>
-						))}
-					</TableBody>
-				</Table>
-			</TableContainer>
-		</div>
+		<>
+			<TableHead>
+				<TableRow>
+					<TableCell>Дата</TableCell>
+					<TableCell>Счет</TableCell>
+					<TableCell>Сумма</TableCell>
+					<TableCell>Категория</TableCell>
+					<TableCell>Действия</TableCell>
+				</TableRow>
+			</TableHead>
+			<TableBody>
+				{arr.map((transaction) => (
+					<TransactionsItem transaction={transaction} key={transaction._id} />
+				))}
+			</TableBody>
+		</>
 	);
 }
 

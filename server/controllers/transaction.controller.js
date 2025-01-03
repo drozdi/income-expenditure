@@ -62,8 +62,6 @@ async function updateIncomeTransaction(id, body) {
 
 	await updatedAccount.save();
 
-	await updatedTransaction.populate('category');
-	await updatedTransaction.populate('account');
 	await updatedTransaction.populate('link');
 
 	updatedTransaction._doc.accountBalance = updatedAccount.balance;
@@ -95,8 +93,6 @@ async function updateExpenseTransaction(id, body) {
 
 	await updatedAccount.save();
 
-	await updatedTransaction.populate('category');
-	await updatedTransaction.populate('account');
 	await updatedTransaction.populate('link');
 
 	updatedTransaction._doc.accountBalance = updatedAccount.balance;
@@ -119,10 +115,7 @@ async function deleteTransaction(id) {
 }
 
 async function getTransactions(filter = {}) {
-	return await Transaction.find(filter)
-		.populate('category')
-		.populate('account')
-		.populate('link');
+	return await Transaction.find(filter).populate('link');
 }
 
 // get item

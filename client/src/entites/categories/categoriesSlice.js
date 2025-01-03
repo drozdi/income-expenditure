@@ -40,7 +40,7 @@ export const categoriesSlice = createSlice({
 				},
 			},
 		),
-		fetchTypes: create.asyncThunk(
+		fetchTypesCategories: create.asyncThunk(
 			async (payload, { rejectWithValue }) => {
 				try {
 					const { data } = await categoriesService.getTypes();
@@ -162,7 +162,7 @@ export const {
 	reset: resetCategories,
 	edit: editCategory,
 	fetchCategories,
-	fetchTypes,
+	fetchTypesCategories,
 	addCategory,
 	updateCategory,
 	deleteCategory,
@@ -172,6 +172,11 @@ export const { selectError, selectLoading, selectEditId, selectTypes } = selecto
 
 export const selectCategories = (accountId) => (state) => {
 	return state.categories.entities[accountId];
+};
+
+export const selectCategoryLabel = (accountId, id) => (state) => {
+	const categories = state.categories.entities[accountId] || [];
+	return categories.find((t) => t._id === id)?.label || id;
 };
 
 export default reducer;

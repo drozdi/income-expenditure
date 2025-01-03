@@ -7,7 +7,8 @@ const initialState = {
 	error: null,
 	limitItems: 10,
 	totalPages: 1,
-	currentPage: 1,
+	currentPage: 0,
+	totalItems: 0,
 };
 
 export const transactionsSlice = createSlice({
@@ -18,6 +19,10 @@ export const transactionsSlice = createSlice({
 		setTransactions: (state, { payload }) => {
 			state.entities = payload;
 		},
+		setPpagination: (state, { payload }) => {
+			return { ...state, ...payload };
+		},
+
 		fetchTransactions: create.asyncThunk(
 			async (payload, { rejectWithValue }) => {
 				try {
@@ -65,7 +70,6 @@ export const transactionsSlice = createSlice({
 				},
 			},
 		),
-
 		saveTransaction: create.asyncThunk(async (payload, { dispatch }) => {
 			if (payload._id) {
 				return await dispatch(
@@ -89,7 +93,7 @@ export const transactionsSlice = createSlice({
 					state.loading = true;
 				},
 				fulfilled: (state, { payload }) => {
-					state.entities.concat(payload);
+					state.entities = state.entities.concat(payload);
 					state.loading = false;
 				},
 				rejected: (state, { payload, error }) => {
@@ -148,6 +152,7 @@ export const transactionsSlice = createSlice({
 		selectLimitItems: (state) => state.limitItems,
 		selectTotalPages: (state) => state.totalPages,
 		selectCurrentPage: (state) => state.currentPage,
+		selectTotalItems: (state) => state.totalItems,
 	},
 });
 
@@ -159,6 +164,7 @@ export const {
 	addTransaction,
 	deleteTransation,
 	updateTransation,
+	setPpagination,
 } = actions;
 export const {
 	selectTransactions,
@@ -167,6 +173,7 @@ export const {
 	selectLimitItems,
 	selectTotalPages,
 	selectCurrentPage,
+	selectTotalItems,
 } = selectors;
 
 export const selectTransaction = (id) => (state) =>

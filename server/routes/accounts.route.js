@@ -18,13 +18,15 @@ const { addCategory } = require('../controllers/category.controller.js');
 
 router.use(auth);
 
-router.get('/type', async (req, res) => {
+router.get('/types', async (req, res) => {
 	res.send({
 		data: {
-			cash: 'cash',
-			bank_account: 'bank_account',
-			credit_card: 'credit_card',
-			investment: 'investment',
+			cash: 'Наличные',
+			account: 'Счет',
+			bank_account: 'Банковский счет',
+			debit_card: 'Дебетовая карта',
+			credit_card: 'Кедитная карта',
+			investment: 'Вклад',
 		},
 	});
 });

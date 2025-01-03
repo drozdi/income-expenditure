@@ -4,6 +4,7 @@ import {
 	deleteAccount,
 	selectAccounts,
 	selectLoading,
+	selectTypes,
 } from '../../entites/accounts/accountsSlice';
 import localStorageService from '../../shared/services/localStorage.service';
 
@@ -21,6 +22,7 @@ export default () => {
 	const isLoading = useSelector(selectLoading);
 	const userId = localStorageService.getUserId();
 	const accounts = useSelector(selectAccounts) || [];
+	const types = useSelector(selectTypes);
 	const handlerDelete = async (id, label) => {
 		if (confirm(`Удалить счет "${label}"?`)) {
 			dispatch(deleteAccount(id))
@@ -65,13 +67,17 @@ export default () => {
 							}}
 						>
 							<CardHeader
-								title={account.label}
+								title={
+									account.label +
+									` (${types[account.type] || account.type})`
+								}
 								subheader={
 									account?.owner?._id === userId
 										? 'Мой'
 										: account.owner.name
 								}
 							/>
+							<CardContent></CardContent>
 							<CardContent>{currencyFormat(account.balance)}</CardContent>
 						</Stack>
 						<ButtonGroup
@@ -79,7 +85,12 @@ export default () => {
 							variant="text"
 							orientation="vertical"
 						>
-							<Button>Hist</Button>
+							<Button
+								component={link}
+								to={`/transactions/?account=${account._id}`}
+							>
+								Hist
+							</Button>
 							<Button
 								component={link}
 								to={`/categories/${account._id}`}

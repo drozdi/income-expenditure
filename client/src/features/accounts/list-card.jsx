@@ -3,7 +3,11 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import { Card, CardContent, CardHeader, CardMedia, Stack } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectAccounts, selectLoading } from '../../entites/accounts/accountsSlice';
+import {
+	selectAccounts,
+	selectLoading,
+	selectTypes,
+} from '../../entites/accounts/accountsSlice';
 import localStorageService from '../../shared/services/localStorage.service';
 import Link from '../../shared/ui/link';
 import { currencyFormat } from '../../shared/utils/currency-format';
@@ -12,6 +16,7 @@ export default () => {
 	const isLoading = useSelector(selectLoading);
 	const userId = localStorageService.getUserId();
 	const accounts = useSelector(selectAccounts) || [];
+	const types = useSelector(selectTypes);
 	return (
 		<Stack
 			direction="row"
@@ -37,7 +42,10 @@ export default () => {
 						}}
 						component={Card}
 					>
-						<CardHeader title={account.label} />
+						<CardHeader
+							title={account.label}
+							subheader={`(${types[account.type] || account.type})`}
+						/>
 						<CardMedia className="text-center">
 							<CloseIcon />
 						</CardMedia>

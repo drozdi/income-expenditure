@@ -11,6 +11,8 @@ import {
 	TextField,
 	Typography,
 } from '@mui/material';
+
+import LoadingButton from '@mui/lab/LoadingButton';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import { useNotifications } from '@toolpad/core/useNotifications';
 import dayjs from 'dayjs';
@@ -22,6 +24,7 @@ import { accountBalance, selectAccounts } from '../../entites/accounts/accountsS
 import { selectCategories } from '../../entites/categories/categoriesSlice';
 import {
 	saveTransaction,
+	selectLoading,
 	selectTransaction,
 } from '../../entites/transactions/transactionsSlice';
 import { currencyFormat } from '../../shared/utils/currency-format';
@@ -32,8 +35,7 @@ export default function IncomeForm({ className, id, account }) {
 	const notifications = useNotifications();
 	const dispatch = useDispatch();
 	const accounts = useSelector(selectAccounts) || [];
-
-	console.log(transaction);
+	const loading = useSelector(selectLoading);
 
 	const [type, setType] = useState(
 		(!transaction?.link && transaction?.type) || transaction?.link || 'transfer',
@@ -47,8 +49,8 @@ export default function IncomeForm({ className, id, account }) {
 	);
 	const [transferAccount, setTransferAccount] = useState(transaction?.link?.account);
 	const [date, setDate] = useState(dayjs(transaction?.date));
-	const [amount, setAmount] = useState(transaction?.amount);
-	const [comment, setComment] = useState(transaction?.comment);
+	const [amount, setAmount] = useState(transaction?.amount || '');
+	const [comment, setComment] = useState(transaction?.comment || '');
 
 	const categories = useSelector(selectCategories(currentAccount)) || [];
 	const groupedCategories = categories.filter((category) => category.type === 'income');
@@ -96,12 +98,10 @@ export default function IncomeForm({ className, id, account }) {
 					date: date.$d,
 				};
 
-		console.log(formData);
-
 		dispatch(saveTransaction(formData))
 			.unwrap()
-			.then((data) => {
-				const transactions = [].concat(data);
+			.then(({ payload }) => {
+				const transactions = [].concat(payload);
 				for (let transaction of transactions) {
 					dispatch(accountBalance(transaction));
 				}
@@ -240,14 +240,16 @@ export default function IncomeForm({ className, id, account }) {
 				rows={4}
 			/>
 			<Divider flexItem />
-			<Button
+
+			<LoadingButton
+				loading={loading}
 				color="primary"
 				variant="contained"
 				onClick={onSave}
 				disabled={!cheack}
 			>
-				{id ? 'Сохранить' : 'Добавить'}
-			</Button>
+				{loading ? 'Сохранение...' : id ? 'Сохранить' : 'Добавить'}
+			</LoadingButton>
 		</Stack>
 	);
 }

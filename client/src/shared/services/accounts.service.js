@@ -22,5 +22,9 @@ const accountsService = {
 		const { data } = await httpService.delete(accountsEndpoint + id);
 		return data;
 	},
+	getTypes: async () => {
+		const { data } = await httpService.get(accountsEndpoint + 'types');
+		return data;
+	},
 };
 export default accountsService;

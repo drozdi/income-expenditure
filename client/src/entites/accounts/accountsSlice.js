@@ -3,6 +3,7 @@ import accountsService from '../../shared/services/accounts.service';
 
 const initialState = {
 	entities: [],
+	types: [],
 	isLoading: false,
 	error: null,
 };
@@ -61,13 +62,24 @@ export const saveAccount = createAsyncThunk(
 		}
 	},
 );
-
+export const fetchTypes = createAsyncThunk(
+	'accounts/types',
+	async (_, { rejectWithValue }) => {
+		try {
+			const { data } = await accountsService.getTypes();
+			return data;
+		} catch (error) {
+			return rejectWithValue(error.response.data);
+		}
+	},
+);
 export const accountsSlice = createSlice({
 	name: 'accounts',
 	initialState,
 	reducers: {
 		reset: (state) => {
 			state.entities = [];
+			state.types = [];
 			state.isLoading = false;
 			state.error = null;
 		},
@@ -79,6 +91,18 @@ export const accountsSlice = createSlice({
 		},
 	},
 	extraReducers: (builder) => {
+		builder.addCase(fetchTypes.pending, (state, action) => {
+			state.isLoading = true;
+		});
+		builder.addCase(fetchTypes.fulfilled, (state, { payload }) => {
+			state.types = payload;
+			state.isLoading = false;
+		});
+		builder.addCase(fetchTypes.rejected, (state, { payload, error }) => {
+			state.error = payload ?? error;
+			state.isLoading = false;
+		});
+
 		builder.addCase(fetchAccounts.pending, (state, action) => {
 			state.isLoading = true;
 		});
@@ -131,6 +155,7 @@ export const accountsSlice = createSlice({
 		});
 	},
 	selectors: {
+		selectTypes: (state) => state.types,
 		selectAccounts: (state) => state.entities,
 		selectLoading: (state) => state.isLoading,
 		selectError: (state) => state.error,
@@ -142,11 +167,19 @@ export const accountsSlice = createSlice({
 const { actions, selectors, reducer } = accountsSlice;
 export const { reset: resetAccounts, accountBalance } = actions;
 
-export const { selectAccounts, selectLoading, selectError, selectTotalBalance } =
-	selectors;
+export const {
+	selectTypes,
+	selectAccounts,
+	selectLoading,
+	selectError,
+	selectTotalBalance,
+} = selectors;
 
 export const selectAccount = (id) => (state) => {
 	return state.accounts.entities.find((t) => t._id === id);
+};
+export const selectAccountLabel = (id) => (state) => {
+	return state.accounts.entities.find((t) => t._id === id)?.label || id;
 };
 
 export default reducer;

@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { selectTypes } from '../../entites/categories/categoriesSlice';
-import BackBtn from '../../features/btnBack';
 import AccountCategoriesList from '../../features/categories/accounts';
 import CategoriesList from '../../features/categories/list';
 
@@ -12,34 +11,25 @@ export function CategoriesPage() {
 	const types = useSelector(selectTypes);
 	const [currentType, setCurrentType] = useState(Object.entries(types)?.[0]?.[0]);
 	useEffect(() => setCurrentType(Object.entries(types)?.[0]?.[0]), [types]);
-	return (
+	return accountId ? (
 		<>
-			{accountId ? (
-				<>
-					{types && (
-						<ButtonGroup
-							fullWidth
-							value={currentType}
-							onChange={setCurrentType}
+			{types && (
+				<ButtonGroup fullWidth value={currentType} onChange={setCurrentType}>
+					{Object.entries(types).map(([value, label]) => (
+						<Button
+							variant={currentType === value ? 'contained' : ''}
+							key={value}
+							value={value}
+							onClick={() => setCurrentType(value)}
 						>
-							{Object.entries(types).map(([value, label]) => (
-								<Button
-									variant={currentType === value ? 'contained' : ''}
-									key={value}
-									value={value}
-									onClick={() => setCurrentType(value)}
-								>
-									{label}
-								</Button>
-							))}
-						</ButtonGroup>
-					)}
-					<CategoriesList account={accountId} type={currentType} />
-				</>
-			) : (
-				<AccountCategoriesList />
+							{label}
+						</Button>
+					))}
+				</ButtonGroup>
 			)}
-			<BackBtn className="float-end" />
+			<CategoriesList account={accountId} type={currentType} />
 		</>
+	) : (
+		<AccountCategoriesList />
 	);
 }

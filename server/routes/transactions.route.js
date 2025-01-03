@@ -33,27 +33,31 @@ router.post('/', async (req, res) => {
 		const expense = await expenseTransaction({
 			...reqData,
 			to: undefined,
-			category: await Category.findOne({
-				account: reqData.account,
-				type: 'transfer',
-			}),
+			category: (
+				await Category.findOne({
+					account: reqData.account,
+					type: 'transfer',
+				})
+			)._id,
 		});
 		const income = await incomeTransaction({
 			...reqData,
 			account: reqData.to,
 			to: undefined,
 			link: expense,
-			category: await Category.findOne({
-				account: reqData.to,
-				type: 'transfer',
-			}),
+			category: (
+				await Category.findOne({
+					account: reqData.to,
+					type: 'transfer',
+				})
+			)._id,
 		});
 		expense.link = income;
 		await expense.save();
 		res.send({
 			data: [
-				{ ...expense._doc, link: { ...income._doc } },
-				{ ...income._doc, link: { ...expense._doc } },
+				{ ...expense._doc, link: { ...income._doc, link: undefined } },
+				{ ...income._doc, link: { ...expense._doc, link: undefined } },
 			],
 		});
 		return;
@@ -117,29 +121,31 @@ router.patch('/:id', async (req, res) => {
 				owner: req.user._id,
 				to: undefined,
 				link: updatedTransaction,
-				category: await Category.findOne({
-					account: req.body.account,
+				category: (
+					await Category.findOne({
+						account: req.body.account,
+						type: 'transfer',
+					})
+				)._id,
+			});
+			updatedTransaction.category = (
+				await Category.findOne({
+					account: updatedTransaction.account,
 					type: 'transfer',
-				}),
-			});
-			await updatedLinkTransaction.populate('account');
-			updatedTransaction.category = await Category.findOne({
-				account: updatedTransaction.account,
-				type: 'transfer',
-			});
+				})
+			)._id;
 
 			updatedTransaction.link = { ...updatedLinkTransaction._doc };
 			updatedLinkTransaction._doc.added = true;
 			updatedLinkTransaction._doc.link = { ...updatedTransaction._doc };
 		}
-		await updatedTransaction.save();
-		await updatedTransaction.populate('link');
 	} else if (transaction.type === 'expense') {
 		updatedTransaction = await updateExpenseTransaction(req.params.id, {
 			...req.body,
 			to: undefined,
 			type: undefined,
 		});
+
 		if (isTransfer && req.body.to) {
 			updatedLinkTransaction = await updateIncomeTransaction(transaction.link, {
 				...req.body,
@@ -158,24 +164,27 @@ router.patch('/:id', async (req, res) => {
 				account: req.body.to,
 				to: undefined,
 				link: updatedTransaction,
-				category: await Category.findOne({
-					account: req.body.to,
+				category: (
+					await Category.findOne({
+						account: req.body.to,
+						type: 'transfer',
+					})
+				)._id,
+			});
+			updatedTransaction.category = (
+				await Category.findOne({
+					account: updatedTransaction.account,
 					type: 'transfer',
-				}),
-			});
-			await updatedLinkTransaction.populate('account');
-			updatedTransaction.category = await Category.findOne({
-				account: updatedTransaction.account,
-				type: 'transfer',
-			});
+				})
+			)._id;
 			updatedTransaction.link = { ...updatedLinkTransaction._doc };
 			updatedLinkTransaction._doc.added = true;
 			updatedLinkTransaction._doc.link = { ...updatedTransaction._doc };
 		}
-
-		await updatedTransaction.save();
-		await updatedTransaction.populate('link');
 	}
+
+	await updatedTransaction.save();
+	await updatedTransaction.populate('link');
 
 	const result = [{ ...updatedTransaction._doc }];
 	if (isTransfer || updatedLinkTransaction?._doc.added) {

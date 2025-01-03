@@ -5,8 +5,9 @@ import { useDialogs } from '@toolpad/core/useDialogs';
 import { useNotifications } from '@toolpad/core/useNotifications';
 import dayjs from 'dayjs';
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
-import { accountBalance } from '../../entites/accounts/accountsSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { accountBalance, selectAccountLabel } from '../../entites/accounts/accountsSlice';
+import { selectCategoryLabel } from '../../entites/categories/categoriesSlice';
 import { deleteTransation } from '../../entites/transactions/transactionsSlice';
 import Link from '../../shared/ui/link';
 import { currencyFormat } from '../../shared/utils/currency-format';
@@ -52,12 +53,16 @@ export default function TransactionsItem({ className, transaction }) {
 	return (
 		<TableRow className={className}>
 			<TableCell>{dayjs(transaction.date).format('YYYY-MM-DD HH:mm')}</TableCell>
-			<TableCell>{transaction.account.label || transaction.account}</TableCell>
+			<TableCell>{useSelector(selectAccountLabel(transaction.account))}</TableCell>
 			<TableCell>
 				{(transaction.type === 'income' ? '+' : '-') +
 					currencyFormat(transaction.amount)}
 			</TableCell>
-			<TableCell>{transaction.category.label || transaction.category}</TableCell>
+			<TableCell>
+				{useSelector(
+					selectCategoryLabel(transaction.account, transaction.category),
+				)}
+			</TableCell>
 			<TableCell>
 				<IconButton
 					component={Link}

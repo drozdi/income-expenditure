@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAccounts, resetAccounts } from '../entites/accounts/accountsSlice';
+import {
+	fetchAccounts,
+	fetchTypes as fetchTypesAccounts,
+	resetAccounts,
+} from '../entites/accounts/accountsSlice';
 import { selectUserId } from '../entites/auth/authSlice';
 import {
 	fetchCategories,
-	fetchTypes,
+	fetchTypesCategories,
 	resetCategories,
 } from '../entites/categories/categoriesSlice';
 import { fetchUser, resetSettings } from '../entites/settings/settingsSlice';
@@ -23,11 +27,13 @@ export const AppLoader = ({ children }) => {
 		dispatch(resetAccounts());
 		dispatch(resetCategories());
 		dispatch(resetSettings());
+
 		dispatch(resetTransactions());
 		if (userId) {
 			setLoading(true);
 			Promise.all([
-				dispatch(fetchTypes()),
+				dispatch(fetchTypesAccounts()),
+				dispatch(fetchTypesCategories()),
 				dispatch(fetchAccounts()),
 				dispatch(fetchCategories()),
 				dispatch(fetchTransactions()),

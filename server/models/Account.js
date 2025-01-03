@@ -7,8 +7,14 @@ const AccountSchema = mongoose.Schema(
 		balance: { type: Number, required: true, default: 0 },
 		type: {
 			type: String,
-			//required: true,
-			enum: ['cash', 'bank_account', 'credit_card', 'investment'],
+			enum: [
+				'cash',
+				'credit_card',
+				'debit_card',
+				'bank_account',
+				'account',
+				'investment',
+			],
 		},
 		owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 		categories: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }],

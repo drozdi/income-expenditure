@@ -1,20 +1,32 @@
+import { Box } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import { Footer, Header, Sidebar } from '../widgets';
 export function MainLayout() {
 	return (
-		<>
-			<div className="container min-h-full flex flex-col justify-between m-auto relative">
-				<Header className="fixed top-0 container z-40" />
-				<div className="flex pt-32 pb-5 overflow-hidden">
-					<Sidebar className="w-64 hidden sm:block" />
-					<div className="relative w-full p-4">
-						<main className="relative">
-							<Outlet />
-						</main>
-					</div>
-				</div>
-				<Footer className="" />
-			</div>
-		</>
+		<Box
+			sx={{
+				position: 'absolute',
+				top: 0,
+				left: 0,
+				display: 'flex',
+				flexDirection: 'column',
+				alignItems: 'center',
+				justifyContent: 'center',
+				overflow: 'hidden',
+				height: '100vh',
+				width: '100vw',
+			}}
+		>
+			<Header />
+			<Box sx={{ pt: 10, display: 'flex', flex: '1 1 auto' }}>
+				<Box component="nav" sx={{ width: 256 }}>
+					<Sidebar />
+				</Box>
+				<Box component="main" sx={{ flex: '1 1 auto', p: 2 }}>
+					<Outlet />
+				</Box>
+			</Box>
+			<Footer className="" />
+		</Box>
 	);
 }
