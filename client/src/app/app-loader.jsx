@@ -17,7 +17,7 @@ import {
 	resetTransactions,
 } from '../entites/transactions/transactionsSlice';
 
-import { CircularProgress } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
 
 export const AppLoader = ({ children }) => {
 	const [isLoading, setLoading] = useState(false);
@@ -47,9 +47,21 @@ export const AppLoader = ({ children }) => {
 	return (
 		<>
 			{isLoading ? (
-				<div className="fixed top-0 left-0 h-screen w-screen backdrop-blur bg-white/10 flex justify-center content-center items-center z-50">
+				<Box
+					sx={{
+						position: 'fixed',
+						top: 0,
+						left: 0,
+						right: 0,
+						bottom: 0,
+						display: 'flex',
+						justifyContent: 'center',
+						alignItems: 'center',
+						zIndex: 1000,
+					}}
+				>
 					<CircularProgress size="5em" />
-				</div>
+				</Box>
 			) : (
 				children
 			)}

@@ -10,23 +10,29 @@ export function MainLayout() {
 				left: 0,
 				display: 'flex',
 				flexDirection: 'column',
+				justifyContent: 'space-between',
 				alignItems: 'center',
-				justifyContent: 'center',
-				overflow: 'hidden',
-				height: '100vh',
-				width: '100vw',
+				height: '100%',
+				width: '100%',
 			}}
 		>
 			<Header />
-			<Box sx={{ pt: 10, display: 'flex', flex: '1 1 auto' }}>
-				<Box component="nav" sx={{ width: 256 }}>
+			<Box sx={{ pt: 10, display: 'flex', width: '100%', maxWidth: '100%' }}>
+				<Box
+					component="nav"
+					sx={{
+						width: 256,
+						pt: 2,
+						display: { xs: 'none', md: 'block' },
+					}}
+				>
 					<Sidebar />
 				</Box>
-				<Box component="main" sx={{ flex: '1 1 auto', p: 2 }}>
+				<Box component="main" sx={{ flex: '1 1 auto', px: 4 }}>
 					<Outlet />
 				</Box>
 			</Box>
-			<Footer className="" />
+			<Footer />
 		</Box>
 	);
 }

@@ -12,7 +12,15 @@ import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import BookmarkRemoveIcon from '@mui/icons-material/BookmarkRemove';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes';
-import { Button, ButtonGroup, Card, CardContent, CardHeader, Stack } from '@mui/material';
+import {
+	Button,
+	ButtonGroup,
+	Card,
+	CardContent,
+	CardHeader,
+	Stack,
+	Typography,
+} from '@mui/material';
 import { default as Link, default as link } from '../../shared/ui/link';
 import { currencyFormat } from '../../shared/utils/currency-format';
 
@@ -43,7 +51,9 @@ export default () => {
 	};
 	if (!accounts.length) {
 		return (
-			<div className="text-center">Нет активных счетов. Добавьте новый счёт.</div>
+			<Typography align="center">
+				Нет активных счетов. Добавьте новый счёт.
+			</Typography>
 		);
 	}
 	return (
@@ -55,7 +65,11 @@ export default () => {
 						key={account._id}
 						direction="row"
 						justifyContent="space-between"
-						className="hover:shadow-sm hover:shadow-black"
+						sx={{
+							':hover': {
+								boxShadow: 4,
+							},
+						}}
 					>
 						<Stack
 							component={Link}
@@ -127,7 +141,11 @@ export default () => {
 					direction="row"
 					justifyContent="space-between"
 					alignItems="stretch"
-					className="hover:shadow-sm hover:shadow-black"
+					sx={{
+						':hover': {
+							boxShadow: 4,
+						},
+					}}
 				>
 					<Stack
 						component={Link}

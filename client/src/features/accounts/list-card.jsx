@@ -30,7 +30,11 @@ export default () => {
 					key={account._id}
 					to={`/account/${account._id}`}
 					underline="none"
-					className="hover:shadow-sm hover:shadow-black"
+					sx={{
+						':hover': {
+							boxShadow: 2,
+						},
+					}}
 				>
 					<Stack
 						direction="column"
@@ -46,7 +50,11 @@ export default () => {
 							title={account.label}
 							subheader={`(${types[account.type] || account.type})`}
 						/>
-						<CardMedia className="text-center">
+						<CardMedia
+							sx={{
+								textAlign: 'center',
+							}}
+						>
 							<CloseIcon />
 						</CardMedia>
 						<CardContent>{currencyFormat(account.balance)}</CardContent>
@@ -56,7 +64,11 @@ export default () => {
 			<Link
 				to={`/account/`}
 				underline="none"
-				className="hover:shadow-sm hover:shadow-black"
+				sx={{
+					':hover': {
+						boxShadow: 2,
+					},
+				}}
 			>
 				<Stack
 					direction="column"
@@ -69,7 +81,11 @@ export default () => {
 					component={Card}
 				>
 					<CardHeader title="Счет" />
-					<CardMedia className="text-center">
+					<CardMedia
+						sx={{
+							textAlign: 'center',
+						}}
+					>
 						<AddCircleOutlineIcon sx={{ fontSize: 48 }} />
 					</CardMedia>
 					<CardContent>Новый счет</CardContent>
