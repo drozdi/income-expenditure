@@ -35,38 +35,42 @@ export default function TransactionsFilters() {
 				account,
 				type,
 				category,
-				from: from.$y ? from.format('YYYY-MM-DD') : '',
-				to: to.$y ? to.format('YYYY-MM-DD') : '',
+				from: from?.$y ? from.format('YYYY-MM-DD') : '',
+				to: to?.$y ? to.format('YYYY-MM-DD') : '',
 			}),
 		[account, type, category, from, to],
 	);
 
 	return (
 		<div>
-			<div>
+			<Toolbar variant="dense" disableGutters>
 				<DatePicker
-					defaultValue={from}
+					defaultValue={from?.$y ? from : undefined}
 					format="YYYY-MM-DD"
 					views={['year', 'month', 'day']}
+					label="С"
 					slotProps={{
 						field: {
-							size: 'small',
+							variant: 'filled',
+							clearable: true,
 						},
 					}}
 					onChange={setFrom}
 				/>
 				<DatePicker
-					defaultValue={to}
+					defaultValue={to?.$y ? to : undefined}
 					format="YYYY-MM-DD"
 					views={['year', 'month', 'day']}
+					label="По"
 					slotProps={{
 						field: {
-							size: 'small',
+							variant: 'filled',
+							clearable: true,
 						},
 					}}
 					onChange={setTo}
 				/>
-			</div>
+			</Toolbar>
 			<Toolbar variant="dense" disableGutters sx={{ mb: 2 }}>
 				<FormControl size="small" fullWidth variant="filled">
 					<InputLabel>Тип</InputLabel>

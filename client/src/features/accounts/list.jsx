@@ -11,6 +11,8 @@ import localStorageService from '../../shared/services/localStorage.service';
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import BookmarkRemoveIcon from '@mui/icons-material/BookmarkRemove';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import EqualizerIcon from '@mui/icons-material/Equalizer';
+import ManageSearchIcon from '@mui/icons-material/ManageSearch';
 import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes';
 import {
 	Button,
@@ -71,6 +73,13 @@ export default () => {
 							},
 						}}
 					>
+						<Button
+							component={link}
+							to={`/statistics/${account._id}`}
+							title="Статистика"
+						>
+							<EqualizerIcon fontSize="large" />
+						</Button>
 						<Stack
 							component={Link}
 							to={`/account/${account._id}`}
@@ -94,6 +103,7 @@ export default () => {
 							<CardContent></CardContent>
 							<CardContent>{currencyFormat(account.balance)}</CardContent>
 						</Stack>
+
 						<ButtonGroup
 							sx={{ flex: '0 0 0 auto' }}
 							variant="text"
@@ -102,8 +112,9 @@ export default () => {
 							<Button
 								component={link}
 								to={`/transactions/?account=${account._id}`}
+								title="Транзакции"
 							>
-								Hist
+								<ManageSearchIcon />
 							</Button>
 							<Button
 								component={link}
@@ -147,6 +158,9 @@ export default () => {
 						},
 					}}
 				>
+					<Button title="Статистика" disabled>
+						<EqualizerIcon fontSize="large" />
+					</Button>
 					<Stack
 						component={Link}
 						to={`/account/`}
@@ -167,7 +181,9 @@ export default () => {
 						orientation="vertical"
 						disabled
 					>
-						<Button>Hist</Button>
+						<Button title="Транзакции">
+							<ManageSearchIcon />
+						</Button>
 						<Button component={link} to={`/categories/`} title="Категории">
 							<SpeakerNotesIcon />
 						</Button>

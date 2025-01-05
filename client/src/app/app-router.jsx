@@ -6,6 +6,7 @@ import {
 	CategoriesPage,
 	MainPage,
 	SettingsPage,
+	StatisticsPage,
 	TransactionPage,
 	TransactionsPage,
 } from '../pages';
@@ -46,6 +47,7 @@ export const AppRouter = () => {
 					element={<TransactionPage />}
 				/>
 				<Route path="transactions/" element={<TransactionsPage />} />
+				<Route path="statistics/:account/" element={<StatisticsPage />} />
 				<Route
 					path="404"
 					element={

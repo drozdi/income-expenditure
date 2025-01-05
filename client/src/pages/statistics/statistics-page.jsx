@@ -1,7 +1,7 @@
+import { useParams } from 'react-router-dom';
+import StatisticsAccount from '../../features/statistics/account';
+
 export function StatisticsPage() {
-	return (
-		<div>
-			<h1>Statistics</h1>
-		</div>
-	);
+	const { account } = useParams();
+	return <StatisticsAccount accountId={account} />;
 }

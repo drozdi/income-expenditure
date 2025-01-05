@@ -46,13 +46,18 @@ export default function TransactionsList({ className }) {
 		);
 	}, [transactions, search]);
 
+	const sorted = useMemo(() => {
+		return filtered.sort((a, b) => {
+			if (a.date < b.date) return -1;
+			if (a.date > b.date) return 1;
+			return 0;
+		});
+	}, [filtered]);
+
 	const arr = useMemo(
 		() =>
-			filtered.slice(
-				currentPage * limitItems,
-				currentPage * limitItems + limitItems,
-			),
-		[filtered, currentPage, limitItems],
+			sorted.slice(currentPage * limitItems, currentPage * limitItems + limitItems),
+		[sorted, currentPage, limitItems],
 	);
 
 	useEffect(() => {

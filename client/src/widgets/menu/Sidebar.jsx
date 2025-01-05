@@ -11,6 +11,15 @@ export function Sidebar() {
 				</ListItem>
 
 				<ListItem disablePadding>
+					<ListItemButton
+						component={Link}
+						to="/statistics/675ed9c4444bb8cd1b565d2a/"
+					>
+						Статистика
+					</ListItemButton>
+				</ListItem>
+
+				<ListItem disablePadding>
 					<ListItemButton component={Link} to="/transaction/expense">
 						Расход
 					</ListItemButton>
@@ -33,6 +42,7 @@ export function Sidebar() {
 						Категории
 					</ListItemButton>
 				</ListItem>
+
 				<ListItem disablePadding>
 					<ListItemButton component={Link} to="/accounts">
 						Счета
