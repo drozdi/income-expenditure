@@ -11,6 +11,7 @@ import {
 
 import { useSearchParams } from 'react-router-dom';
 
+import dayjs from 'dayjs';
 import { useEffect, useMemo } from 'react';
 import TransactionsItem from './item';
 
@@ -27,16 +28,19 @@ export default function TransactionsList({ className }) {
 		const type = search.get('type') || '';
 		const account = search.get('account') || '';
 		const category = search.get('category') || '';
-		const from = search.get('from') || '';
-		const to = search.get('to') || '';
+
+		const from = search.get('from');
+		const to = search.get('to');
 
 		return (
 			transactions?.filter((transaction) => {
-				if (from && transaction.date <= from) return false;
-				if (to && transaction.date >= to) return false;
 				if (type && transaction.type !== type) return false;
 				if (account && transaction.account !== account) return false;
 				if (category && transaction.category !== category) return false;
+				if (from && dayjs(transaction.date).diff(from, 'h') <= 0) return false;
+				if (to && dayjs(transaction.date).diff(to + 'T23:59:59', 'ms') > 0)
+					return false;
+
 				return true;
 			}) || []
 		);

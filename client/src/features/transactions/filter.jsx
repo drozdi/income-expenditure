@@ -12,8 +12,8 @@ export default function TransactionsFilters() {
 	const [type, setType] = useState(search.get('type') || '');
 	const [account, setAccount] = useState(search.get('account') || '');
 	const [category, setCategory] = useState(search.get('category') || '');
-	const [from, setFrom] = useState(dayjs(search.get('from') || ''));
-	const [to, setTo] = useState(dayjs(search.get('to') || ''));
+	const [from, setFrom] = useState(dayjs(search.get('from')));
+	const [to, setTo] = useState(dayjs(search.get('to')));
 
 	const accounts = useSelector(selectAccounts);
 	const types = useSelector(selectTypes);
@@ -29,16 +29,14 @@ export default function TransactionsFilters() {
 		}
 	}, [account, type]);
 
-	console.log(from);
-
 	useEffect(
 		() =>
 			setSearch({
 				account,
 				type,
 				category,
-				from: from.format('YYYY-MM-DD'),
-				to: to.format('YYYY-MM-DD'),
+				from: from.$y ? from.format('YYYY-MM-DD') : '',
+				to: to.$y ? to.format('YYYY-MM-DD') : '',
 			}),
 		[account, type, category, from, to],
 	);
