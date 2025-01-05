@@ -27,9 +27,13 @@ export default function TransactionsList({ className }) {
 		const type = search.get('type') || '';
 		const account = search.get('account') || '';
 		const category = search.get('category') || '';
+		const from = search.get('from') || '';
+		const to = search.get('to') || '';
 
 		return (
 			transactions?.filter((transaction) => {
+				if (from && transaction.date <= from) return false;
+				if (to && transaction.date >= to) return false;
 				if (type && transaction.type !== type) return false;
 				if (account && transaction.account !== account) return false;
 				if (category && transaction.category !== category) return false;
