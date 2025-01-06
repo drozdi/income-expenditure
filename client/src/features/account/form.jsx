@@ -57,7 +57,7 @@ export default ({ id, onSave }) => {
 					severity: 'success',
 					autoHideDuration: 3000,
 				});
-				onSave?.(payload);
+				navigate('/accounts');
 			})
 			.catch(({ payload, error }) => {
 				notifications.show(payload ?? error, {

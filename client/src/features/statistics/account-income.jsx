@@ -1,60 +1,82 @@
 import { Box, Typography } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
+import dayjs from 'dayjs';
 import PropTypes from 'prop-types';
 import { useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { selectAccount } from '../../entites/accounts/accountsSlice';
 import { selectCategories } from '../../entites/categories/categoriesSlice';
 import { selectTransactionAccount } from '../../entites/transactions/transactionsSlice';
 import { currencyFormat } from '../../shared/utils/currency-format';
 import { randomColor } from '../../shared/utils/randomColor';
-export default function StatisticsAccountIncome({ accountId }) {
-	const dispatch = useDispatch();
+export default function StatisticsAccountIncome({ from, to, accountId }) {
 	const account = useSelector(selectAccount(accountId));
+	if (!account) {
+		return '';
+	}
 	const categories = useSelector(selectCategories(accountId)) || [];
 	const transactions = useSelector(selectTransactionAccount(accountId)) || [];
 
-	let transferCategory;
+	const fromDate = dayjs(
+		dayjs(from ? from : dayjs()).format('YYYY-MM-DD') + 'T00:00:00',
+	);
+	const toDate = dayjs(
+		dayjs(to ? to : fromDate.format('YYYY-MM') + '-31').format('YYYY-MM-DD') +
+			'T23:59:59',
+	);
 
-	const data = {};
+	const filtered = useMemo(() => {
+		return (
+			transactions?.filter((transaction) => {
+				if (fromDate && fromDate.unix() - dayjs(transaction.date).unix() > 0)
+					return false;
+				if (toDate && dayjs(transaction.date).unix() - toDate.unix() > 0)
+					return false;
+				return true;
+			}) || []
+		);
+	}, [transactions, fromDate, toDate]);
 
-	for (const category of categories) {
-		if (category.type === 'transfer') {
-			transferCategory = category._id;
-			continue;
+	const { data, typesValue } = useMemo(() => {
+		const data = {};
+		const typesValue = {
+			expense: 0,
+			income: 0,
+		};
+		let transferCategory;
+		for (const category of categories) {
+			if (category.type === 'transfer') {
+				transferCategory = category._id;
+				continue;
+			}
+			data[category._id] = {
+				label: category.label,
+				type: category.type,
+				total: 0,
+			};
 		}
-		data[category._id] = {
-			label: category.label,
-			type: category.type,
-			total: 0,
-		};
-	}
-	if (transferCategory) {
-		data[transferCategory + 'expense'] = {
-			label: 'Перевод',
-			type: 'expense',
-			total: 0,
-		};
-		data[transferCategory + 'income'] = {
-			label: 'Перевод',
-			type: 'income',
-			total: 0,
-		};
-	}
-
-	const typesValue = {
-		expense: 0,
-		income: 0,
-	};
-
-	for (const transaction of transactions) {
-		typesValue[transaction.type] += transaction.amount;
-		if (transaction.category === transferCategory) {
-			data[transferCategory + transaction.type].total += transaction.amount;
-		} else {
-			data[transaction.category].total += transaction.amount;
+		if (transferCategory) {
+			data[transferCategory + 'expense'] = {
+				label: 'Перевод',
+				type: 'expense',
+				total: 0,
+			};
+			data[transferCategory + 'income'] = {
+				label: 'Перевод',
+				type: 'income',
+				total: 0,
+			};
 		}
-	}
+		for (const transaction of filtered) {
+			typesValue[transaction.type] += transaction.amount;
+			if (transaction.category === transferCategory) {
+				data[transferCategory + transaction.type].total += transaction.amount;
+			} else {
+				data[transaction.category].total += transaction.amount;
+			}
+		}
+		return { data, typesValue };
+	}, [filtered, categories]);
 
 	const propsIncome = useMemo(() => {
 		const xAxis = [];
@@ -83,11 +105,13 @@ export default function StatisticsAccountIncome({ accountId }) {
 	}, [data]);
 
 	return (
-		<Box>
-			<Typography align="center">
-				<Typography variant="h6">{account.label}</Typography>
-				Доход: {currencyFormat(typesValue.income)}
+		<Box align="center">
+			<Typography variant="h6">
+				{account.label} ({fromDate.format('YYYY-MM-DD')} -{' '}
+				{toDate.format('YYYY-MM-DD')})
 			</Typography>
+			<Typography>Доход: {currencyFormat(typesValue.income)}</Typography>
+
 			<BarChart {...propsIncome} width={500} height={300} />
 		</Box>
 	);
@@ -95,4 +119,6 @@ export default function StatisticsAccountIncome({ accountId }) {
 
 StatisticsAccountIncome.propTypes = {
 	account: PropTypes.string,
+	from: PropTypes.string,
+	to: PropTypes.string,
 };

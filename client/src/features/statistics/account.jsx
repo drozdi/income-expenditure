@@ -1,9 +1,11 @@
 import { Box, Stack, Typography } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { PieChart } from '@mui/x-charts/PieChart';
+import dayjs from 'dayjs';
 import PropTypes from 'prop-types';
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Navigate, useNavigate } from 'react-router-dom';
 import {
 	selectAccount,
 	selectTypes as selectAccountTypes,
@@ -12,58 +14,77 @@ import { selectCategories, selectTypes } from '../../entites/categories/categori
 import { selectTransactionAccount } from '../../entites/transactions/transactionsSlice';
 import { currencyFormat } from '../../shared/utils/currency-format';
 import { randomColor } from '../../shared/utils/randomColor';
-export default function StatisticsAccount({ accountId }) {
-	const dispatch = useDispatch();
-	const types = useSelector(selectTypes);
+export default function StatisticsAccount({ from, to, accountId }) {
 	const account = useSelector(selectAccount(accountId));
+	if (!account) {
+		return '';
+	}
+
+	const types = useSelector(selectTypes);
 	const accountTypes = useSelector(selectAccountTypes);
 	const categories = useSelector(selectCategories(accountId)) || [];
 	const transactions = useSelector(selectTransactionAccount(accountId)) || [];
 
-	let transferCategory;
+	const fromDate = dayjs(
+		dayjs(from ? from : dayjs()).format('YYYY-MM-DD') + 'T00:00:00',
+	);
+	const toDate = dayjs(
+		dayjs(to ? to : fromDate.format('YYYY-MM') + '-31').format('YYYY-MM-DD') +
+			'T23:59:59',
+	);
 
-	const data = {};
+	const filtered = useMemo(() => {
+		return (
+			transactions?.filter((transaction) => {
+				if (fromDate && fromDate.unix() - dayjs(transaction.date).unix() > 0)
+					return false;
+				if (toDate && dayjs(transaction.date).unix() - toDate.unix() > 0)
+					return false;
+				return true;
+			}) || []
+		);
+	}, [transactions, fromDate, toDate]);
 
-	for (const category of categories) {
-		if (category.type === 'transfer') {
-			transferCategory = category._id;
-			continue;
+	const { data, typesValue } = useMemo(() => {
+		const data = {};
+		const typesValue = {
+			expense: 0,
+			income: 0,
+		};
+		let transferCategory;
+		for (const category of categories) {
+			if (category.type === 'transfer') {
+				transferCategory = category._id;
+				continue;
+			}
+			data[category._id] = {
+				label: category.label,
+				type: category.type,
+				total: 0,
+			};
 		}
-		data[category._id] = {
-			label: category.label,
-			type: category.type,
-			total: 0,
-		};
-		/*data[category._id].total = transactions
-			.filter((t) => t.category === category._id)
-			.reduce((acc, t) => acc + t.amount, 0);*/
-	}
-	if (transferCategory) {
-		data[transferCategory + 'expense'] = {
-			label: 'Перевод',
-			type: 'expense',
-			total: 0,
-		};
-		data[transferCategory + 'income'] = {
-			label: 'Перевод',
-			type: 'income',
-			total: 0,
-		};
-	}
-
-	const typesValue = {
-		expense: 0,
-		income: 0,
-	};
-
-	for (const transaction of transactions) {
-		typesValue[transaction.type] += transaction.amount;
-		if (transaction.category === transferCategory) {
-			data[transferCategory + transaction.type].total += transaction.amount;
-		} else {
-			data[transaction.category].total += transaction.amount;
+		if (transferCategory) {
+			data[transferCategory + 'expense'] = {
+				label: 'Перевод',
+				type: 'expense',
+				total: 0,
+			};
+			data[transferCategory + 'income'] = {
+				label: 'Перевод',
+				type: 'income',
+				total: 0,
+			};
 		}
-	}
+		for (const transaction of filtered) {
+			typesValue[transaction.type] += transaction.amount;
+			if (transaction.category === transferCategory) {
+				data[transferCategory + transaction.type].total += transaction.amount;
+			} else {
+				data[transaction.category].total += transaction.amount;
+			}
+		}
+		return { data, typesValue };
+	}, [filtered, categories]);
 
 	const propsExpense = useMemo(() => {
 		const values = [];
@@ -110,18 +131,29 @@ export default function StatisticsAccount({ accountId }) {
 					},
 				},
 			],
-			series: [{ data: values }],
+			series: [{ data: values, valueFormatter: (v) => currencyFormat(v) }],
 		};
 	}, [data]);
 
 	return (
 		<>
-			<Typography align="center" variant="h4" gutterBottom>
-				{account.label}{' '}
-				<Typography variant="overline" sx={{ fontSize: '0.65em' }}>
-					({accountTypes[account.type] || account.type})
+			<Stack
+				direction="row"
+				spacing={2}
+				justifyContent="space-between"
+				alignItems="center"
+			>
+				<Typography align="center" variant="h4" gutterBottom>
+					{account.label}{' '}
+					<Typography variant="overline" sx={{ fontSize: '0.65em' }}>
+						({accountTypes[account.type] || account.type})
+					</Typography>
 				</Typography>
-			</Typography>
+				<Typography variant="overline">
+					{fromDate.format('YYYY-MM-DD')} - {toDate.format('YYYY-MM-DD')}
+				</Typography>
+			</Stack>
+
 			<Stack direction="row" flexWrap="wrap">
 				<Box>
 					<Typography align="center">
@@ -137,26 +169,38 @@ export default function StatisticsAccount({ accountId }) {
 					<PieChart {...propsExpense} width={500} height={300} />
 				</Box>
 
-				<BarChart
-					xAxis={[
-						{
-							scaleType: 'band',
-							data: [types.income, types.expense],
-							colorMap: {
-								type: 'ordinal',
-								colors: ['#0f0', '#f00'],
+				<Box>
+					<Typography align="center">
+						Остаток: {currencyFormat(typesValue.income - typesValue.expense)}
+					</Typography>
+					<BarChart
+						xAxis={[
+							{
+								scaleType: 'band',
+								data: [types.income, types.expense],
+								colorMap: {
+									type: 'ordinal',
+									colors: ['#0f0', '#f00'],
+								},
 							},
-						},
-					]}
-					series={[{ data: [typesValue.income, typesValue.expense] }]}
-					width={500}
-					height={300}
-				/>
+						]}
+						series={[
+							{
+								data: [typesValue.income, typesValue.expense],
+								valueFormatter: (v) => currencyFormat(v),
+							},
+						]}
+						width={500}
+						height={300}
+					/>
+				</Box>
 			</Stack>
 		</>
 	);
 }
 
 StatisticsAccount.propTypes = {
-	account: PropTypes.string,
+	accountId: PropTypes.string,
+	from: PropTypes.string,
+	to: PropTypes.string,
 };

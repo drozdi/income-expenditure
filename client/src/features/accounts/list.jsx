@@ -26,6 +26,8 @@ import {
 import { default as Link, default as link } from '../../shared/ui/link';
 import { currencyFormat } from '../../shared/utils/currency-format';
 
+import { fetchCategories } from '../../entites/categories/categoriesSlice';
+
 export default () => {
 	const notifications = useNotifications();
 	const dispatch = useDispatch();
@@ -38,13 +40,15 @@ export default () => {
 			dispatch(deleteAccount(id))
 				.unwrap()
 				.then((data) => {
-					notifications.show(`Удалено!`, {
-						severity: 'success',
-						autoHideDuration: 3000,
+					dispatch(fetchCategories()).then(() => {
+						notifications.show(`Удалено!`, {
+							severity: 'success',
+							autoHideDuration: 3000,
+						});
 					});
 				})
 				.catch(({ error, payload }) => {
-					notifications.show(error, {
+					notifications.show(error ?? payload, {
 						severity: 'error',
 						autoHideDuration: 3000,
 					});

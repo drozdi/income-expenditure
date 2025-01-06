@@ -84,8 +84,7 @@ router.delete('/:id', async (req, res) => {
 			error: 'Нельзя удалить пока есть транзакции',
 		});
 	} else {
-		await deleteAccount(req.params.id);
-		res.send({ error: null });
+		res.send({ data: await deleteAccount(req.params.id) });
 	}
 });
 

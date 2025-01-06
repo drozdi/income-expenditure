@@ -31,8 +31,7 @@ async function updateAccount(id, account) {
 
 // delete
 async function deleteAccount(id) {
-	const account = await Account.findById(id);
-	await account.populate('categories');
+	const account = await Account.findById(id).populate('categories');
 	account.categories.map(async (category) => {
 		await category.deleteOne();
 	});
