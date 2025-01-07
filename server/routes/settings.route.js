@@ -17,6 +17,22 @@ router.get('/user', async (req, res) => {
 	}
 });
 
+router.get('/users', async (req, res) => {
+	try {
+		const users = await User.find({
+			_id: { $nin: req.user },
+		});
+		users.forEach((user) => {
+			user.password = null;
+		});
+		res.send({ data: users });
+	} catch (error) {
+		res.status(500).send({
+			message: 'На сервере произошла ошибка. Попробуйте позже',
+		});
+	}
+});
+
 router.patch('/user', async (req, res) => {
 	try {
 		const user = await User.findByIdAndUpdate(req.user._id, req.body, {

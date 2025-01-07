@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import authService from '../../shared/services/auth.service';
 import localStorageService from '../../shared/services/localStorage.service';
 
-const initialState = localStorageService.getAccessToken()
+const initialState = localStorageService.getUserId()
 	? {
 			isLoading: true,
 			error: null,
@@ -44,8 +44,7 @@ export const logoutUser = createAsyncThunk(
 	'auth/logout',
 	async (_, { rejectWithValue }) => {
 		try {
-			const res = await authService.logout();
-			return res;
+			return await authService.logout();
 		} catch (error) {
 			return rejectWithValue(error.response.data);
 		}
@@ -94,6 +93,7 @@ export const authSlice = createSlice({
 			state.isAuth = false;
 			state.auth = null;
 			state.dataLoaded = false;
+			localStorageService.removeAuthData();
 		});
 		builder.addCase(logoutUser.rejected, (state, action) => {
 			state.isLoading = false;

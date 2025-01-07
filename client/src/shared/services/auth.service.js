@@ -17,14 +17,10 @@ const authService = {
 		});
 		return data;
 	},
-	refresh: async () => {
-		const { data } = await httpAuth.post('token', {
-			refresh_token: localStorageService.getRefreshToken(),
-		});
-		return data;
-	},
 	logout: async () => {
+		const { data } = await httpAuth.post('signOut');
 		localStorageService.removeAuthData();
+		return data;
 	},
 };
 export default authService;

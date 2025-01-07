@@ -1,26 +1,27 @@
-const tokenService = require('../services/token.service');
+const User = require('../models/User');
+const { verify } = require('../helpers/token');
 
-function auth(req, res, next) {
-	req.user = {
-		_id: '6755707168b4fed5a811b808',
-	};
-	next(); //*/
-	/*if (req.method === 'OPTIONS') {
+async function auth(req, res, next) {
+	if (req.method === 'OPTIONS') {
 		return next();
 	}
-
 	try {
-		const token = req.headers.authorization.split(' ')[1];
-		if (!token) {
-			return res.status(401).json({ message: 'Unauthorized' });
+		const tokenData = verify(req.cookies.token);
+
+		const user = await User.findOne({ _id: tokenData.id });
+
+		if (!user) {
+			res.status(401).send({ error: 'Authenticated user not found' });
+
+			return;
 		}
-		const data = tokenService.validateAccess(token);
-		req.user = data;
+
+		req.user = user;
 
 		next();
 	} catch (e) {
-		res.status(401).json({ message: 'Unauthorized' });
-	} //*/
+		res.status(401).send({ error: e.message || 'Token error' });
+	}
 }
 
 module.exports = auth;

@@ -55,17 +55,16 @@ export default () => {
 				});
 		}
 	};
-	if (!accounts.length) {
-		return (
-			<Typography align="center">
-				Нет активных счетов. Добавьте новый счёт.
-			</Typography>
-		);
-	}
+
 	return (
 		<>
 			<Stack direction="column" spacing={2}>
-				{accounts.map((account) => (
+				{!accounts.length && (
+					<Typography align="center">
+						Нет активных счетов. Добавьте новый счёт.
+					</Typography>
+				)}
+				{accounts?.map((account) => (
 					<Stack
 						component={Card}
 						key={account._id}

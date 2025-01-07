@@ -9,6 +9,8 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { Button, Stack, TextField } from '@mui/material';
 import { useDialogs } from '@toolpad/core/useDialogs';
 import { useNotifications } from '@toolpad/core/useNotifications';
+import { useEffect } from 'react';
+import settingsService from '../../shared/services/settings.service';
 
 export default function SettingsForm({ className, onSaved }) {
 	const navigate = useNavigate();
@@ -44,6 +46,11 @@ export default function SettingsForm({ className, onSaved }) {
 				});
 			});
 	};
+	useEffect(() => {
+		settingsService.getUsers().then((data) => {
+			console.log(data);
+		});
+	}, []);
 	return (
 		<Stack
 			className={className}

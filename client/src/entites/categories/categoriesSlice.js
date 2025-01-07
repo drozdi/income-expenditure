@@ -150,6 +150,7 @@ export const categoriesSlice = createSlice({
 		}),
 	}),
 	selectors: {
+		selectAll: (state) => state.entities,
 		selectError: (state) => state.error,
 		selectLoading: (state) => state.loading,
 		selectEditId: (state) => state.editId,
@@ -168,15 +169,22 @@ export const {
 	deleteCategory,
 } = actions;
 
-export const { selectError, selectLoading, selectEditId, selectTypes } = selectors;
+export const { selectError, selectLoading, selectEditId, selectTypes, selectAll } =
+	selectors;
 
 export const selectCategories = (accountId) => (state) => {
 	return state.categories.entities[accountId];
 };
 
+export const selectCategory = (accountId, id) => (state) => {
+	const categories = state.categories.entities[accountId];
+	return categories?.find((t) => t._id === id)?.label;
+};
+
 export const selectCategoryLabel = (accountId, id) => (state) => {
-	const categories = state.categories.entities[accountId] || [];
-	return categories.find((t) => t._id === id)?.label || id;
+	console.log(accountId, id);
+	const categories = state.categories.entities[accountId];
+	return categories?.find((t) => t._id === id)?.label || id;
 };
 
 export default reducer;

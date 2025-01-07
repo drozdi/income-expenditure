@@ -38,8 +38,8 @@ export default () => {
 			.then(() => {
 				navigate('/');
 			})
-			.catch(({ error }) => {
-				notifications.show(error.message, {
+			.catch(({ error, message }) => {
+				notifications.show(error ?? message, {
 					severity: 'error',
 					autoHideDuration: 3000,
 				});

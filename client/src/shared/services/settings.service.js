@@ -14,5 +14,13 @@ const settingsService = {
 		const { data } = await httpService.patch(settingsEndpoint + 'user', payload);
 		return data;
 	},
+	getUsers: async () => {
+		const { data } = await httpService.get(settingsEndpoint + 'users');
+		return data;
+	},
+	updateUsers: async (payload) => {
+		const { data } = await httpService.patch(settingsEndpoint + 'users', payload);
+		return data;
+	},
 };
 export default settingsService;

@@ -33,15 +33,15 @@ router.get('/types', async (req, res) => {
 
 router.get('/', async (req, res) => {
 	try {
-		const user = await User.findById(req.user._id).populate('accounts');
+		await req.user.populate('accounts');
 
-		for (let account of user.accounts) {
+		for (let account of req.user.accounts) {
 			await account.populate('owner');
 			account.owner.password = null;
 			account.owner.accounts = null;
 		}
 
-		res.send({ data: user.accounts });
+		res.send({ data: req.user.accounts });
 	} catch (error) {
 		res.status(500).send({
 			message: 'На сервере произошла ошибка. Попробуйте позже',

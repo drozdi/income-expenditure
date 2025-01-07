@@ -22,8 +22,11 @@ const {
 router.use(auth);
 
 router.get('/', async (req, res) => {
-	const transactions = await getTransactions();
-	//await transactions.exec();
+	await req.user.populate('accounts');
+
+	const transactions = await getTransactions({
+		account: { $in: req.user.accounts },
+	});
 	res.send({ data: transactions });
 });
 
