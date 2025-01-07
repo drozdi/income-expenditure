@@ -23,7 +23,7 @@ import {
 	Stack,
 	Typography,
 } from '@mui/material';
-import { default as Link, default as link } from '../../shared/ui/link';
+import { default as Link, default as link } from '../../shared/link';
 import { currencyFormat } from '../../shared/utils/currency-format';
 
 import { fetchCategories } from '../../entites/categories/categoriesSlice';

@@ -8,10 +8,10 @@ import {
 	selectLoading,
 	selectTypes,
 } from '../../entites/accounts/accountsSlice';
+import Link from '../../shared/link';
 import localStorageService from '../../shared/services/localStorage.service';
-import Link from '../../shared/ui/link';
 import { currencyFormat } from '../../shared/utils/currency-format';
-export default () => {
+export default function MainAccounts() {
 	const dispatch = useDispatch();
 	const isLoading = useSelector(selectLoading);
 	const userId = localStorageService.getUserId();
@@ -28,7 +28,7 @@ export default () => {
 			{accounts.map((account) => (
 				<Link
 					key={account._id}
-					to={`/account/${account._id}`}
+					to={`/statistics/${account._id}`}
 					underline="none"
 					sx={{
 						':hover': {
@@ -93,4 +93,4 @@ export default () => {
 			</Link>
 		</Stack>
 	);
-};
+}

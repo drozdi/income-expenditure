@@ -1,9 +1,11 @@
-import { WidgetList } from '../../widgets/accounts';
-
+import { Stack } from '@mui/material';
+import { WidgetAccountsList } from '../../widgets/accounts';
+import { WidgetTransactionsList } from '../../widgets/transactions';
 export function MainPage() {
 	return (
-		<>
-			<WidgetList />
-		</>
+		<Stack direction="column" spacing={2}>
+			<WidgetAccountsList />
+			<WidgetTransactionsList />
+		</Stack>
 	);
 }

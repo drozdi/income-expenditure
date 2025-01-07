@@ -15,7 +15,7 @@ import { useSelector } from 'react-redux';
 import { selectIsAuth } from '../../entites/auth/authSlice';
 import { selectUser } from '../../entites/settings/settingsSlice';
 import LogOutBtn from '../../features/auth/sign-out';
-import Link from '../../shared/ui/link';
+import Link from '../../shared/link';
 
 export function Header() {
 	const isAuth = useSelector(selectIsAuth);

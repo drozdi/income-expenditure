@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { accountBalance, selectAccountLabel } from '../../entites/accounts/accountsSlice';
 import { selectCategoryLabel } from '../../entites/categories/categoriesSlice';
 import { deleteTransation } from '../../entites/transactions/transactionsSlice';
-import Link from '../../shared/ui/link';
+import Link from '../../shared/link';
 import { currencyFormat } from '../../shared/utils/currency-format';
 
 export default function TransactionsItem({ className, transaction }) {
