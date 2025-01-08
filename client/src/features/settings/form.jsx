@@ -9,35 +9,31 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { Button, Stack, TextField } from '@mui/material';
 import { useDialogs } from '@toolpad/core/useDialogs';
 import { useNotifications } from '@toolpad/core/useNotifications';
-import { useEffect } from 'react';
-import settingsService from '../../shared/services/settings.service';
 
-export default function SettingsForm({ className, onSaved }) {
+export default function SettingsForm({ onSaved }) {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const dialogs = useDialogs();
 	const notifications = useNotifications();
-
 	const user = useSelector(selectUser);
-
 	const {
 		register,
 		handleSubmit,
+		control,
 		formState: { isLoading, errors },
 	} = useForm({
 		mode: 'onChange',
 		defaultValues: { username: user.username, email: user.email },
 	});
-
 	const onSubmit = async (data) => {
 		dispatch(saveUser(data))
 			.unwrap()
-			.then((data) => {
+			.then(({ payload }) => {
 				notifications.show(`Успешно обновлено!`, {
 					severity: 'success',
 					autoHideDuration: 3000,
 				});
-				onSaved?.(data);
+				onSaved?.(payload);
 			})
 			.catch(({ error }) => {
 				notifications.show(error, {
@@ -46,14 +42,8 @@ export default function SettingsForm({ className, onSaved }) {
 				});
 			});
 	};
-	useEffect(() => {
-		settingsService.getUsers().then((data) => {
-			console.log(data);
-		});
-	}, []);
 	return (
 		<Stack
-			className={className}
 			direction="column"
 			spacing={2}
 			component="form"
@@ -78,7 +68,6 @@ export default function SettingsForm({ className, onSaved }) {
 				helperText={errors?.email?.message || ' '}
 				{...register('email', { required: true })}
 			/>
-
 			<Stack direction="row" justifyContent="center" spacing={2}>
 				<LoadingButton
 					loading={isLoading}
@@ -102,6 +91,5 @@ export default function SettingsForm({ className, onSaved }) {
 }
 
 SettingsForm.propTypes = {
-	className: PropTypes.string,
 	onSaved: PropTypes.func,
 };

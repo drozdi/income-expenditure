@@ -95,6 +95,7 @@ export default function ExpenseForm({ className, id, account }) {
 				for (let transaction of transactions) {
 					dispatch(accountBalance(transaction));
 				}
+				console.log(payload);
 				setCurrentAccount(undefined);
 				setAmount('');
 				setComment('');

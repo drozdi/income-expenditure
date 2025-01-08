@@ -182,7 +182,6 @@ export const selectCategory = (accountId, id) => (state) => {
 };
 
 export const selectCategoryLabel = (accountId, id) => (state) => {
-	console.log(accountId, id);
 	const categories = state.categories.entities[accountId];
 	return categories?.find((t) => t._id === id)?.label || id;
 };

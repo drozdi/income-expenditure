@@ -35,9 +35,7 @@ export default function MainTransactions({ limit = 3 }) {
 		() => sorted.slice((page - 1) * limit, page * limit),
 		[sorted, page, limit],
 	);
-	console.log('s', selected);
 
-	console.log('render', page);
 	return (
 		<>
 			<List dense>

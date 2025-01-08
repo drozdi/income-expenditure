@@ -4,8 +4,7 @@ import { PieChart } from '@mui/x-charts/PieChart';
 import dayjs from 'dayjs';
 import PropTypes from 'prop-types';
 import { useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import {
 	selectAccount,
 	selectTypes as selectAccountTypes,
@@ -40,7 +39,7 @@ export default function StatisticsAccount({ from, to, accountId }) {
 					return false;
 				if (toDate && dayjs(transaction.date).unix() - toDate.unix() > 0)
 					return false;
-				return true;
+				return !!transaction.amount;
 			}) || []
 		);
 	}, [transactions, fromDate, toDate]);
@@ -103,7 +102,7 @@ export default function StatisticsAccount({ from, to, accountId }) {
 				{
 					data: values,
 					highlightScope: { highlight: 'item' },
-					valueFormatter: (v) => currencyFormat(v.value),
+					valueFormatter: (v) => currencyFormat(v.value || 0),
 				},
 			],
 		};
@@ -131,7 +130,7 @@ export default function StatisticsAccount({ from, to, accountId }) {
 					},
 				},
 			],
-			series: [{ data: values, valueFormatter: (v) => currencyFormat(v) }],
+			series: [{ data: values, valueFormatter: (v) => currencyFormat(v || 0) }],
 		};
 	}, [data]);
 
@@ -157,21 +156,21 @@ export default function StatisticsAccount({ from, to, accountId }) {
 			<Stack direction="row" flexWrap="wrap">
 				<Box>
 					<Typography align="center">
-						Доход: {currencyFormat(typesValue.income)}
+						Доход: {currencyFormat(typesValue.income || 0)}
 					</Typography>
 					<BarChart {...propsIncome} width={500} height={300} />
 				</Box>
 
 				<Box>
 					<Typography align="center">
-						Расход: {currencyFormat(typesValue.expense)}
+						Расход: {currencyFormat(typesValue.expense || 0)}
 					</Typography>
 					<PieChart {...propsExpense} width={500} height={300} />
 				</Box>
 
 				<Box>
 					<Typography align="center">
-						Остаток: {currencyFormat(typesValue.income - typesValue.expense)}
+						Остаток: {currencyFormat(+typesValue.income - typesValue.expense)}
 					</Typography>
 					<BarChart
 						xAxis={[
@@ -187,7 +186,7 @@ export default function StatisticsAccount({ from, to, accountId }) {
 						series={[
 							{
 								data: [typesValue.income, typesValue.expense],
-								valueFormatter: (v) => currencyFormat(v),
+								valueFormatter: (v) => currencyFormat(v || 0),
 							},
 						]}
 						width={500}

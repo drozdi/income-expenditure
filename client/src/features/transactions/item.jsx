@@ -16,9 +16,12 @@ export default function TransactionsItem({ className, transaction }) {
 	const notifications = useNotifications();
 	const dialogs = useDialogs();
 	const dispatch = useDispatch();
+	const label = useSelector(
+		selectCategoryLabel(transaction.account, transaction.category),
+	);
 	const handlerDelete = async () => {
 		const deleteConfirmed = await dialogs.confirm(
-			`Точно хотите удалить транзакцию "${transaction.category.label || transaction.category}" ${dayjs(transaction.date).format('YYYY-MM-DD HH:mm')}?`,
+			`Точно хотите удалить транзакцию "${label}" ${dayjs(transaction.date).format('YYYY-MM-DD HH:mm')}?`,
 			{
 				title: 'Удалить?',
 				okText: 'Да',
@@ -35,7 +38,7 @@ export default function TransactionsItem({ className, transaction }) {
 						dispatch(accountBalance(t));
 					}
 					notifications.show(
-						`Транзакция "${transaction.category.label || transaction.category}" ${dayjs(transaction.date).format('YYYY-MM-DD HH:mm')} успешно удалена!`,
+						`Транзакция "${label}" ${dayjs(transaction.date).format('YYYY-MM-DD HH:mm')} успешно удалена!`,
 						{
 							severity: 'success',
 							autoHideDuration: 3000,
@@ -58,11 +61,7 @@ export default function TransactionsItem({ className, transaction }) {
 				{(transaction.type === 'income' ? '+' : '-') +
 					currencyFormat(transaction.amount)}
 			</TableCell>
-			<TableCell>
-				{useSelector(
-					selectCategoryLabel(transaction.account, transaction.category),
-				)}
-			</TableCell>
+			<TableCell>{label}</TableCell>
 			<TableCell>
 				<IconButton
 					component={Link}

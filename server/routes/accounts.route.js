@@ -76,6 +76,13 @@ router.patch('/:id', async (req, res) => {
 });
 
 router.delete('/:id', async (req, res) => {
+	const transaction = await getAccount(req.params.id);
+	if (String(transaction.owner._id) !== String(req.user._id)) {
+		await User.findByIdAndUpdate(req.user._id, {
+			$pull: { accounts: req.params.id },
+		});
+		return res.send({ data: transaction });
+	}
 	const transactions = await Transaction.find({
 		account: req.params.id,
 	}).limit(1);

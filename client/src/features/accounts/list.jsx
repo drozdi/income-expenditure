@@ -6,6 +6,8 @@ import {
 	selectLoading,
 	selectTypes,
 } from '../../entites/accounts/accountsSlice';
+import { fetchCategories } from '../../entites/categories/categoriesSlice';
+import { fetchTransactions } from '../../entites/transactions/transactionsSlice';
 import localStorageService from '../../shared/services/localStorage.service';
 
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
@@ -23,10 +25,8 @@ import {
 	Stack,
 	Typography,
 } from '@mui/material';
-import { default as Link, default as link } from '../../shared/link';
+import Link from '../../shared/link';
 import { currencyFormat } from '../../shared/utils/currency-format';
-
-import { fetchCategories } from '../../entites/categories/categoriesSlice';
 
 export default () => {
 	const notifications = useNotifications();
@@ -40,7 +40,10 @@ export default () => {
 			dispatch(deleteAccount(id))
 				.unwrap()
 				.then((data) => {
-					dispatch(fetchCategories()).then(() => {
+					Promise.all([
+						dispatch(fetchCategories()),
+						dispatch(fetchTransactions()),
+					]).then(() => {
 						notifications.show(`Удалено!`, {
 							severity: 'success',
 							autoHideDuration: 3000,
@@ -77,7 +80,7 @@ export default () => {
 						}}
 					>
 						<Button
-							component={link}
+							component={Link}
 							to={`/statistics/${account._id}`}
 							title="Статистика"
 						>
@@ -100,7 +103,7 @@ export default () => {
 								subheader={
 									account?.owner?._id === userId
 										? 'Мой'
-										: account.owner.name
+										: account.owner.username
 								}
 							/>
 							<CardContent></CardContent>
@@ -113,28 +116,28 @@ export default () => {
 							orientation="vertical"
 						>
 							<Button
-								component={link}
+								component={Link}
 								to={`/transactions/?account=${account._id}`}
 								title="Транзакции"
 							>
 								<ManageSearchIcon />
 							</Button>
 							<Button
-								component={link}
+								component={Link}
 								to={`/categories/${account._id}`}
 								title="Категории"
 							>
 								<SpeakerNotesIcon />
 							</Button>
 							<Button
-								component={link}
+								component={Link}
 								to={`/transaction/income?account=${account._id}`}
 								title="Доход"
 							>
 								<BookmarkAddIcon />
 							</Button>
 							<Button
-								component={link}
+								component={Link}
 								to={`/transaction/expense?account=${account._id}`}
 								title="Расход"
 							>
@@ -187,7 +190,7 @@ export default () => {
 						<Button title="Транзакции">
 							<ManageSearchIcon />
 						</Button>
-						<Button component={link} to={`/categories/`} title="Категории">
+						<Button component={Link} to={`/categories/`} title="Категории">
 							<SpeakerNotesIcon />
 						</Button>
 						<Button title="Доход">

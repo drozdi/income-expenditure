@@ -11,6 +11,7 @@ import {
 	TransactionsPage,
 } from '../pages';
 
+import ProtectedRoute from '../features/protected-route/protectedRoute';
 import { SignIn } from '../pages/sign-in/sign-in';
 import { SignUp } from '../pages/sign-up/sign-up';
 
@@ -18,8 +19,6 @@ export const AppRouter = () => {
 	return (
 		<Routes>
 			<Route path="/" element={<MainLayout />}>
-				<Route path="" element={<MainPage />} />
-				<Route path="settings" element={<SettingsPage />} />
 				<Route path="auth" element={<DefaultLayout />}>
 					<Route path="" element={<Navigate to="/auth/signIn" />} />
 					<Route path="signIn" element={<SignIn />} />
@@ -27,27 +26,73 @@ export const AppRouter = () => {
 					<Route path="signOut" element={<div>SignOut</div>} />
 					<Route path="*" element={<Navigate to="/auth/signIn" />} />
 				</Route>
-				<Route path="categories" element={<DefaultLayout />}>
+
+				<Route
+					path=""
+					element={
+						<ProtectedRoute>
+							<MainPage />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path="settings"
+					element={
+						<ProtectedRoute>
+							<SettingsPage />
+						</ProtectedRoute>
+					}
+				/>
+				<Route path="categories" element={<ProtectedRoute />}>
 					<Route path="" element={<CategoriesPage />} />
 					<Route path=":accountId" element={<CategoriesPage />} />
 				</Route>
-				<Route path="accounts" element={<AccountsPage />} />
-				<Route path="account" element={<DefaultLayout />}>
+				<Route
+					path="accounts"
+					element={
+						<ProtectedRoute>
+							<AccountsPage />
+						</ProtectedRoute>
+					}
+				/>
+				<Route path="account" element={<ProtectedRoute />}>
 					<Route path="" element={<AccountPage />} />
 					<Route path=":id" element={<AccountPage />} />
 				</Route>
 				<Route
 					path="transaction/:type/:id"
 					//path="transaction/:type(income|expense)"
-					element={<TransactionPage />}
+					element={
+						<ProtectedRoute>
+							<TransactionPage />
+						</ProtectedRoute>
+					}
 				/>
 				<Route
 					path="transaction/:type/"
 					//path="transaction/:type(income|expense)"
-					element={<TransactionPage />}
+					element={
+						<ProtectedRoute>
+							<TransactionPage />
+						</ProtectedRoute>
+					}
 				/>
-				<Route path="transactions/" element={<TransactionsPage />} />
-				<Route path="statistics/:account/" element={<StatisticsPage />} />
+				<Route
+					path="transactions/"
+					element={
+						<ProtectedRoute>
+							<TransactionsPage />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path="statistics/:account/"
+					element={
+						<ProtectedRoute>
+							<StatisticsPage />
+						</ProtectedRoute>
+					}
+				/>
 				<Route
 					path="404"
 					element={
