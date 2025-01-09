@@ -46,7 +46,7 @@ export default function ExpenseForm({ className, id, account }) {
 		(!transaction?.link && (transaction?.category._id || transaction?.category)) ||
 			undefined,
 	);
-	const [transferAccount, setTransferAccount] = useState(transaction?.link?.account);
+	const [toAccount, setToAccount] = useState(transaction?.link?.account);
 	const [date, setDate] = useState(dayjs(transaction?.date));
 	const [amount, setAmount] = useState(transaction?.amount || '');
 	const [comment, setComment] = useState(transaction?.comment || '');
@@ -59,10 +59,10 @@ export default function ExpenseForm({ className, id, account }) {
 	useEffect(() => {
 		setType(undefined);
 		setCurrentCategory(undefined);
-		setTransferAccount(undefined);
+		setToAccount(undefined);
 	}, [currentAccount]);
 	useEffect(() => {
-		setTransferAccount(undefined);
+		setToAccount(undefined);
 		currentCategory && setTimeout(() => setCurrentCategory(currentCategory), 0);
 		if (currentCategory) {
 			setType('expense');
@@ -70,11 +70,11 @@ export default function ExpenseForm({ className, id, account }) {
 	}, [currentCategory]);
 	useEffect(() => {
 		setCurrentCategory(undefined);
-		transferAccount && setTimeout(() => setTransferAccount(transferAccount), 0);
-		if (transferAccount) {
+		toAccount && setTimeout(() => setToAccount(toAccount), 0);
+		if (toAccount) {
 			setType('transfer');
 		}
-	}, [transferAccount]);
+	}, [toAccount]);
 
 	const onSave = async () => {
 		const formData = {
@@ -82,7 +82,7 @@ export default function ExpenseForm({ className, id, account }) {
 			type,
 			account: currentAccount,
 			category: currentCategory,
-			to: transferAccount,
+			to: toAccount,
 			date: date.$d,
 			amount,
 			comment,
@@ -118,8 +118,7 @@ export default function ExpenseForm({ className, id, account }) {
 			}); //*/
 	};
 
-	const cheack =
-		type && currentAccount && (currentCategory || transferAccount) && amount;
+	const cheack = type && currentAccount && (currentCategory || toAccount) && amount;
 
 	return (
 		<Stack className={className} orientation="column" spacing={1}>
@@ -189,13 +188,11 @@ export default function ExpenseForm({ className, id, account }) {
 						spacing={2}
 						justifyContent="space-between"
 						alignItems="stretch"
-						variant={
-							transferAccount === account._id ? 'contained' : 'outlined'
-						}
+						variant={toAccount === account._id ? 'contained' : 'outlined'}
 						component={Button}
 						value={account._id}
 						disabled={currentAccount === account._id}
-						onClick={() => setTransferAccount(account._id)}
+						onClick={() => setToAccount(account._id)}
 					>
 						<Typography variant="caption">{account.label}</Typography>
 						<Typography variant="caption" sx={{ marginTop: '0 !important' }}>

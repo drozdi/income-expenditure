@@ -42,7 +42,8 @@ async function updateIncomeTransaction(id, body) {
 	const transaction = await Transaction.findById(id);
 
 	const calcBalance =
-		transaction.account != body.account || transaction.amount != body.amount;
+		String(transaction.account) != String(body.account) ||
+		transaction.amount != body.amount;
 
 	const account = await Account.findById(transaction.account);
 
@@ -73,7 +74,8 @@ async function updateExpenseTransaction(id, body) {
 	const transaction = await Transaction.findById(id);
 
 	const calcBalance =
-		transaction.account != body.account || transaction.amount != body.amount;
+		String(transaction.account) != String(body.account) ||
+		transaction.amount != body.amount;
 
 	const account = await Account.findById(transaction.account);
 

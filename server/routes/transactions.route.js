@@ -36,35 +36,65 @@ router.post('/', async (req, res) => {
 		const expense = await expenseTransaction({
 			...reqData,
 			to: undefined,
-			category: (
-				await Category.findOne({
-					account: reqData.account,
-					type: 'transfer',
-				})
-			)._id,
+			category: await Category.findOne({
+				account: reqData.account,
+				type: 'transfer',
+			}),
 		});
 		const income = await incomeTransaction({
 			...reqData,
 			account: reqData.to,
 			to: undefined,
 			link: expense,
-			category: (
-				await Category.findOne({
-					account: reqData.to,
-					type: 'transfer',
-				})
-			)._id,
+			category: await Category.findOne({
+				account: reqData.to,
+				type: 'transfer',
+			}),
 		});
 		expense.link = income;
 		await expense.save();
-		res.send({
+
+		expense.category = expense.category?._id || expense.category;
+		income.category = income.category?._id || income.category;
+
+		return res.send({
 			data: [
 				{ ...expense._doc, link: { ...income._doc, link: undefined } },
 				{ ...income._doc, link: { ...expense._doc, link: undefined } },
 			],
 		});
-		return;
-	} else if (reqData.account === 'transfer') {
+	} else if (reqData.type === 'transfer' && reqData.from) {
+		const expense = await expenseTransaction({
+			...reqData,
+			account: reqData.from,
+			from: undefined,
+			category: await Category.findOne({
+				account: reqData.from,
+				type: 'transfer',
+			}),
+		});
+		const income = await incomeTransaction({
+			...reqData,
+			from: undefined,
+			link: expense,
+			category: await Category.findOne({
+				account: reqData.account,
+				type: 'transfer',
+			}),
+		});
+		expense.link = income;
+		await expense.save();
+
+		expense.category = expense.category?._id || expense.category;
+		income.category = income.category?._id || income.category;
+
+		return res.send({
+			data: [
+				{ ...expense._doc, link: { ...income._doc, link: undefined } },
+				{ ...income._doc, link: { ...expense._doc, link: undefined } },
+			],
+		});
+	} else if (reqData.type === 'transfer') {
 		return res.status(400).send({
 			error: 'Transfer transaction must have a "to" account',
 		});
@@ -96,21 +126,22 @@ router.delete('/:id', async (req, res) => {
 router.patch('/:id', async (req, res) => {
 	const transaction = await getTransaction(req.params.id);
 	const isTransfer = !!transaction.link;
+	const reqData = { ...req.body };
 
 	let updatedTransaction;
 	let updatedLinkTransaction;
 
-	if (transaction.type === 'income') {
-		updatedTransaction = await updateIncomeTransaction(req.params.id, {
-			...req.body,
-			account: isTransfer ? req.body.to : req.body.account,
+	if (transaction.type === 'expense') {
+		updatedTransaction = await updateExpenseTransaction(req.params.id, {
+			...reqData,
 			to: undefined,
 			type: undefined,
 		});
 
-		if (isTransfer && req.body.account && req.body.to) {
-			updatedLinkTransaction = await updateExpenseTransaction(transaction.link, {
-				...req.body,
+		if (isTransfer && reqData.to) {
+			updatedLinkTransaction = await updateIncomeTransaction(transaction.link, {
+				...reqData,
+				account: reqData.to,
 				to: undefined,
 				type: undefined,
 			});
@@ -118,68 +149,71 @@ router.patch('/:id', async (req, res) => {
 			updatedTransaction.link = undefined;
 			updatedLinkTransaction = await deleteTransaction(transaction.link);
 			updatedLinkTransaction._doc.removed = true;
-		} else if (req.body.account && req.body.to) {
-			updatedLinkTransaction = await expenseTransaction({
-				...req.body,
+		} else if (reqData.to) {
+			updatedLinkTransaction = await incomeTransaction({
+				...reqData,
 				owner: req.user._id,
+				account: reqData.to,
 				to: undefined,
 				link: updatedTransaction,
-				category: (
-					await Category.findOne({
-						account: req.body.account,
-						type: 'transfer',
-					})
-				)._id,
-			});
-			updatedTransaction.category = (
-				await Category.findOne({
-					account: updatedTransaction.account,
+				category: await Category.findOne({
+					account: reqData.to,
 					type: 'transfer',
-				})
-			)._id;
+				}),
+			});
+			updatedTransaction.category = await Category.findOne({
+				account: updatedTransaction.account,
+				type: 'transfer',
+			});
+
+			updatedTransaction.category =
+				updatedTransaction.category?._id || updatedTransaction.category;
+			updatedLinkTransaction.category =
+				updatedLinkTransaction.category?._id || updatedLinkTransaction.category;
 
 			updatedTransaction.link = { ...updatedLinkTransaction._doc };
 			updatedLinkTransaction._doc.added = true;
 			updatedLinkTransaction._doc.link = { ...updatedTransaction._doc };
 		}
-	} else if (transaction.type === 'expense') {
-		updatedTransaction = await updateExpenseTransaction(req.params.id, {
-			...req.body,
-			to: undefined,
+	} else if (transaction.type === 'income') {
+		updatedTransaction = await updateIncomeTransaction(req.params.id, {
+			...reqData,
+			from: undefined,
 			type: undefined,
 		});
 
-		if (isTransfer && req.body.to) {
-			updatedLinkTransaction = await updateIncomeTransaction(transaction.link, {
-				...req.body,
-				account: req.body.to,
-				to: undefined,
+		if (isTransfer && reqData.from) {
+			updatedLinkTransaction = await updateExpenseTransaction(transaction.link, {
+				...reqData,
+				account: reqData.from,
 				type: undefined,
 			});
 		} else if (isTransfer) {
 			updatedTransaction.link = undefined;
 			updatedLinkTransaction = await deleteTransaction(transaction.link);
 			updatedLinkTransaction._doc.removed = true;
-		} else if (req.body.to) {
-			updatedLinkTransaction = await incomeTransaction({
-				...req.body,
+		} else if (reqData.from) {
+			updatedLinkTransaction = await expenseTransaction({
+				...reqData,
 				owner: req.user._id,
-				account: req.body.to,
-				to: undefined,
+				account: reqData.from,
 				link: updatedTransaction,
-				category: (
-					await Category.findOne({
-						account: req.body.to,
-						type: 'transfer',
-					})
-				)._id,
-			});
-			updatedTransaction.category = (
-				await Category.findOne({
-					account: updatedTransaction.account,
+				from: undefined,
+				category: await Category.findOne({
+					account: reqData.from,
 					type: 'transfer',
-				})
-			)._id;
+				}),
+			});
+			updatedTransaction.category = await Category.findOne({
+				account: updatedTransaction.account,
+				type: 'transfer',
+			});
+
+			updatedTransaction.category =
+				updatedTransaction.category?._id || updatedTransaction.category;
+			updatedLinkTransaction.category =
+				updatedLinkTransaction.category?._id || updatedLinkTransaction.category;
+
 			updatedTransaction.link = { ...updatedLinkTransaction._doc };
 			updatedLinkTransaction._doc.added = true;
 			updatedLinkTransaction._doc.link = { ...updatedTransaction._doc };
@@ -194,8 +228,7 @@ router.patch('/:id', async (req, res) => {
 		result.push({
 			...updatedLinkTransaction._doc,
 		});
-	} //*/
-	console.log(result);
+	}
 	res.send({ data: result });
 });
 

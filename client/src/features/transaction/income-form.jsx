@@ -47,7 +47,8 @@ export default function IncomeForm({ className, id, account }) {
 		(!transaction?.link && (transaction?.category._id || transaction?.category)) ||
 			undefined,
 	);
-	const [transferAccount, setTransferAccount] = useState(transaction?.link?.account);
+	const [fromAccount, setFromAccount] = useState(transaction?.link?.account);
+
 	const [date, setDate] = useState(dayjs(transaction?.date));
 	const [amount, setAmount] = useState(transaction?.amount || '');
 	const [comment, setComment] = useState(transaction?.comment || '');
@@ -58,10 +59,10 @@ export default function IncomeForm({ className, id, account }) {
 	useEffect(() => {
 		setType(undefined);
 		setCurrentCategory(undefined);
-		setTransferAccount(undefined);
+		setFromAccount(undefined);
 	}, [currentAccount]);
 	useEffect(() => {
-		setTransferAccount(undefined);
+		setFromAccount(undefined);
 		currentCategory && setTimeout(() => setCurrentCategory(currentCategory), 0);
 		if (currentCategory) {
 			setType('income');
@@ -69,34 +70,23 @@ export default function IncomeForm({ className, id, account }) {
 	}, [currentCategory]);
 	useEffect(() => {
 		setCurrentCategory(undefined);
-		transferAccount && setTimeout(() => setTransferAccount(transferAccount), 0);
-		if (transferAccount) {
+		fromAccount && setTimeout(() => setFromAccount(fromAccount), 0);
+		if (fromAccount) {
 			setType('transfer');
 		}
-	}, [transferAccount]);
+	}, [fromAccount]);
 
 	const onSave = async () => {
-		const formData = transferAccount
-			? {
-					_id: id,
-					type,
-					amount,
-					comment,
-					account: transferAccount,
-					category: undefined,
-					to: currentAccount,
-					date: date.$d,
-				}
-			: {
-					_id: id,
-					type,
-					amount,
-					comment,
-					account: currentAccount,
-					category: currentCategory,
-					to: undefined,
-					date: date.$d,
-				};
+		const formData = {
+			_id: id,
+			type,
+			amount,
+			comment,
+			account: currentAccount,
+			category: currentCategory,
+			from: fromAccount,
+			date: date.$d,
+		};
 
 		dispatch(saveTransaction(formData))
 			.unwrap()
@@ -127,8 +117,7 @@ export default function IncomeForm({ className, id, account }) {
 			}); //*/
 	};
 
-	const cheack =
-		type && currentAccount && (currentCategory || transferAccount) && amount;
+	const cheack = type && currentAccount && (currentCategory || fromAccount) && amount;
 
 	return (
 		<Stack className={className} orientation="column" spacing={1}>
@@ -198,13 +187,11 @@ export default function IncomeForm({ className, id, account }) {
 						spacing={2}
 						justifyContent="space-between"
 						alignItems="stretch"
-						variant={
-							transferAccount === account._id ? 'contained' : 'outlined'
-						}
+						variant={fromAccount === account._id ? 'contained' : 'outlined'}
 						component={Button}
 						value={account._id}
 						disabled={currentAccount === account._id}
-						onClick={() => setTransferAccount(account._id)}
+						onClick={() => setFromAccount(account._id)}
 					>
 						<Typography variant="caption">{account.label}</Typography>
 						<Typography variant="caption" sx={{ marginTop: '0 !important' }}>
