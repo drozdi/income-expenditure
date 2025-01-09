@@ -21,9 +21,9 @@ app.use(cors());
 
 app.use('/api', routes);
 
-/*app.get('*', (req, res) => {
+app.get('*', (req, res) => {
 	res.sendFile(path.resolve('..', 'client', 'build', 'index.html'));
-});//*/
+}); //*/
 
 async function start() {
 	try {
