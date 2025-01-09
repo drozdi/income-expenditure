@@ -9,6 +9,7 @@ import {
 	selectAccount,
 	selectTypes,
 } from '../../entites/accounts/accountsSlice';
+import { fetchCategories } from '../../entites/categories/categoriesSlice';
 
 import LoadingButton from '@mui/lab/LoadingButton';
 import {
@@ -53,6 +54,7 @@ export default ({ id, onSave }) => {
 		dispatch(saveAccount(data))
 			.unwrap()
 			.then(({ payload }) => {
+				dispatch(fetchCategories());
 				notifications.show(`Сохранено!`, {
 					severity: 'success',
 					autoHideDuration: 3000,

@@ -8,7 +8,7 @@ const { register, login } = require('../controllers/user.controller.js');
 
 router.post('/signUp', [
 	check('email', 'Некорректный email').isEmail(),
-	check('password', 'Минимальная длина пароля 8 символов').isLength({ min: 8 }),
+	check('password', 'Минимальная длина пароля 6 символов').isLength({ min: 6 }),
 	async (req, res) => {
 		try {
 			const exitingUser = await User.findOne({ email: req.body.email });

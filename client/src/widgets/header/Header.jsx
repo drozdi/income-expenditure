@@ -54,9 +54,11 @@ export function Header() {
 						Finance
 					</Typography>
 				</Stack>
-				<Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-					News
-				</Typography>
+				<Typography
+					variant="h6"
+					component="div"
+					sx={{ flexGrow: 1 }}
+				></Typography>
 				{isAuth ? (
 					<div>
 						<IconButton

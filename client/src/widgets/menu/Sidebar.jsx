@@ -1,43 +1,53 @@
-import { Box, List, ListItem, ListItemButton } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Box, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
+import { NavLink } from 'react-router-dom';
+
+import PropTypes from 'prop-types';
+
+function ListItemLink({ children, to }) {
+	return (
+		<ListItemButton
+			component={NavLink}
+			to={to}
+			style={({ isActive }) => ({
+				backgroundColor: isActive ? 'rgba(0, 0, 0, 0.1)' : 'transparent',
+			})}
+		>
+			<ListItemText>{children}</ListItemText>
+		</ListItemButton>
+	);
+}
+
+ListItemLink.propTypes = {
+	children: PropTypes.node,
+	to: PropTypes.string.isRequired,
+};
+
 export function Sidebar() {
 	return (
 		<Box component="aside" sx={{ boxShadow: 1 }}>
 			<List>
 				<ListItem disablePadding>
-					<ListItemButton component={Link} to="/">
-						Главная
-					</ListItemButton>
+					<ListItemLink to="/">Главная</ListItemLink>
 				</ListItem>
 
 				<ListItem disablePadding>
-					<ListItemButton component={Link} to="/transaction/expense">
-						Расход
-					</ListItemButton>
+					<ListItemLink to="/transaction/expense">Расход</ListItemLink>
 				</ListItem>
 
 				<ListItem disablePadding>
-					<ListItemButton component={Link} to="/transaction/income">
-						Доход
-					</ListItemButton>
+					<ListItemLink to="/transaction/income">Доход</ListItemLink>
 				</ListItem>
 
 				<ListItem disablePadding>
-					<ListItemButton component={Link} to="/transactions/">
-						История
-					</ListItemButton>
+					<ListItemLink to="/transactions/">История</ListItemLink>
 				</ListItem>
 
 				<ListItem disablePadding>
-					<ListItemButton component={Link} to="/categories/">
-						Категории
-					</ListItemButton>
+					<ListItemLink to="/categories/">Категории</ListItemLink>
 				</ListItem>
 
 				<ListItem disablePadding>
-					<ListItemButton component={Link} to="/accounts">
-						Счета
-					</ListItemButton>
+					<ListItemLink to="/accounts">Счета</ListItemLink>
 				</ListItem>
 			</List>
 		</Box>

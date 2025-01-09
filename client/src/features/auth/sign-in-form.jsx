@@ -80,7 +80,7 @@ export default () => {
 					type="submit"
 					variant="contained"
 				>
-					{isLoading ? 'Вход...' : 'Ввойти'}
+					{isLoading ? 'Вход...' : 'Войти'}
 				</LoadingButton>
 				<Button component={Link} to="/auth/signUp" disabled={isLoading}>
 					Регистрация
