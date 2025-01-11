@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { Navigate, useParams, useSearchParams } from 'react-router-dom';
 import { selectTransaction } from '../../entites/transactions/transactionsSlice';
@@ -10,6 +11,9 @@ export function TransactionPage() {
 	const transaction = useSelector(selectTransaction(id));
 	return (
 		<div>
+			<Typography gutterBottom align="center" variant="h5">
+				{id ? 'Операция' : 'Новая операция'}
+			</Typography>
 			{type === 'income' ? (
 				<IncomeForm id={id} account={account} />
 			) : type === 'expense' ? (

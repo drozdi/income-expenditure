@@ -7,14 +7,14 @@ import PropTypes from 'prop-types';
 import AddCategoryItem from './add-item';
 import CategoryItem from './item';
 
-export default function CategoriesList({ className, account, type }) {
+export default function CategoriesList({ account, type }) {
 	const categories = useSelector(selectCategories(account)) || [];
 	const grouped = useMemo(() => {
 		return categories.filter((category) => category.type === type);
 	}, [categories, type]);
 
 	return (
-		<List className={className}>
+		<List>
 			<AddCategoryItem account={account} type={type} />
 			{!categories.length && (
 				<ListSubheader>Нет категорий. Добавьте новую категорию.</ListSubheader>
@@ -27,7 +27,6 @@ export default function CategoriesList({ className, account, type }) {
 }
 
 CategoriesList.propTypes = {
-	className: PropTypes.string,
 	account: PropTypes.string,
 	type: PropTypes.string,
 };

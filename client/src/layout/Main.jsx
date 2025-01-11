@@ -1,7 +1,10 @@
 import { Box } from '@mui/material';
+import { useSelector } from 'react-redux';
 import { Outlet } from 'react-router-dom';
+import { selectIsAuth } from '../entites/auth/authSlice';
 import { Footer, Header, Sidebar } from '../widgets';
 export function MainLayout() {
+	const isAuth = useSelector(selectIsAuth);
 	return (
 		<Box
 			sx={{
@@ -18,16 +21,18 @@ export function MainLayout() {
 		>
 			<Header />
 			<Box sx={{ pt: 10, display: 'flex', width: '100%', maxWidth: '100%' }}>
-				<Box
-					component="nav"
-					sx={{
-						width: 256,
-						pt: 2,
-						display: { xs: 'none', md: 'block' },
-					}}
-				>
-					<Sidebar />
-				</Box>
+				{isAuth && (
+					<Box
+						component="nav"
+						sx={{
+							width: 256,
+							pt: 2,
+							display: { xs: 'none', md: 'block' },
+						}}
+					>
+						<Sidebar />
+					</Box>
+				)}
 				<Box component="main" sx={{ flex: '1 1 auto', px: 4 }}>
 					<Outlet />
 				</Box>

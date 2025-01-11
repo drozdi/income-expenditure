@@ -153,7 +153,7 @@ export default function StatisticsAccount({ from, to, accountId }) {
 				</Typography>
 			</Stack>
 
-			<Stack direction="row" flexWrap="wrap">
+			<Stack direction="row" spacing={2} flexWrap="wrap">
 				<Box>
 					<Typography align="center">
 						Доход: {currencyFormat(typesValue.income || 0)}

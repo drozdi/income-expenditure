@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addCategory } from '../../entites/categories/categoriesSlice';
 
-export default function CategoriesAddItem({ className, account, type }) {
+export default function CategoriesAddItem({ account, type }) {
 	const dialogs = useDialogs();
 	const dispatch = useDispatch();
 	const notifications = useNotifications();
@@ -46,7 +46,6 @@ export default function CategoriesAddItem({ className, account, type }) {
 
 	return (
 		<ListItem
-			className={className}
 			disablePadding
 			disableGutters
 			secondaryAction={
@@ -72,7 +71,6 @@ export default function CategoriesAddItem({ className, account, type }) {
 }
 
 CategoriesAddItem.propTypes = {
-	className: PropTypes.string,
 	account: PropTypes.string,
 	type: PropTypes.string,
 };

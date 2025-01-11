@@ -1,9 +1,12 @@
+import { Container, Typography } from '@mui/material';
 import SignInForm from '../../features/auth/sign-in-form';
 export const SignIn = () => {
 	return (
-		<div>
-			<h1 className="text-3xl text-center mb-4">Вход</h1>
+		<Container maxWidth="xs">
+			<Typography gutterBottom variant="h5" align="center">
+				Вход
+			</Typography>
 			<SignInForm />
-		</div>
+		</Container>
 	);
 };

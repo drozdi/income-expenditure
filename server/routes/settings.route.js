@@ -3,7 +3,8 @@ const User = require('../models/User.js');
 const router = express.Router({ mergeParams: true });
 const auth = require('../middlewares/auth.js');
 const Account = require('../models/Account.js');
-const mongoose = require('mongoose');
+const { check, validationResult } = require('express-validator');
+const { updateUser } = require('../controllers/user.controller.js');
 
 router.use(auth);
 
@@ -19,19 +20,21 @@ router.get('/user', async (req, res) => {
 	}
 });
 
-router.patch('/user', async (req, res) => {
-	try {
-		const user = await User.findByIdAndUpdate(req.user._id, req.body, {
-			returnDocument: 'after',
-		});
-		user.password = undefined;
-		res.send({ data: user });
-	} catch (error) {
-		res.status(500).send({
-			message: 'На сервере произошла ошибка. Попробуйте позже',
-		});
-	}
-});
+router.patch('/user', [
+	check('email', 'Некорректный email').isEmail(),
+	async (req, res) => {
+		try {
+			const user = updateUser(req.user._id, req.body);
+
+			user.password = undefined;
+			res.send({ data: user });
+		} catch (error) {
+			res.status(500).send({
+				message: 'На сервере произошла ошибка. Попробуйте позже',
+			});
+		}
+	},
+]);
 
 router.get('/users', async (req, res) => {
 	try {

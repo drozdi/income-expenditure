@@ -26,6 +26,12 @@ router.post('/signUp', [
 				});
 			}
 
+			if (req.body.password && req.body.password !== req.body.re_password) {
+				return res.status(400).json({
+					error: 'INVALID_DATA',
+				});
+			}
+
 			const { user, token } = await register(req.body);
 
 			res.cookie('token', token, { httpOnly: true }).send({

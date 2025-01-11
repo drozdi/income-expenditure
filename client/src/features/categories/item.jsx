@@ -22,7 +22,7 @@ import {
 	updateCategory,
 } from '../../entites/categories/categoriesSlice';
 
-export default function CategoriesItem({ className, category }) {
+export default function CategoriesItem({ category }) {
 	const inputRef = useRef();
 	const notifications = useNotifications();
 	const dialogs = useDialogs();
@@ -112,7 +112,6 @@ export default function CategoriesItem({ className, category }) {
 
 	return (
 		<ListItem
-			className={className}
 			key={category._id}
 			onDoubleClick={handlerDblclick}
 			divider
@@ -181,6 +180,5 @@ export default function CategoriesItem({ className, category }) {
 }
 
 CategoriesItem.propTypes = {
-	className: PropTypes.string,
 	category: PropTypes.object,
 };

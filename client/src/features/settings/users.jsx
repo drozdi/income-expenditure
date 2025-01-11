@@ -76,7 +76,7 @@ export default function SettingsUsers({ onSaved }) {
 					<ListItem
 						key={user._id}
 						secondaryAction={
-							<FormControl sx={{ width: 300 }}>
+							<FormControl sx={{ width: 300 }} size="small">
 								<InputLabel>Доступ</InputLabel>
 								<Select
 									multiple

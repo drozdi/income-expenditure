@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { useState } from 'react';
@@ -10,19 +10,31 @@ export function StatisticsPage() {
 
 	return (
 		<>
-			<Box
-				sx={{
-					display: 'flex',
-					justifyContent: 'right',
-				}}
+			<Stack
+				direction="row"
+				spacing={2}
+				alignItems="center"
+				justifyContent="space-between"
+				sx={{ mb: 2 }}
 			>
-				<DatePicker
-					defaultValue={date}
-					format="YYYY MMMM"
-					views={['year', 'month']}
-					onChange={setDate}
-				/>
-			</Box>
+				<Typography gutterBottom variant="h5">
+					Статистика
+				</Typography>
+				<Box
+					sx={{
+						display: 'flex',
+						justifyContent: 'right',
+					}}
+				>
+					<DatePicker
+						defaultValue={date}
+						format="YYYY MMMM"
+						views={['year', 'month']}
+						onChange={setDate}
+					/>
+				</Box>
+			</Stack>
+
 			<StatisticsAccount from={date.format('YYYY-MM')} accountId={account} />
 		</>
 	);

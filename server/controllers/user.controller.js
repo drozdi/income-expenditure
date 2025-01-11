@@ -33,16 +33,28 @@ async function login(email, password) {
 	return { token, user };
 }
 
+async function updateUser(id, userData) {
+	if (userData.password && userData.password !== userData.re_password) {
+		throw new Error('Password');
+	}
+
+	if (userData.password) {
+		userData.password = await bcrypt.hash(userData.password, 12);
+	} else {
+		userData.password = undefined;
+	}
+
+	return await User.findByIdAndUpdate(id, userData, {
+		returnDocument: 'after',
+	});
+}
+
 async function getUsers() {
 	return User.find();
 }
 
 async function deleteUser(id) {
 	return User.deleteOne({ _id: id });
-}
-
-async function updateUser(id, userData) {
-	return User.findByIdAndUpdate(id, userData, { returnDocument: 'after' });
 }
 
 module.exports = {
