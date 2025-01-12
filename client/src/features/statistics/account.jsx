@@ -25,7 +25,8 @@ export default function StatisticsAccount({ from, to, accountId }) {
 	const transactions = useSelector(selectTransactionAccount(accountId)) || [];
 
 	const fromDate = dayjs(
-		dayjs(from ? from : dayjs()).format('YYYY-MM-DD') + 'T00:00:00',
+		dayjs(from ? from : dayjs().format('YYYY-MM') + '-01').format('YYYY-MM-DD') +
+			'T00:00:00',
 	);
 	const toDate = dayjs(
 		dayjs(to ? to : fromDate.format('YYYY-MM') + '-31').format('YYYY-MM-DD') +
@@ -135,7 +136,7 @@ export default function StatisticsAccount({ from, to, accountId }) {
 	}, [data]);
 
 	return (
-		<>
+		<Box>
 			<Stack
 				direction="row"
 				spacing={2}
@@ -194,7 +195,7 @@ export default function StatisticsAccount({ from, to, accountId }) {
 					/>
 				</Box>
 			</Stack>
-		</>
+		</Box>
 	);
 }
 
