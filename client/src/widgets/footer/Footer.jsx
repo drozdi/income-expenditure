@@ -1,3 +1,3 @@
-export function Footer({ className }) {
-	return <footer className={className}>footer</footer>;
+export function Footer() {
+	return <footer></footer>;
 }

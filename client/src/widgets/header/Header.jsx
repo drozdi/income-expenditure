@@ -51,7 +51,7 @@ export function Header() {
 							color: 'inherit',
 						}}
 					>
-						Finance
+						Мои Финансы
 					</Typography>
 				</Stack>
 				<Typography

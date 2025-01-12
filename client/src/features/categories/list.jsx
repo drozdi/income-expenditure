@@ -1,14 +1,13 @@
 import { List, ListSubheader } from '@mui/material';
 import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import { selectCategories } from '../../entites/categories/categoriesSlice';
+import { useCategories } from '../../entites/categories/hooks';
 
 import PropTypes from 'prop-types';
 import AddCategoryItem from './add-item';
 import CategoryItem from './item';
 
 export default function CategoriesList({ account, type }) {
-	const categories = useSelector(selectCategories(account)) || [];
+	const categories = useCategories(account);
 	const grouped = useMemo(() => {
 		return categories.filter((category) => category.type === type);
 	}, [categories, type]);

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { selectAll } from './categoriesSlice';
+import { selectAll, selectCategories } from './categoriesSlice';
 export function useMapCategories() {
 	const all = useSelector(selectAll);
 	return useMemo(() => {
@@ -13,4 +13,14 @@ export function useMapCategories() {
 		});
 		return maps;
 	}, [all]);
+}
+export function useCategories(account) {
+	const categories = useSelector(selectCategories(account)) || [];
+	return useMemo(() => {
+		return [...categories].sort((a, b) => {
+			if (a?.label.toLowerCase() < b?.label.toLowerCase()) return -1;
+			if (a?.label.toLowerCase() > b?.label.toLowerCase()) return 1;
+			return 0;
+		});
+	}, [categories]);
 }

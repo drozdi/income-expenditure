@@ -9,7 +9,9 @@ import {
 	selectAccount,
 	selectTypes as selectAccountTypes,
 } from '../../entites/accounts/accountsSlice';
-import { selectCategories, selectTypes } from '../../entites/categories/categoriesSlice';
+import { selectTypes } from '../../entites/categories/categoriesSlice';
+import { useCategories } from '../../entites/categories/hooks';
+
 import { selectTransactionAccount } from '../../entites/transactions/transactionsSlice';
 import { currencyFormat } from '../../shared/utils/currency-format';
 import { randomColor } from '../../shared/utils/randomColor';
@@ -21,7 +23,7 @@ export default function StatisticsAccount({ from, to, accountId }) {
 
 	const types = useSelector(selectTypes);
 	const accountTypes = useSelector(selectAccountTypes);
-	const categories = useSelector(selectCategories(accountId)) || [];
+	const categories = useCategories(accountId);
 	const transactions = useSelector(selectTransactionAccount(accountId)) || [];
 
 	const fromDate = dayjs(

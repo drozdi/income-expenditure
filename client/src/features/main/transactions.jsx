@@ -11,7 +11,7 @@ import { currencyFormat } from '../../shared/utils/currency-format';
 export default function MainTransactions({ limit = 3 }) {
 	const transactions = useSelector(selectTransactions);
 	const [page, setPage] = useState(1);
-	const count = ~~(transactions.length / limit) + 1;
+	const count = ~~((transactions.length - 1) / limit) + 1;
 	const mapsCategories = useMapCategories();
 
 	if (!transactions?.length) {

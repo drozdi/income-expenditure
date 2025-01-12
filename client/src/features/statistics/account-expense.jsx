@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { selectAccount } from '../../entites/accounts/accountsSlice';
-import { selectCategories } from '../../entites/categories/categoriesSlice';
+import { useCategories } from '../../entites/categories/hooks';
 import { selectTransactionAccount } from '../../entites/transactions/transactionsSlice';
 import { currencyFormat } from '../../shared/utils/currency-format';
 import { randomColor } from '../../shared/utils/randomColor';
@@ -17,7 +17,7 @@ export default function StatisticsAccountExpense({ from, to, accountId }) {
 		return '';
 	}
 
-	const categories = useSelector(selectCategories(accountId)) || [];
+	const categories = useCategories(accountId);
 	const transactions = useSelector(selectTransactionAccount(accountId)) || [];
 
 	const fromDate = dayjs(

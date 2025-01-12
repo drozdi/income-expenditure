@@ -20,7 +20,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { accountBalance, selectAccounts } from '../../entites/accounts/accountsSlice';
-import { selectCategories } from '../../entites/categories/categoriesSlice';
+import { useCategories } from '../../entites/categories/hooks';
 import {
 	saveTransaction,
 	selectLoading,
@@ -51,7 +51,7 @@ export default function ExpenseForm({ className, id, account }) {
 	const [amount, setAmount] = useState(transaction?.amount || '');
 	const [comment, setComment] = useState(transaction?.comment || '');
 
-	const categories = useSelector(selectCategories(currentAccount)) || [];
+	const categories = useCategories(currentAccount);
 	const groupedCategories = categories.filter(
 		(category) => category.type === 'expense',
 	);
