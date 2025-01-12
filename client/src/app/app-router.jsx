@@ -1,4 +1,6 @@
+import { Box, Typography } from '@mui/material';
 import { Navigate, Route, Routes } from 'react-router-dom';
+import ProtectedRoute from '../features/protected-route/protectedRoute';
 import { DefaultLayout, MainLayout } from '../layout';
 import {
 	AccountPage,
@@ -10,8 +12,6 @@ import {
 	TransactionPage,
 	TransactionsPage,
 } from '../pages';
-
-import ProtectedRoute from '../features/protected-route/protectedRoute';
 import { SignIn } from '../pages/sign-in/sign-in';
 import { SignUp } from '../pages/sign-up/sign-up';
 
@@ -96,18 +96,22 @@ export const AppRouter = () => {
 				<Route
 					path="404"
 					element={
-						<div className="flex flex-col items-center text-xl">
-							<h2 className="text-2xl">Ошибка</h2>
-						</div>
+						<Box>
+							<Typography align="center" variant="h2">
+								Not Found
+							</Typography>
+						</Box>
 					}
 				/>
 			</Route>
 			<Route
 				path="*"
 				element={
-					<div className="flex flex-col items-center text-xl">
-						<h2 className="text-2xl">Ошибка</h2>
-					</div>
+					<Box>
+						<Typography align="center" variant="h2">
+							Ошибка
+						</Typography>
+					</Box>
 				}
 			/>
 		</Routes>
