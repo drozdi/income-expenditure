@@ -115,6 +115,14 @@ router.get('/:id', async (req, res) => {
 });
 
 router.delete('/:id', async (req, res) => {
+	const cTransaction = await getTransaction(req.params.id);
+
+	if (String(cTransaction.owner) !== String(req.user._id)) {
+		return res.status(400).send({
+			error: 'Нельзя удалить чужую транзакцию',
+		});
+	}
+
 	const transaction = await deleteTransaction(req.params.id);
 	const result = [transaction];
 	if (transaction.link) {
@@ -125,6 +133,12 @@ router.delete('/:id', async (req, res) => {
 
 router.patch('/:id', async (req, res) => {
 	const transaction = await getTransaction(req.params.id);
+	if (String(transaction.owner) !== String(req.user._id)) {
+		return res.status(400).send({
+			error: 'Нельзя изменить чужую транзакцию',
+		});
+	}
+
 	const isTransfer = !!transaction.link;
 	const reqData = { ...req.body };
 
